@@ -110,7 +110,11 @@ class MertonJumpDiffusionStockPrices(AbstractStochasticValue):
         logS[:, 0] = self.logS0
         rJ = self.lamb * (exp(self.mu+0.5*self.delta*self.delta) - 1)
         nbjumps = np.random.poisson(self.lamb*dt, (nbsimulations, nbtimesteps))
-        jumpmagnitudes = np.random.lognormal(log(1+self.mu)-0.5*self.delta*self.delta, self.delta)
+        jumpmagnitudes = np.random.lognormal(
+            log(1+self.mu)-0.5*self.delta*self.delta,
+            self.delta,
+            size=(nbsimulations, nbtimesteps)
+        )
         for i in range(1, nbtimesteps):
             logS[:, i] = logS[:, i-1] + \
                          (self.r - rJ - 0.5 * self.sigma * self.sigma) * dt + \
