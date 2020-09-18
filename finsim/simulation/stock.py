@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from math import log
+from math import log, exp
 
 import numpy as np
 # import numba as nb
@@ -90,3 +90,30 @@ class HestonStockPrices(AbstractStochasticValue):
                          v[:, i] * z1[:, i] * np.sqrt(dt)
 
         return np.exp(logS), v
+
+
+class MertonJumpDiffusionStockPrices(AbstractStochasticValue):
+    def __init__(self, S0, r, sigma, mu, lamb, delta):
+        self.S0 = S0
+        self.r = r
+        self.sigma = sigma
+        self.mu = mu
+        self.lamb = lamb
+        self.delta = delta
+
+        self.logS0 = log(self.S0)
+
+    def generate_time_series(self, T, dt, nbsimulations=1):
+        nbtimesteps = int(T // dt) + 1
+        z1 = np.random.normal(size=(nbsimulations, nbtimesteps))
+        logS = np.zeros((nbsimulations, nbtimesteps))
+        logS[:, 0] = self.logS0
+        rJ = self.lamb * (exp(self.mu+0.5*self.delta*self.delta) - 1)
+        nbjumps = np.random.poisson(self.lamb*dt, (nbsimulations, nbtimesteps))
+        jumpmagnitudes = np.random.lognormal(log(1+self.mu)-0.5*self.delta*self.delta, self.delta)
+        for i in range(1, nbtimesteps):
+            logS[:, i] = logS[:, i-1] + \
+                         (self.r - rJ - 0.5 * self.sigma * self.sigma) * dt + \
+                         self.sigma * z1[:, i] * np.sqrt(dt) + \
+                         jumpmagnitudes[:, i] * nbjumps[:, i]
+        return np.exp(logS)
