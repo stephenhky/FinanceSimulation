@@ -3,8 +3,6 @@ from math import log, exp
 
 import numpy as np
 
-from . import numbastock
-
 
 class AbstractStochasticValue(ABC):
     @abstractmethod
@@ -20,19 +18,8 @@ class BlackScholesMertonStockPrices(AbstractStochasticValue):
 
         self.logS0 = log(S0)
 
-    def generate_time_series(self, T, dt, nbsimulations=1, numba=True):
+    def generate_time_series(self, T, dt, nbsimulations=1):
         nbtimesteps = int(T // dt) + 1
-        if numba:
-            return numbastock.simulate_BlackScholesMerton_stocks(
-                self.S0,
-                self.r,
-                self.sigma,
-                dt,
-                nbtimesteps,
-                nbsimulations
-            )
-
-
         z = np.random.normal(size=(nbsimulations, nbtimesteps))
         logS = np.zeros((nbsimulations, nbtimesteps))
         logS[:, 0] = self.logS0
