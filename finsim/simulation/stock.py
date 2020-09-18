@@ -2,7 +2,8 @@ from abc import ABC, abstractmethod
 from math import log, exp
 
 import numpy as np
-# import numba as nb
+
+from . import numbastock
 
 
 class AbstractStochasticValue(ABC):
@@ -19,8 +20,17 @@ class BlackScholesMertonStockPrices(AbstractStochasticValue):
 
         self.logS0 = log(S0)
 
-    # @nb.njit(nb.float64[:](nb.float64, nb.float64, nb.int64))
-    def generate_time_series(self, T, dt, nbsimulations=1):
+    def generate_time_series(self, T, dt, nbsimulations=1, numba=True):
+        if numba:
+            return numbastock.simulate_BlackScholesMerton_stocks(
+                self.S0,
+                self.r,
+                self.sigma,
+                T,
+                dt,
+                nbsimulations
+            )
+
         nbtimesteps = int(T // dt) + 1
         z = np.random.normal(size=(nbsimulations, nbtimesteps))
         logS = np.zeros((nbsimulations, nbtimesteps))
