@@ -5,9 +5,8 @@ import numpy as np
 import numba as nb
 
 
-@nb.njit(nb.float64[:, :](nb.float64, nb.float64, nb.float64, nb.float64, nb.float64, nb.int64))
-def simulate_BlackScholesMerton_stocks(S0, r, sigma, T, dt, nbsimulations):
-    nbtimesteps = int(T // dt) + 1
+@nb.njit(nb.float64[:, :](nb.float64, nb.float64, nb.float64, nb.float64, nb.int64, nb.int64))
+def simulate_BlackScholesMerton_stocks(S0, r, sigma, dt, nbtimesteps, nbsimulations):
     z = np.random.normal(size=(nbsimulations, nbtimesteps))
     logS = np.zeros((nbsimulations, nbtimesteps))
     logS[:, 0] = log(S0)
