@@ -4,7 +4,7 @@ from math import exp, sqrt
 
 import numpy as np
 
-from finsim.simulation.stock import BlackScholesMertonStockPrices, HestonStockPrices
+from finsim.simulation.stock import BlackScholesMertonStockPrices, HestonStockPrices, MertonJumpDiffusionStockPrices
 
 
 def expected_bsm_stock(S0, r, sigma, t):
@@ -63,6 +63,35 @@ class TestStockSimulations(unittest.TestCase):
             271.72,
             delta=1.96*0.80
         )
+
+    def test_MertonJumpDiffusionStocks(self):
+        mjd_simulator = MertonJumpDiffusionStockPrices(100, 0.01, 0.01, 0.01, 0.01, 0.001)
+        mjd_stocks = [
+            np.mean(mjd_simulator.generate_time_series(100, 0.1, nbsimulations=1000), axis=0)
+            for _ in range(100)
+        ]
+
+        self.assertAlmostEqual(
+            np.mean([stock[250] for stock in mjd_stocks]),
+            197.97,
+            delta=1.96*6.37
+        )
+        self.assertAlmostEqual(
+            np.mean([stock[500] for stock in mjd_stocks]),
+            393.35,
+            delta=1.96*28.15
+        )
+        self.assertAlmostEqual(
+            np.mean([stock[750] for stock in mjd_stocks]),
+            773.20,
+            delta=1.96*67.73
+        )
+        self.assertAlmostEqual(
+            np.mean([stock[999] for stock in mjd_stocks]),
+            1523.06,
+            delta=1.96*169.68
+        )
+
 
 
 if __name__ == '__main__':
