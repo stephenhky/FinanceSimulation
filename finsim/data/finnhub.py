@@ -9,6 +9,14 @@ class FinnHubStockReader:
     def __init__(self, token):
         self.token = token
 
+    def get_all_US_symbols(self):
+        request_url = 'https://finnhub.io/api/v1/stock/symbol?exchange=US&token={}'.format(self.token)
+        r = requests.get(request_url)
+        response = r.json()
+        return response
+
+    # allsymbols_df = pd.DataFrame(finnhubReader.get_all_US_symbols())
+
     def get_stock_candlestick(self, symbol, startdate, enddate):
         starttimestamp = int(datetime.strptime(startdate, '%Y-%m-%d').timestamp())
         endtimestamp = int(datetime.strptime(enddate, '%Y-%m-%d').timestamp())
