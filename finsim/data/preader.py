@@ -14,6 +14,6 @@ def get_yahoofinance_data(symbol, startdate, enddate):
     oricols = df.columns
     df['TimeStamp'] = df.index
     # df['Date'] = df['TimeStamp'].apply(lambda ts: ts.date())
-    df = df[['TimeStamp', 'Date'] + list(oricols)]
+    df = df[['TimeStamp'] + list(oricols)]
 
     return df
