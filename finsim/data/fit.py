@@ -1,6 +1,8 @@
 
 import numpy as np
 
+from .native.numbafit import numba_fit_BlackScholesMerton_model, numba_fit_multivariate_BlackScholesMerton_model
+
 
 dividing_factors_dict = {
     'second': 1.0,
@@ -14,24 +16,26 @@ dividing_factors_dict = {
 def fit_BlackScholesMerton_model(timestamps, prices, unit='year'):
     dividing_factor = dividing_factors_dict[unit]
 
-    dlogS = np.log(prices[1:] / prices[:-1])
-    dt = np.array(timestamps[1:] - timestamps[:-1], dtype='timedelta64[s]')
-    dt = np.array(dt, dtype=np.float) / dividing_factor
-
-    r = np.mean(dlogS / dt)
-    sigma = np.std(dlogS / np.sqrt(dt))
-
-    return r, sigma
+    return numba_fit_BlackScholesMerton_model(timestamps, prices, dividing_factor)
+    # dlogS = np.log(prices[1:] / prices[:-1])
+    # dt = np.array(timestamps[1:] - timestamps[:-1], dtype='timedelta64[s]')
+    # dt = np.array(dt, dtype=np.float) / dividing_factor
+    #
+    # r = np.mean(dlogS / dt)
+    # sigma = np.std(dlogS / np.sqrt(dt))
+    #
+    # return r, sigma
 
 
 def fit_multivariate_BlackScholesMerton_model(timestamps, multiprices, unit='year'):
     dividing_factor = dividing_factors_dict[unit]
 
-    dlogS = np.log(multiprices[:, 1:] / multiprices[:, :-1])
-    dt = np.array(timestamps[1:] - timestamps[:-1], dtype='timedelta64[s]')
-    dt = np.array(dt, dtype=np.float) / dividing_factor
-
-    r = np.mean(dlogS / dt, axis=1)
-    cov = np.cov(dlogS / np.sqrt(dt))
-
-    return r, cov
+    return numba_fit_multivariate_BlackScholesMerton_model(timestamps, multiprices, dividing_factor)
+    # dlogS = np.log(multiprices[:, 1:] / multiprices[:, :-1])
+    # dt = np.array(timestamps[1:] - timestamps[:-1], dtype='timedelta64[s]')
+    # dt = np.array(dt, dtype=np.float) / dividing_factor
+    #
+    # r = np.mean(dlogS / dt, axis=1)
+    # cov = np.cov(dlogS / np.sqrt(dt))
+    #
+    # return r, cov
