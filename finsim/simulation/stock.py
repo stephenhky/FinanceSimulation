@@ -37,7 +37,6 @@ class SquareRootDiffusionProcesses(AbstractStochasticValue):
         self.kappa = kappa
         self.sigma = sigma
 
-    # @nb.njit(nb.float64[:](nb.float64, nb.float64, nb.int64))
     def generate_time_series(self, T, dt, nbsimulations=1):
         nbtimesteps = int(T // dt) + 1
         z = np.random.normal(size=(nbsimulations, nbtimesteps))
