@@ -21,13 +21,6 @@ def fit_BlackScholesMerton_model(timestamps, prices, unit='year'):
     ts = np.array(timestamps, dtype='datetime64[s]')
     ts = np.array(ts, dtype=np.float) / dividing_factor
     return numba_fit_BlackScholesMerton_model(ts, prices)
-    # dlogS = np.log(prices[1:] / prices[:-1])
-    # dt = np.array(ts[1:] - ts[:-1])
-    #
-    # r = np.mean(dlogS / dt)
-    # sigma = np.std(dlogS / np.sqrt(dt))
-    #
-    # return r, sigma
 
 
 def fit_multivariate_BlackScholesMerton_model(timestamps, multiprices, unit='year'):
@@ -36,10 +29,3 @@ def fit_multivariate_BlackScholesMerton_model(timestamps, multiprices, unit='yea
     ts = np.array(timestamps, dtype='datetime64[s]')
     ts = np.array(ts, dtype=np.float) / dividing_factor
     return numba_fit_multivariate_BlackScholesMerton_model(ts, multiprices)
-    # dlogS = np.log(multiprices[:, 1:] / multiprices[:, :-1])
-    # dt = np.array(ts[1:] - ts[:-1])
-    #
-    # r = np.mean(dlogS / dt, axis=1)
-    # cov = np.cov(dlogS / np.sqrt(dt))
-    #
-    # return r, cov
