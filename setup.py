@@ -38,7 +38,13 @@ setup(
     author="Kwan-Yuet Ho",
     author_email="stephenhky@yahoo.com.hk",
     # license='MIT',
-    packages=['finsim'],
+    packages=[
+        'finsim',
+        'finsim.data',
+        'finsim.data.native',
+        'finsim.simulation',
+        'finsim.portfolio'
+    ],
     install_requires=install_requirements(),
     tests_require=[
       'unittest2',

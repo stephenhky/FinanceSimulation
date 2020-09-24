@@ -6,7 +6,7 @@ from math import sqrt
 import numpy as np
 
 from finsim.simulation.stock import BlackScholesMertonStockPrices
-from finsim.data.fit import fit_BlackScholesMerton_model
+from finsim.estimate.fit import fit_BlackScholesMerton_model
 
 
 class TestParameterFitting(unittest.TestCase):
