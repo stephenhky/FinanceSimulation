@@ -41,7 +41,8 @@ setup(
     packages=[
         'finsim',
         'finsim.data',
-        'finsim.data.native',
+        'finsim.estimate',
+        'finsim.estimate.native',
         'finsim.simulation',
         'finsim.portfolio'
     ],
