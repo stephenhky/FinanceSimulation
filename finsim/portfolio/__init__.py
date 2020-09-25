@@ -1,2 +1,2 @@
 
-from .portfolio import OptimizedPortfolio, get_BlackScholesMerton_stocks_estimation
+from .portfolio import OptimizedWeightingPolicy, OptimizedPortfolio, get_BlackScholesMerton_stocks_estimation

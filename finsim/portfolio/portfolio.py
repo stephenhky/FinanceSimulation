@@ -95,7 +95,7 @@ def optimized_portfolio_on_sharperatio(r, cov, rf):
     )
 
 
-class OptimizedPortfolio:
+class OptimizedWeightingPolicy:
     def __init__(self, rf, r=None, cov=None, symbols=None):
         self.rf = rf
         self.optimized = False
@@ -123,6 +123,10 @@ class OptimizedPortfolio:
             np.expand_dims(self.optimized_weights, axis=0)
         )
         self.optimized_volatility = np.sqrt(np.sum(sqweights * self.cov))
+
+    @property
+    def portfolio_symbols(self):
+        return self.symbols
 
     @property
     def weights(self):
@@ -172,3 +176,56 @@ class OptimizedPortfolio:
             'correlation': self.correlation_matrix
         }
         return summary
+
+
+class OptimizedPortfolio:
+    def __init__(self, portfolio, totalworth, presetdate):
+        self.portfolio = portfolio
+        self.totalworth = totalworth
+        self.presetdate = presetdate
+
+        self.compute()
+
+    def compute(self):
+        prices = {
+            symbol: get_yahoofinance_data(symbol, self.presetdate, self.presetdate)['Close'][0]
+            for symbol in self.portfolio.symbols
+        }
+        summary = self.portfolio.portfolio_summary
+        for component in summary['components']:
+            symbol = component['symbol']
+            component['nbshares'] = component['weight'] * self.totalworth / prices[symbol]
+
+        self.summary = summary
+
+    @property
+    def portfolio_symbols(self):
+        return self.portfolio.portfolio_symbols
+
+    @property
+    def weights(self):
+        return self.portfolio.weights
+
+    @property
+    def portfolio_yield(self):
+        return self.portfolio.portfolio_yield
+
+    @property
+    def volatility(self):
+        return self.portfolio.volatility
+
+    @property
+    def sharpe_ratio(self):
+        return self.portfolio.sharpe_ratio
+
+    @property
+    def correlation_matrix(self):
+        return self.portfolio.correlation_matrix
+
+    @property
+    def named_correlation_matrix(self):
+        return self.portfolio.named_correlation_matrix
+
+    @property
+    def portfolio_summary(self):
+        return self.summary
