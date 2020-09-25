@@ -70,7 +70,11 @@ def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=F
                 minlen = min(len(df_i), len(df_j))
                 assert df_i['TimeStamp'][-minlen] == df_j['TimeStamp'][-minlen]
                 assert df_i['TimeStamp'][-1] == df_j['TimeStamp'][-1]
-                cov = np.cov(np.array(df_i['Close'][-minlen:]), np.array(df_j['Close'][-minlen:]))
+
+                ts = df_i['TimeStamp'][-minlen:]
+                multiprices = np.array([np.array(df_i['Close'][-minlen:]), np.array(df_j['Close'][-minlen:])])
+
+                r, cov = fit_multivariate_BlackScholesMerton_model(ts, multiprices)
                 covmat[i, j] = cov[0, 1]
                 covmat[j, i] = cov[1, 0]
             return rarray, covmat
@@ -158,7 +162,7 @@ class OptimizedPortfolio:
                     'symbol': sym,
                     'yield': self.r[i],
                     'weight': self.weights[i],
-                    'volatility': self.cov[i, i]
+                    'volatility': np.sqrt(self.cov[i, i])
                 }
                 for i, sym in enumerate(self.symbols)
             ],
