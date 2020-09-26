@@ -1,25 +1,57 @@
+
+import sys
 from itertools import product
 
+from tqdm import tqdm
 import numpy as np
 import pandas as pd
 
 from .numerics import get_BlackScholesMerton_stocks_estimation
 from .numerics import get_symbol_closing_price, optimized_portfolio_on_sharperatio
+from ..data.preader import get_yahoofinance_data
 
 
 class Portfolio:
     def __init__(self, symbols_nbshares):   # symbols_nbshares = {'NVDA': 200, 'AMZN': 101}
         self.symbols_nbshares = symbols_nbshares
 
-    def get_price(self, datestr):
+    def get_portfolio_value(self, datestr):
         portfolio_value = sum([
             self.symbols_nbshares[symbol] * get_symbol_closing_price(symbol, datestr)
             for symbol in self.symbols_nbshares
         ])
         return portfolio_value
 
-    def get_prices(self, startdate, enddate):
-        pass
+    def get_portfolio_values_overtime(self, startdate, enddate):
+        print('Reading financial data...')
+        stocks_data_dfs = [
+            get_yahoofinance_data(sym, startdate, enddate)
+            for sym in tqdm(self.symbols_nbshares.keys())
+        ]
+
+        print('Estimating...')
+        max_timearray_ref = 0
+        maxlen = max(len(stocks_data_dfs[i]) for i in range(len(stocks_data_dfs)))
+        minlen = min(len(stocks_data_dfs[i]) for i in range(len(stocks_data_dfs)))
+        if minlen != maxlen:
+            print('Not all symbols have data all the way back to {}'.format(startdate), file=sys.stderr)
+            max_timearray_ref = [i for i in range(len(stocks_data_dfs)) if maxlen == len(stocks_data_dfs[i])][0]
+            print('Symbols not having whole range of data:', file=sys.stderr)
+            for i, symbol in enumerate(self.symbols_nbshares):
+                if len(stocks_data_dfs[i]) != maxlen:
+                    print('{}: starting from {}'.format(symbol, stocks_data_dfs[i]['TimeStamp'][0].date().strftime('%Y-%m-%d')),
+                          file=sys.stderr)
+            print('Estimation starting from {}'.format(
+                stocks_data_dfs[max_timearray_ref]['TimeStamp'][-minlen].date().strftime('%Y-%m-%d')),
+                  file=sys.stderr)
+
+        df = pd.DataFrame(stocks_data_dfs[max_timearray_ref]['TimeStamp'][-minlen:])
+        df['value'] = sum([
+            self.symbols_nbshares[sym] * stocks_data_dfs[i]['Close'][-minlen:]
+            for i, sym in enumerate(self.symbols_nbshares.keys())
+            ])
+        return df
+
 
     @property
     def portfolio_symbols_nbshares(self):
