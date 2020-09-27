@@ -11,14 +11,14 @@ from ..estimate.fit import fit_multivariate_BlackScholesMerton_model, fit_BlackS
 from .metrics import sharpe_ratio
 
 
-def get_symbol_closing_price(symbol, datestr):
+def get_symbol_closing_price(symbol, datestr, epsilon=1e-10):
     try:
         return get_yahoofinance_data(symbol, datestr, datestr)['Close'][0]
     except KeyError:
-        return 0.
+        return epsilon
 
 
-def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=False):
+def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=False, epsilon=1e-10):
     print('Reading financial data...')
     stocks_data_dfs = [
         get_yahoofinance_data(sym, startdate, enddate)
@@ -67,7 +67,7 @@ def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=F
             for i in range(len(symbols)):
                 if symbols[i] in absent_stocks:
                     rarray[i] = 0.
-                    covmat[i, i] = 1e-10   # infinitesimal value
+                    covmat[i, i] = epsilon   # infinitesimal value
                     continue
                 df = stocks_data_dfs[i]
                 r, sigma = fit_BlackScholesMerton_model(
@@ -96,12 +96,12 @@ def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=F
             return rarray, covmat
 
 
-def optimized_portfolio_on_sharperatio(r, cov, rf):
+def optimized_portfolio_on_sharperatio(r, cov, rf, minweight=0.):
     func = partial(sharpe_ratio, r=r, cov=cov, rf=rf)
     nbstocks = len(r)
-    initialguess = np.repeat(1 /nbstocks, nbstocks)
+    initialguess = np.repeat(1 / nbstocks, nbstocks)
     constraints = [
-        LinearConstraint(np.eye(nbstocks), 0, 1),
+        LinearConstraint(np.eye(nbstocks), minweight, 1.),
         LinearConstraint(np.array([np.repeat(1, nbstocks)]), 1, 1)
     ]
     return minimize(

@@ -69,9 +69,10 @@ class Portfolio:
 
 
 class OptimizedWeightingPolicy:
-    def __init__(self, rf, r=None, cov=None, symbols=None):
+    def __init__(self, rf, r=None, cov=None, symbols=None, minweight=0.):
         self.rf = rf
         self.optimized = False
+        self.minweight = minweight
         
         if r is not None and cov is not None:
             self.optimize(r, cov, symbols=symbols)
@@ -85,7 +86,7 @@ class OptimizedWeightingPolicy:
         self.r = r
         self.cov = cov
         self.symbols = symbols if symbols is not None else list(range(len(r)))
-        self.optimized_sol = optimized_portfolio_on_sharperatio(r, cov, self.rf)
+        self.optimized_sol = optimized_portfolio_on_sharperatio(r, cov, self.rf, minweight=self.minweight)
         self.optimized = True
 
         self.optimized_weights = self.optimized_sol.x
@@ -215,6 +216,7 @@ def get_optimized_portfolio(
         presetdate,
         estimating_startdate,
         estimating_enddate,
+        minweight=0.,
         lazy=False
 ):
     r, cov = get_BlackScholesMerton_stocks_estimation(
@@ -223,6 +225,6 @@ def get_optimized_portfolio(
         estimating_enddate,
         lazy=lazy
     )
-    optimized_weighting_policy = OptimizedWeightingPolicy(rf, r, cov, symbols)
+    optimized_weighting_policy = OptimizedWeightingPolicy(rf, r, cov, symbols, minweight=minweight)
     optimized_portfolio = OptimizedPortfolio(optimized_weighting_policy, totalworth, presetdate)
     return optimized_portfolio
