@@ -38,20 +38,24 @@ class Portfolio:
             max_timearray_ref = [i for i in range(len(stocks_data_dfs)) if maxlen == len(stocks_data_dfs[i])][0]
             print('Symbols not having whole range of data:', file=sys.stderr)
             for i, symbol in enumerate(self.symbols_nbshares):
-                if len(stocks_data_dfs[i]) != maxlen:
+                thisdflen = len(stocks_data_dfs[i])
+                if thisdflen != maxlen:
                     print('{}: starting from {}'.format(symbol, stocks_data_dfs[i]['TimeStamp'][0].date().strftime('%Y-%m-%d')),
                           file=sys.stderr)
-            print('Estimation starting from {}'.format(
-                stocks_data_dfs[max_timearray_ref]['TimeStamp'][-minlen].date().strftime('%Y-%m-%d')),
-                  file=sys.stderr)
+                    predf = pd.DataFrame(stocks_data_dfs[max_timearray_ref]['TimeStamp'][:(maxlen-thisdflen)])
+                    predf[stocks_data_dfs[max_timearray_ref].columns[1:]] = 0
+                    stocks_data_dfs[i] = predf.append(stocks_data_dfs[i])
 
-        df = pd.DataFrame(stocks_data_dfs[max_timearray_ref]['TimeStamp'][-minlen:])
+            # print('Estimation starting from {}'.format(
+            #     stocks_data_dfs[max_timearray_ref]['TimeStamp'][-minlen].date().strftime('%Y-%m-%d')),
+            #       file=sys.stderr)
+
+        df = pd.DataFrame(stocks_data_dfs[max_timearray_ref]['TimeStamp'])
         df['value'] = sum([
-            self.symbols_nbshares[sym] * stocks_data_dfs[i]['Close'][-minlen:]
+            self.symbols_nbshares[sym] * stocks_data_dfs[i]['Close']
             for i, sym in enumerate(self.symbols_nbshares.keys())
             ])
         return df
-
 
     @property
     def portfolio_symbols_nbshares(self):
