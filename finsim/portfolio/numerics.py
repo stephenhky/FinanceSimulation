@@ -12,7 +12,10 @@ from .metrics import sharpe_ratio
 
 
 def get_symbol_closing_price(symbol, datestr):
-    return get_yahoofinance_data(symbol, datestr, datestr)['Close'][0]
+    try:
+        return get_yahoofinance_data(symbol, datestr, datestr)['Close'][0]
+    except KeyError:
+        return 0.
 
 
 def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=False):
@@ -25,7 +28,8 @@ def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=F
     print('Estimating...')
     max_timearray_ref = 0
     maxlen = max(len(stocks_data_dfs[i]) for i in range(len(stocks_data_dfs)))
-    minlen = min(len(stocks_data_dfs[i]) for i in range(len(stocks_data_dfs)))
+    minlen = min(len(stocks_data_dfs[i]) for i in range(len(stocks_data_dfs)) if len(stocks_data_dfs) > 0)   # exclude those stocks that do not exist
+    absent_stocks = {sym for sym, df in zip(symbols, stocks_data_dfs) if len(df) == 0}
     if maxlen == minlen:
         return fit_multivariate_BlackScholesMerton_model(
             np.array(stocks_data_dfs[max_timearray_ref]['TimeStamp']),
@@ -39,7 +43,9 @@ def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=F
         max_timearray_ref = [i for i in range(len(stocks_data_dfs)) if maxlen == len(stocks_data_dfs[i])][0]
         print('Symbols not having whole range of data:', file=sys.stderr)
         for i, symbol in enumerate(symbols):
-            if len(stocks_data_dfs[i]) != maxlen:
+            if len(stocks_data_dfs[i]) == 0:
+                print('{} has no data between {} and {}'.format(symbol, startdate, enddate), file=sys.stderr)
+            elif len(stocks_data_dfs[i]) != maxlen:
                 print('{}: starting from {}'.format(symbol, stocks_data_dfs[i]['TimeStamp'][0].date().strftime('%Y-%m-%d')),
                       file=sys.stderr)
         if lazy:
@@ -59,6 +65,10 @@ def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=F
             rarray = np.zeros(len(symbols))
             covmat = np.zeros((len(symbols), len(symbols)))
             for i in range(len(symbols)):
+                if symbols[i] in absent_stocks:
+                    rarray[i] = 0.
+                    covmat[i, i] = 1e-10   # infinitesimal value
+                    continue
                 df = stocks_data_dfs[i]
                 r, sigma = fit_BlackScholesMerton_model(
                     np.array(df['TimeStamp']),
@@ -67,6 +77,10 @@ def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=F
                 rarray[i] = r
                 covmat[i, i] = sigma*sigma
             for i, j in product(range(len(symbols)), range(len(symbols))):
+                if symbols[i] in absent_stocks or symbols[j] in absent_stocks:
+                    covmat[i, j] = 0.
+                    covmat[j, i] = 0.
+                    continue
                 df_i = stocks_data_dfs[i]
                 df_j = stocks_data_dfs[j]
                 minlen = min(len(df_i), len(df_j))

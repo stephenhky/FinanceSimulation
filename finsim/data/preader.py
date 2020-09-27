@@ -2,6 +2,7 @@
 from datetime import datetime
 import sys
 
+import pandas as pd
 from pandas_datareader import data
 
 
@@ -16,7 +17,16 @@ def get_yahoofinance_data(symbol, startdate, enddate):
     except KeyError as e:
         print('Symbol {} does not exist between {} and {}.'.format(symbol, startdate, enddate),
               file=sys.stderr)
-        raise e
+        return pd.DataFrame({
+            'TimeStamp': [],
+            'High': [],
+            'Low': [],
+            'Open': [],
+            'Close': [],
+            'Volume': [],
+            'Adj Close': []
+        })
+
     oricols = df.columns
     df['TimeStamp'] = df.index
     # df['Date'] = df['TimeStamp'].apply(lambda ts: ts.date())
