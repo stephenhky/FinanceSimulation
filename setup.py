@@ -37,7 +37,7 @@ setup(
     url="https://github.com/stephenhky/FinanceSimulation",
     author="Kwan-Yuet Ho",
     author_email="stephenhky@yahoo.com.hk",
-    # license='MIT',
+    license='LGPL',
     packages=[
         'finsim',
         'finsim.data',
