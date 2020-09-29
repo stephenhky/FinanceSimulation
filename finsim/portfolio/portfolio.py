@@ -40,9 +40,14 @@ class Portfolio:
             for i, symbol in enumerate(self.symbols_nbshares):
                 thisdflen = len(stocks_data_dfs[i])
                 if thisdflen != maxlen:
-                    print('{}: starting from {}'.format(symbol, stocks_data_dfs[i]['TimeStamp'][0].date().strftime('%Y-%m-%d')),
-                          file=sys.stderr)
-                    predf = pd.DataFrame(stocks_data_dfs[max_timearray_ref]['TimeStamp'][:(maxlen-thisdflen)])
+                    if thisdflen == 0:
+                        print('No data for {} for this date range at all.'.format(symbol), file=sys.stderr)
+                        predf = pd.DataFrame(stocks_data_dfs[max_timearray_ref]['TimeStamp'])
+                    else:
+                        print('{}: starting from {}'.format(symbol, stocks_data_dfs[i]['TimeStamp'][0].date().strftime(
+                            '%Y-%m-%d')),
+                              file=sys.stderr)
+                        predf = pd.DataFrame(stocks_data_dfs[max_timearray_ref]['TimeStamp'][:(maxlen - thisdflen)])
                     predf[stocks_data_dfs[max_timearray_ref].columns[1:]] = 0
                     stocks_data_dfs[i] = predf.append(stocks_data_dfs[i])
 
