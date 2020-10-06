@@ -18,11 +18,12 @@ def get_symbol_closing_price(symbol, datestr, epsilon=1e-10):
         return epsilon
 
 
-def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=False, epsilon=1e-10):
+def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=False, epsilon=1e-10, progressbar=True):
     print('Reading financial data...')
+    symreadingprogress = tqdm(symbols) if progressbar else symbols
     stocks_data_dfs = [
         get_yahoofinance_data(sym, startdate, enddate)
-        for sym in tqdm(symbols)
+        for sym in symreadingprogress
     ]
 
     print('Estimating...')
