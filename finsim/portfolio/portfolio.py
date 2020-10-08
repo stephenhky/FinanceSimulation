@@ -51,15 +51,11 @@ class Portfolio:
                     predf[stocks_data_dfs[max_timearray_ref].columns[1:]] = 0
                     stocks_data_dfs[i] = predf.append(stocks_data_dfs[i])
 
-            # print('Estimation starting from {}'.format(
-            #     stocks_data_dfs[max_timearray_ref]['TimeStamp'][-minlen].date().strftime('%Y-%m-%d')),
-            #       file=sys.stderr)
-
         df = pd.DataFrame(stocks_data_dfs[max_timearray_ref]['TimeStamp'])
         df['value'] = sum([
             self.symbols_nbshares[sym] * stocks_data_dfs[i]['Close']
             for i, sym in enumerate(self.symbols_nbshares.keys())
-            ])
+        ])
         return df
 
     @property
@@ -162,9 +158,9 @@ class OptimizedWeightingPolicy:
 
 
 class OptimizedPortfolio(Portfolio):
-    def __init__(self, portfolio, totalworth, presetdate):
+    def __init__(self, policy, totalworth, presetdate):
         super(OptimizedPortfolio, self).__init__({})
-        self.portfolio = portfolio
+        self.policy = policy
         self.totalworth = totalworth
         self.presetdate = presetdate
         self.compute()
@@ -172,9 +168,9 @@ class OptimizedPortfolio(Portfolio):
     def compute(self):
         prices = {
             symbol: get_symbol_closing_price(symbol, self.presetdate)
-            for symbol in self.portfolio.symbols
+            for symbol in self.policy.symbols
         }
-        summary = self.portfolio.portfolio_summary
+        summary = self.policy.portfolio_summary
         for component in summary['components']:
             symbol = component['symbol']
             component['nbshares'] = component['weight'] * self.totalworth / prices[symbol]
@@ -184,31 +180,31 @@ class OptimizedPortfolio(Portfolio):
 
     @property
     def portfolio_symbols(self):
-        return self.portfolio.portfolio_symbols
+        return self.policy.portfolio_symbols
 
     @property
     def weights(self):
-        return self.portfolio.weights
+        return self.policy.weights
 
     @property
     def portfolio_yield(self):
-        return self.portfolio.portfolio_yield
+        return self.policy.portfolio_yield
 
     @property
     def volatility(self):
-        return self.portfolio.volatility
+        return self.policy.volatility
 
     @property
     def sharpe_ratio(self):
-        return self.portfolio.sharpe_ratio
+        return self.policy.sharpe_ratio
 
     @property
     def correlation_matrix(self):
-        return self.portfolio.correlation_matrix
+        return self.policy.correlation_matrix
 
     @property
     def named_correlation_matrix(self):
-        return self.portfolio.named_correlation_matrix
+        return self.policy.named_correlation_matrix
 
     @property
     def portfolio_summary(self):
