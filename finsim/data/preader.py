@@ -1,6 +1,7 @@
 
 from datetime import datetime
 import sys
+import logging
 
 import pandas as pd
 from pandas_datareader import data
@@ -16,8 +17,7 @@ def get_yahoofinance_data(symbol, startdate, enddate):
             end=datetime.strptime(enddate, '%Y-%m-%d')
         )
     except (KeyError, RemoteDataError) as e:
-        print('Symbol {} does not exist between {} and {}.'.format(symbol, startdate, enddate),
-              file=sys.stderr)
+        logging.warning('Symbol {} does not exist between {} and {}.'.format(symbol, startdate, enddate))
         return pd.DataFrame({
             'TimeStamp': [],
             'High': [],
