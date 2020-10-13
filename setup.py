@@ -18,7 +18,7 @@ def package_description():
 
 setup(
     name='finsim',
-    version="0.0.3",
+    version="0.0.4a01",
     description="Financial simulation and inference",
     long_description=package_description(),
     long_description_content_type='text/markdown',
@@ -48,7 +48,7 @@ setup(
     ],
     install_requires=install_requirements(),
     tests_require=[
-      'unittest2',
+      'unittest2', 'pytest'
     ],
     # scripts=[],
     include_package_data=True,
