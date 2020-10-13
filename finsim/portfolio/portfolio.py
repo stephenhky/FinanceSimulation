@@ -1,6 +1,7 @@
 
 import sys
 from itertools import product
+import logging
 
 from tqdm import tqdm
 import numpy as np
@@ -23,30 +24,28 @@ class Portfolio:
         return portfolio_value
 
     def get_portfolio_values_overtime(self, startdate, enddate):
-        print('Reading financial data...')
+        logging.info('Reading financial data...')
         stocks_data_dfs = [
             get_yahoofinance_data(sym, startdate, enddate)
             for sym in tqdm(self.symbols_nbshares.keys())
         ]
 
-        print('Estimating...')
+        logging.info('Estimating...')
         max_timearray_ref = 0
         maxlen = max(len(stocks_data_dfs[i]) for i in range(len(stocks_data_dfs)))
         minlen = min(len(stocks_data_dfs[i]) for i in range(len(stocks_data_dfs)))
         if minlen != maxlen:
-            print('Not all symbols have data all the way back to {}'.format(startdate), file=sys.stderr)
+            logging.warning('Not all symbols have data all the way back to {}'.format(startdate))
             max_timearray_ref = [i for i in range(len(stocks_data_dfs)) if maxlen == len(stocks_data_dfs[i])][0]
-            print('Symbols not having whole range of data:', file=sys.stderr)
+            logging.warning('Symbols not having whole range of data:')
             for i, symbol in enumerate(self.symbols_nbshares):
                 thisdflen = len(stocks_data_dfs[i])
                 if thisdflen != maxlen:
                     if thisdflen == 0:
-                        print('No data for {} for this date range at all.'.format(symbol), file=sys.stderr)
+                        logging.warning('No data for {} for this date range at all.'.format(symbol))
                         predf = pd.DataFrame(stocks_data_dfs[max_timearray_ref]['TimeStamp'])
                     else:
-                        print('{}: starting from {}'.format(symbol, stocks_data_dfs[i]['TimeStamp'][0].date().strftime(
-                            '%Y-%m-%d')),
-                              file=sys.stderr)
+                        logging.warning('{}: starting from {}'.format(symbol, stocks_data_dfs[i]['TimeStamp'][0].date().strftime('%Y-%m-%d')))
                         predf = pd.DataFrame(stocks_data_dfs[max_timearray_ref]['TimeStamp'][:(maxlen - thisdflen)])
                     predf[stocks_data_dfs[max_timearray_ref].columns[1:]] = 0
                     stocks_data_dfs[i] = predf.append(stocks_data_dfs[i])

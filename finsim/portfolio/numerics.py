@@ -1,6 +1,8 @@
+
 import sys
 from functools import partial
 from itertools import product
+import logging
 
 import numpy as np
 from scipy.optimize import LinearConstraint, minimize
@@ -19,14 +21,14 @@ def get_symbol_closing_price(symbol, datestr, epsilon=1e-10):
 
 
 def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=False, epsilon=1e-10, progressbar=True):
-    print('Reading financial data...')
+    logging.info('Reading financial data...')
     symreadingprogress = tqdm(symbols) if progressbar else symbols
     stocks_data_dfs = [
         get_yahoofinance_data(sym, startdate, enddate)
         for sym in symreadingprogress
     ]
 
-    print('Estimating...')
+    logging.info('Estimating...')
     max_timearray_ref = 0
     maxlen = max(len(stocks_data_dfs[i]) for i in range(len(stocks_data_dfs)))
     minlen = min(len(stocks_data_dfs[i]) for i in range(len(stocks_data_dfs)) if len(stocks_data_dfs) > 0)   # exclude those stocks that do not exist
@@ -40,19 +42,17 @@ def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=F
             ])
         )
     if maxlen != minlen:
-        print('Not all symbols have data all the way back to {}'.format(startdate), file=sys.stderr)
+        logging.warning('Not all symbols have data all the way back to {}'.format(startdate))
         max_timearray_ref = [i for i in range(len(stocks_data_dfs)) if maxlen == len(stocks_data_dfs[i])][0]
-        print('Symbols not having whole range of data:', file=sys.stderr)
+        logging.warning('Symbols not having whole range of data:')
         for i, symbol in enumerate(symbols):
             if len(stocks_data_dfs[i]) == 0:
-                print('{} has no data between {} and {}'.format(symbol, startdate, enddate), file=sys.stderr)
+                logging.warning('{} has no data between {} and {}'.format(symbol, startdate, enddate))
             elif len(stocks_data_dfs[i]) != maxlen:
-                print('{}: starting from {}'.format(symbol, stocks_data_dfs[i]['TimeStamp'][0].date().strftime('%Y-%m-%d')),
-                      file=sys.stderr)
+                logging.warning('{}: starting from {}'.format(symbol, stocks_data_dfs[i]['TimeStamp'][0].date().strftime('%Y-%m-%d')))
         if lazy:
-            print('Estimation starting from {}'.format(
-                stocks_data_dfs[max_timearray_ref]['TimeStamp'][-minlen].date().strftime('%Y-%m-%d')),
-                  file=sys.stderr)
+            logging.warning('Estimation starting from {}'.format(
+                stocks_data_dfs[max_timearray_ref]['TimeStamp'][-minlen].date().strftime('%Y-%m-%d')))
             multiprices = np.array([
                 np.array(stocks_data_dfs[i]['Close'][-minlen:])
                 for i in range(len(stocks_data_dfs))
@@ -62,7 +62,7 @@ def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=F
                 multiprices
             )
         else:
-            print('Estimating with various time lengths...', file=sys.stderr)
+            logging.warning('Estimating with various time lengths...')
             rarray = np.zeros(len(symbols))
             covmat = np.zeros((len(symbols), len(symbols)))
             for i in range(len(symbols)):
