@@ -81,7 +81,7 @@ class OptimizedWeightingPolicy:
         if r is not None and cov is not None:
             self.optimize(r, cov, symbols=symbols)
 
-    def optimize(self, r, cov, symbols=None):
+    def optimize_modern_portfolio_theory(self, r, cov, symbols=None):
         assert len(r) == cov.shape[0]
         assert cov.shape[0] == cov.shape[1]
         if symbols is not None:
@@ -101,6 +101,12 @@ class OptimizedWeightingPolicy:
             np.expand_dims(self.optimized_weights, axis=0)
         )
         self.optimized_volatility = np.sqrt(np.sum(sqweights * self.cov))
+
+    def optimize(self, r, cov, symbols=None, theory='MPT'):
+        if theory.upper() == 'MPT':
+            return self.optimize_modern_portfolio_theory(r, cov, symbols=symbols)
+        else:
+            pass
 
     @property
     def portfolio_symbols(self):
