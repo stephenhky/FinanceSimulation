@@ -68,7 +68,7 @@ def get_yahoofinance_data(symbol, startdate, enddate, cacheddir=None):
         preexist = False
         for row in table.where('symbol=="{}"'.format(symbol)):
             preexist = True
-            if row['query_startdate'] >= startdate and row['query_enddate'] <= enddate:
+            if row['query_startdate'].decode('utf-8') <= startdate and row['query_enddate'].decode('utf-8') >= enddate:
                 df = pd.read_hdf(os.path.join(cacheddir, '{}.h5'.format(symbol)), 'yahoodata')
                 df = df[ (df['TimeStamp']>=startdate) & (df['TimeStamp']<=enddate) ]
                 return df
