@@ -13,18 +13,18 @@ from ..estimate.fit import fit_multivariate_BlackScholesMerton_model, fit_BlackS
 from .metrics import sharpe_ratio
 
 
-def get_symbol_closing_price(symbol, datestr, epsilon=1e-10):
+def get_symbol_closing_price(symbol, datestr, epsilon=1e-10, cacheddir=None):
     try:
-        return get_yahoofinance_data(symbol, datestr, datestr)['Close'][0]
+        return get_yahoofinance_data(symbol, datestr, datestr, cacheddir=cacheddir)['Close'][0]
     except KeyError:
         return epsilon
 
 
-def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=False, epsilon=1e-10, progressbar=True):
+def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=False, epsilon=1e-10, progressbar=True, cacheddir=None):
     logging.info('Reading financial data...')
     symreadingprogress = tqdm(symbols) if progressbar else symbols
     stocks_data_dfs = [
-        get_yahoofinance_data(sym, startdate, enddate)
+        get_yahoofinance_data(sym, startdate, enddate, cacheddir=cacheddir)
         for sym in symreadingprogress
     ]
 

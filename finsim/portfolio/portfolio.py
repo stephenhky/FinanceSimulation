@@ -23,10 +23,10 @@ class Portfolio:
         ])
         return portfolio_value
 
-    def get_portfolio_values_overtime(self, startdate, enddate):
+    def get_portfolio_values_overtime(self, startdate, enddate, cacheddir=None):
         logging.info('Reading financial data...')
         stocks_data_dfs = [
-            get_yahoofinance_data(sym, startdate, enddate)
+            get_yahoofinance_data(sym, startdate, enddate, cacheddir=cacheddir)
             for sym in tqdm(self.symbols_nbshares.keys())
         ]
 
@@ -227,13 +227,15 @@ def get_optimized_portfolio(
         estimating_startdate,
         estimating_enddate,
         minweight=0.,
-        lazy=False
+        lazy=False,
+        cacheddir=None
 ):
     r, cov = get_BlackScholesMerton_stocks_estimation(
         symbols,
         estimating_startdate,
         estimating_enddate,
-        lazy=lazy
+        lazy=lazy,
+        cacheddir=cacheddir
     )
     optimized_weighting_policy = OptimizedWeightingPolicy(rf, r, cov, symbols, minweight=minweight)
     optimized_portfolio = OptimizedPortfolio(optimized_weighting_policy, totalworth, presetdate)

@@ -82,8 +82,12 @@ def get_yahoofinance_data(symbol, startdate, enddate, cacheddir=None):
             for row in table.where('symbol=="{}"'.format(symbol)):
                 row['query_startdate'] = startdate
                 row['query_enddate'] = enddate
-                row['data_startdate'] = datetime.strftime(df['TimeStamp'][0].date(), '%Y-%m-%d')
-                row['data_enddate'] = datetime.strftime(df['TimeStamp'][-1].date(), '%Y-%m-%d')
+                if len(df) > 0:
+                    row['data_startdate'] = datetime.strftime(df['TimeStamp'][0].date(), '%Y-%m-%d')
+                    row['data_enddate'] = datetime.strftime(df['TimeStamp'][-1].date(), '%Y-%m-%d')
+                else:
+                    row['data_startdate'] = '0000-00-00'
+                    row['data_enddate'] = ' 0000-00-00'
                 row.update()
         else:
             logging.debug('Creating symbol {} in metatable'.format(symbol))
@@ -91,11 +95,17 @@ def get_yahoofinance_data(symbol, startdate, enddate, cacheddir=None):
             newrow['symbol'] = symbol
             newrow['query_startdate'] = startdate
             newrow['query_enddate'] = enddate
-            newrow['data_startdate'] = datetime.strftime(df['TimeStamp'][0].date(), '%Y-%m-%d')
-            newrow['data_enddate'] = datetime.strftime(df['TimeStamp'][-1].date(), '%Y-%m-%d')
+            if len(df) > 0:
+                newrow['data_startdate'] = datetime.strftime(df['TimeStamp'][0].date(), '%Y-%m-%d')
+                newrow['data_enddate'] = datetime.strftime(df['TimeStamp'][-1].date(), '%Y-%m-%d')
+            else:
+                newrow['data_startdate'] = '0000-00-00'
+                newrow['data_enddate'] = '0000-00-00'
             newrow.append()
 
         table.flush()
         metatable_h5file.close()
 
         return df
+    else:
+        raise TypeError('Type of cacheddir has to be str, but got {} instead!'.format(type(cacheddir)))
