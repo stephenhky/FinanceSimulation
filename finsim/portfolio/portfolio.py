@@ -13,12 +13,13 @@ from ..data.preader import get_yahoofinance_data
 
 
 class Portfolio:
-    def __init__(self, symbols_nbshares):   # symbols_nbshares = {'NVDA': 200, 'AMZN': 101}
+    def __init__(self, symbols_nbshares, cacheddir=None):   # symbols_nbshares = {'NVDA': 200, 'AMZN': 101}
         self.symbols_nbshares = symbols_nbshares
+        self.cacheddir = cacheddir
 
     def get_portfolio_value(self, datestr):
         portfolio_value = sum([
-            self.symbols_nbshares[symbol] * get_symbol_closing_price(symbol, datestr)
+            self.symbols_nbshares[symbol] * get_symbol_closing_price(symbol, datestr, cacheddir=self.cacheddir)
             for symbol in self.symbols_nbshares
         ])
         return portfolio_value
@@ -163,16 +164,17 @@ class OptimizedWeightingPolicy:
 
 
 class OptimizedPortfolio(Portfolio):
-    def __init__(self, policy, totalworth, presetdate):
+    def __init__(self, policy, totalworth, presetdate, cacheddir=None):
         super(OptimizedPortfolio, self).__init__({})
         self.policy = policy
         self.totalworth = totalworth
         self.presetdate = presetdate
         self.compute()
+        self.cacheddir = cacheddir
 
     def compute(self):
         prices = {
-            symbol: get_symbol_closing_price(symbol, self.presetdate)
+            symbol: get_symbol_closing_price(symbol, self.presetdate, cacheddir=self.cacheddir)
             for symbol in self.policy.symbols
         }
         summary = self.policy.portfolio_summary
