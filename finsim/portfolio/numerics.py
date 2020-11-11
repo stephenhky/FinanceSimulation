@@ -1,16 +1,12 @@
 
-import sys
-from functools import partial
 from itertools import product
 import logging
 
 import numpy as np
-from scipy.optimize import LinearConstraint, minimize
 from tqdm import tqdm
 
 from ..data.preader import get_yahoofinance_data
 from ..estimate.fit import fit_multivariate_BlackScholesMerton_model, fit_BlackScholesMerton_model
-from .metrics import sharpe_ratio
 
 
 def get_symbol_closing_price(symbol, datestr, epsilon=1e-10, cacheddir=None):
@@ -95,18 +91,3 @@ def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=F
                 covmat[i, j] = cov[0, 1]
                 covmat[j, i] = cov[1, 0]
             return rarray, covmat
-
-
-def optimized_portfolio_on_sharperatio(r, cov, rf, minweight=0.):
-    func = partial(sharpe_ratio, r=r, cov=cov, rf=rf)
-    nbstocks = len(r)
-    initialguess = np.repeat(1 / nbstocks, nbstocks)
-    constraints = [
-        LinearConstraint(np.eye(nbstocks), minweight, 1.),
-        LinearConstraint(np.array([np.repeat(1, nbstocks)]), 1, 1)
-    ]
-    return minimize(
-        lambda weights: -func(weights),
-        initialguess,
-        constraints=constraints
-    )
