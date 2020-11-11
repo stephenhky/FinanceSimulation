@@ -4,7 +4,7 @@ import logging
 from tqdm import tqdm
 import pandas as pd
 
-from .optimize.policy import OptimizedWeightingPolicy
+from .optimize.policy import OptimizedWeightingPolicyUsingMPTSharpeRatio
 from .numerics import get_BlackScholesMerton_stocks_estimation
 from .numerics import get_symbol_closing_price
 from ..data.preader import get_yahoofinance_data
@@ -110,10 +110,6 @@ class OptimizedPortfolio(Portfolio):
         return self.policy.volatility
 
     @property
-    def sharpe_ratio(self):
-        return self.policy.sharpe_ratio
-
-    @property
     def correlation_matrix(self):
         return self.policy.correlation_matrix
 
@@ -147,6 +143,6 @@ def get_optimized_portfolio(
         lazy=lazy,
         cacheddir=cacheddir
     )
-    optimized_weighting_policy = OptimizedWeightingPolicy(rf, r, cov, symbols, minweight=minweight)
+    optimized_weighting_policy = OptimizedWeightingPolicyUsingMPTSharpeRatio(rf, r, cov, symbols, minweight=minweight)
     optimized_portfolio = OptimizedPortfolio(optimized_weighting_policy, totalworth, presetdate)
     return optimized_portfolio
