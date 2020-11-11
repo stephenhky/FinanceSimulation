@@ -4,7 +4,7 @@ from functools import partial
 import numpy as np
 from scipy.optimize import LinearConstraint, minimize
 
-from finsim.portfolio.metrics import sharpe_ratio
+from .metrics import sharpe_ratio
 
 
 def optimized_portfolio_on_sharperatio(r, cov, rf, minweight=0.):

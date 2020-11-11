@@ -4,7 +4,7 @@ import logging
 from tqdm import tqdm
 import pandas as pd
 
-from . import OptimizedWeightingPolicy
+from .optimize.policy import OptimizedWeightingPolicy
 from .numerics import get_BlackScholesMerton_stocks_estimation
 from .numerics import get_symbol_closing_price
 from ..data.preader import get_yahoofinance_data
