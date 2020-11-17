@@ -18,7 +18,7 @@ class TestDownsideRisk(unittest.TestCase):
         S_array = np.exp(np.cumsum(r_fake_array))
         ts = np.linspace(0, 5, 6)
         downside_risk = downrisk.estimate_downside_risk(ts, S_array, 0.0)
-        self.assertAlmostEqual(downside_risk, 0.1/3)
+        self.assertAlmostEqual(downside_risk, np.sqrt(0.02/5))
 
 
 if __name__ == '__main__':

@@ -9,5 +9,7 @@ def numba_estimate_downside_risk(ts, prices, target_return):
     dt = ts[1:] - ts[:-1]
 
     rarray = dlogS / dt
-    downside_risk = np.sqrt(np.mean(np.square(np.max(0, target_return-rarray))))
+    less_return_array = target_return - rarray
+    less_return_array[less_return_array < 0] = 0.
+    downside_risk = np.sqrt(np.mean(np.square(less_return_array)))
     return downside_risk
