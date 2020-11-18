@@ -1,5 +1,5 @@
 
-from .native.numbadownrisk import numba_estimate_downside_risk
+from .native.numbarisk import numba_estimate_downside_risk
 
 
 def estimate_downside_risk(ts, prices, target_return):
