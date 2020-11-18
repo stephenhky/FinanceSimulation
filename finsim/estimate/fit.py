@@ -1,16 +1,8 @@
 
 import numpy as np
 
+from .constants import dividing_factors_dict
 from .native.numbafit import numba_fit_BlackScholesMerton_model, numba_fit_multivariate_BlackScholesMerton_model
-
-
-dividing_factors_dict = {
-    'second': 1.0,
-    'minute': 60.0,
-    'hour': 60.0*60.0,
-    'day': 60.0*60.0*24.0,
-    'year': 60.0*60.0*24.0*365.0
-}
 
 
 # Note: always round-off to seconds first, but flexible about the unit to be used.
