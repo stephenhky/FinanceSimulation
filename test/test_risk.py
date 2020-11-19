@@ -22,7 +22,7 @@ class TestRisk(unittest.TestCase):
 
     def test_noupward_movement(self):
         ts = np.linspace(0, 10, 11)
-        S = np.linspace(1.0, 0.9, 0.8)
+        S = np.linspace(1.0, 0.5, 11)
         upside_risk = risk.numba_estimate_upside_risk(ts, S, 0.0)
         self.assertAlmostEqual(upside_risk, 0.0)
 
