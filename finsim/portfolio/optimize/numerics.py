@@ -22,4 +22,4 @@ def optimized_portfolio_on_sharperatio(r, cov, rf, minweight=0.):
     )
 
 
-
+def optimized_portfolio_expectation_maximization(r, cov, rf, V0, c):
