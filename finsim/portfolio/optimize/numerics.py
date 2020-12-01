@@ -20,3 +20,6 @@ def optimized_portfolio_on_sharperatio(r, cov, rf, minweight=0.):
         initialguess,
         constraints=constraints
     )
+
+
+

@@ -19,35 +19,34 @@ class OptimizedWeightingPolicy(ABC):
             self.optimize(r, cov, symbols=symbols)
 
     @abstractmethod
-    def optimize(self, r, cov, symbols=None, theory='MPT'):
-        # calculating
-        # self.r
-        # self.cov
-        # self.symbols
-        # self.optimized_weights
-        # self.optimized_portfolio_yield
-        # self.optimized_volatility
-        pass
+    def optimize(self, r, cov, symbols=None):
+        assert len(r) == cov.shape[0]
+        assert cov.shape[0] == cov.shape[1]
+        if symbols is not None:
+            assert len(r) == len(symbols)
+
+        self.r = r
+        self.cov = cov
+        self.symbols = symbols if symbols is not None else list(range(len(r)))
 
     @property
     def portfolio_symbols(self):
         return self.symbols
 
     @property
+    @abstractmethod
     def weights(self):
-        return self.optimized_weights
+        pass
 
     @property
+    @abstractmethod
     def portfolio_yield(self):
-        return self.optimized_portfolio_yield
+        pass
 
     @property
+    @abstractmethod
     def volatility(self):
-        return self.optimized_volatility
-
-    @property
-    def sharpe_ratio(self):
-        return self.optimized_sharpe_ratio
+        pass
 
     @property
     def correlation_matrix(self):
@@ -77,22 +76,14 @@ class OptimizedWeightingPolicy(ABC):
             ],
             'yield': self.optimized_portfolio_yield,
             'volatility': self.optimized_volatility,
-            'sharpe_ratio': self.optimized_sharpe_ratio,
             'correlation': self.correlation_matrix
         }
         return summary
 
 
 class OptimizedWeightingPolicyUsingMPTSharpeRatio(OptimizedWeightingPolicy):
-    def optimize_modern_portfolio_theory(self, r, cov, symbols=None):
-        assert len(r) == cov.shape[0]
-        assert cov.shape[0] == cov.shape[1]
-        if symbols is not None:
-            assert len(r) == len(symbols)
-
-        self.r = r
-        self.cov = cov
-        self.symbols = symbols if symbols is not None else list(range(len(r)))
+    def optimize(self, r, cov, symbols=None):
+        super(OptimizedWeightingPolicyUsingMPTSharpeRatio, self).optimize(r, cov, symbols=symbols)
         self.optimized_sol = optimized_portfolio_on_sharperatio(r, cov, self.rf, minweight=self.minweight)
         self.optimized = True
 
@@ -105,5 +96,25 @@ class OptimizedWeightingPolicyUsingMPTSharpeRatio(OptimizedWeightingPolicy):
         )
         self.optimized_volatility = np.sqrt(np.sum(sqweights * self.cov))
 
-    def optimize(self, r, cov, symbols=None):
-        return self.optimize_modern_portfolio_theory(r, cov, symbols=symbols)
+
+    @property
+    def weights(self):
+        return self.optimized_weights
+
+    @property
+    def portfolio_yield(self):
+        return self.optimized_portfolio_yield
+
+    @property
+    def volatility(self):
+        return self.optimized_volatility
+
+    @property
+    def sharpe_ratio(self):
+        return self.optimized_sharpe_ratio
+
+    @property
+    def portfolio_summary(self):
+        summary = super(OptimizedWeightingPolicyUsingMPTSharpeRatio, self).portfolio_summary
+        summary['sharpe_ratio'] = self.optimized_sharpe_ratio
+        return summary
