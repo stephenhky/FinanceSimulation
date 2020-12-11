@@ -118,3 +118,7 @@ class OptimizedWeightingPolicyUsingMPTSharpeRatio(OptimizedWeightingPolicy):
         summary = super(OptimizedWeightingPolicyUsingMPTSharpeRatio, self).portfolio_summary
         summary['sharpe_ratio'] = self.optimized_sharpe_ratio
         return summary
+
+
+class OptimizedWeightingPolicyUsingMPTCostFunction(OptimizedWeightingPolicy):
+    pass
