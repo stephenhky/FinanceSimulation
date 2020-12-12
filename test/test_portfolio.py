@@ -7,7 +7,7 @@ from finsim.portfolio import get_optimized_portfolio
 
 
 class TestPortfolio(unittest.TestCase):
-    def test_modern_portfolio_theory(self):
+    def test_modern_portfolio_sharpe_ratio(self):
         selected_symbols = ['NVDA', 'AMZN', 'BAH', 'GD']
 
         startdate = '2010-01-01'
@@ -30,6 +30,7 @@ class TestPortfolio(unittest.TestCase):
                       [0.42612949, 0.37066551, 0.34781397, 1.        ]]
                      )
         )
+
 
 if __name__ == '__main__':
     unittest.main()

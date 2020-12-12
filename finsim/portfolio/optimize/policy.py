@@ -5,21 +5,13 @@ from abc import ABC, abstractmethod
 import numpy as np
 import pandas as pd
 
-from .numerics import optimized_portfolio_on_sharperatio
+from .numerics import optimized_portfolio_on_sharperatio, optimized_portfolio_expectation_maximization
 
 
 class OptimizedWeightingPolicy(ABC):
-    def __init__(self, rf, r=None, cov=None, symbols=None, minweight=0.):
+    def __init__(self, rf, r=None, cov=None, symbols=None):
         self.rf = rf
-        self.optimized = False
-        self.minweight = minweight
 
-        self.optimized = False
-        if r is not None and cov is not None:
-            self.optimize(r, cov, symbols=symbols)
-
-    @abstractmethod
-    def optimize(self, r, cov, symbols=None):
         assert len(r) == cov.shape[0]
         assert cov.shape[0] == cov.shape[1]
         if symbols is not None:
@@ -28,6 +20,12 @@ class OptimizedWeightingPolicy(ABC):
         self.r = r
         self.cov = cov
         self.symbols = symbols if symbols is not None else list(range(len(r)))
+
+        self.optimized = False
+
+    @abstractmethod
+    def optimize(self, r, cov, symbols=None):
+        pass
 
     @property
     def portfolio_symbols(self):
@@ -82,6 +80,12 @@ class OptimizedWeightingPolicy(ABC):
 
 
 class OptimizedWeightingPolicyUsingMPTSharpeRatio(OptimizedWeightingPolicy):
+    def __init__(self, rf, r=None, cov=None, symbols=None, minweight=0.):
+        super(OptimizedWeightingPolicyUsingMPTSharpeRatio, self).__init__(rf, r=r, cov=cov, symbols=symbols)
+        self.minweight = minweight
+        if r is not None and cov is not None:
+            self.optimize(r, cov, symbols=symbols)
+
     def optimize(self, r, cov, symbols=None):
         super(OptimizedWeightingPolicyUsingMPTSharpeRatio, self).optimize(r, cov, symbols=symbols)
         self.optimized_sol = optimized_portfolio_on_sharperatio(r, cov, self.rf, minweight=self.minweight)
@@ -95,7 +99,6 @@ class OptimizedWeightingPolicyUsingMPTSharpeRatio(OptimizedWeightingPolicy):
             np.expand_dims(self.optimized_weights, axis=0)
         )
         self.optimized_volatility = np.sqrt(np.sum(sqweights * self.cov))
-
 
     @property
     def weights(self):
@@ -121,4 +124,47 @@ class OptimizedWeightingPolicyUsingMPTSharpeRatio(OptimizedWeightingPolicy):
 
 
 class OptimizedWeightingPolicyUsingMPTCostFunction(OptimizedWeightingPolicy):
-    pass
+    def __init__(self, rf, r=None, cov=None, symbols=None, V0=None, c=None):
+        super(OptimizedWeightingPolicyUsingMPTCostFunction, self).__init__(rf, r=r, cov=cov, symbols=symbols)
+        self.V0 = V0
+        self.c = c
+
+        if r is not None and cov is not None:
+            self.optimize(r, cov, symbols=symbols)
+
+    def optimize(self, r, cov, symbols=None):
+        super(OptimizedWeightingPolicyUsingMPTCostFunction, self).optimize(r, cov, symbols=symbols)
+        self.optimized_sol = optimized_portfolio_expectation_maximization(r, cov, self.rf, self.V0, self.c)
+        self.optimized = True
+
+        self.optimized_unnormalized_weights = self.optimized_sol.x
+        self.optimized_weights = self.optimized_unnormalized_weights[:-1] / np.sum(self.optimized_unnormalized_weights[:-1])
+        self.optimized_costfunction = -self.optimized_sol.fun
+        self.optimized_portfolio_yield = np.sum(self.optimized_weights * self.r)
+        sqweights = np.matmul(
+            np.expand_dims(self.optimized_weights, axis=1),
+            np.expand_dims(self.optimized_weights, axis=0)
+        )
+        self.optimized_volatility = np.sqrt(np.sum(sqweights * self.cov))
+
+    @property
+    def weights(self):
+        return self.optimized_weights
+
+    @property
+    def portfolio_yield(self):
+        return self.optimized_portfolio_yield
+
+    @property
+    def volatility(self):
+        return self.optimized_volatility
+
+    @property
+    def mpt_costfunction(self):
+        return self.optimized_costfunction
+
+    @property
+    def portfolio_summary(self):
+        summary = super(OptimizedWeightingPolicyUsingMPTCostFunction, self).portfolio_summary
+        summary['sharpe_ratio'] = self.mpt_costfunction
+        return summary
