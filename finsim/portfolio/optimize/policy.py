@@ -167,4 +167,6 @@ class OptimizedWeightingPolicyUsingMPTCostFunction(OptimizedWeightingPolicy):
     def portfolio_summary(self):
         summary = super(OptimizedWeightingPolicyUsingMPTCostFunction, self).portfolio_summary
         summary['mpt_costfunction'] = self.mpt_costfunction
+        summary['V0'] = self.V0
+        summary['c'] = self.c
         return summary

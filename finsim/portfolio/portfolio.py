@@ -125,7 +125,7 @@ class OptimizedPortfolio(Portfolio):
         return Portfolio(self.symbols_nbshares)
 
 
-def get_optimized_portfolio(
+def get_optimized_portfolio_on_sharpe_ratio(
         rf,
         symbols,
         totalworth,
@@ -133,6 +133,30 @@ def get_optimized_portfolio(
         estimating_startdate,
         estimating_enddate,
         minweight=0.,
+        lazy=False,
+        cacheddir=None
+):
+    r, cov = get_BlackScholesMerton_stocks_estimation(
+        symbols,
+        estimating_startdate,
+        estimating_enddate,
+        lazy=lazy,
+        cacheddir=cacheddir
+    )
+    optimized_weighting_policy = OptimizedWeightingPolicyUsingMPTSharpeRatio(rf, r, cov, symbols, minweight=minweight)
+    optimized_portfolio = OptimizedPortfolio(optimized_weighting_policy, totalworth, presetdate)
+    return optimized_portfolio
+
+
+def get_optimized_portfolio_on_mpt_costfunction(
+        rf,
+        symbols,
+        totalworth,
+        presetdate,
+        estimating_startdate,
+        estimating_enddate,
+        V0=1.,
+        c=10.,
         lazy=False,
         cacheddir=None
 ):
