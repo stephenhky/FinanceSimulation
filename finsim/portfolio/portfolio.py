@@ -4,7 +4,7 @@ import logging
 from tqdm import tqdm
 import pandas as pd
 
-from .optimize.policy import OptimizedWeightingPolicyUsingMPTSharpeRatio
+from .optimize.policy import OptimizedWeightingPolicyUsingMPTSharpeRatio, OptimizedWeightingPolicyUsingMPTCostFunction
 from .numerics import get_BlackScholesMerton_stocks_estimation
 from .numerics import get_symbol_closing_price
 from ..data.preader import get_yahoofinance_data
@@ -167,6 +167,6 @@ def get_optimized_portfolio_on_mpt_costfunction(
         lazy=lazy,
         cacheddir=cacheddir
     )
-    optimized_weighting_policy = OptimizedWeightingPolicyUsingMPTSharpeRatio(rf, r, cov, symbols, minweight=minweight)
+    optimized_weighting_policy = OptimizedWeightingPolicyUsingMPTCostFunction(rf, r, cov, symbols, V0, c)
     optimized_portfolio = OptimizedPortfolio(optimized_weighting_policy, totalworth, presetdate)
     return optimized_portfolio
