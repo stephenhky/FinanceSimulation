@@ -166,5 +166,5 @@ class OptimizedWeightingPolicyUsingMPTCostFunction(OptimizedWeightingPolicy):
     @property
     def portfolio_summary(self):
         summary = super(OptimizedWeightingPolicyUsingMPTCostFunction, self).portfolio_summary
-        summary['sharpe_ratio'] = self.mpt_costfunction
+        summary['mpt_costfunction'] = self.mpt_costfunction
         return summary

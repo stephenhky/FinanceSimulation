@@ -14,4 +14,4 @@ def sharpe_ratio(weights, r, cov, rf):
 
 def mpt_costfunction(weights, r, cov, rf, V0, c):
     rmat = np.expand_dims(r, axis=0)
-    return weights[-1]*rf + weights*r - 0.5*c/V0*np.matmul(np.matmul(rmat, cov), rmat.T)
+    return weights[-1]*rf + np.dot(weights[:-1], r) - 0.5*c/V0*np.matmul(np.matmul(rmat, cov), rmat.T)[0, 0]
