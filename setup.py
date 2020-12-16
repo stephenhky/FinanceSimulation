@@ -18,7 +18,7 @@ def package_description():
 
 setup(
     name='finsim',
-    version="0.2.1",
+    version="0.3.0a1",
     description="Financial simulation and inference",
     long_description=package_description(),
     long_description_content_type='text/markdown',
@@ -44,7 +44,8 @@ setup(
         'finsim.estimate',
         'finsim.estimate.native',
         'finsim.simulation',
-        'finsim.portfolio'
+        'finsim.portfolio',
+        'finsim.portfolio.optimize'
     ],
     install_requires=install_requirements(),
     tests_require=[
