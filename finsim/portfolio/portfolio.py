@@ -144,7 +144,7 @@ def get_optimized_portfolio_on_sharpe_ratio(
         cacheddir=cacheddir
     )
     optimized_weighting_policy = OptimizedWeightingPolicyUsingMPTSharpeRatio(rf, r, cov, symbols, minweight=minweight)
-    optimized_portfolio = OptimizedPortfolio(optimized_weighting_policy, totalworth, presetdate)
+    optimized_portfolio = OptimizedPortfolio(optimized_weighting_policy, totalworth, presetdate, cacheddir=cacheddir)
     return optimized_portfolio
 
 
