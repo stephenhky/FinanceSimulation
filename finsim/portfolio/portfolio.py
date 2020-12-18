@@ -168,5 +168,5 @@ def get_optimized_portfolio_on_mpt_costfunction(
         cacheddir=cacheddir
     )
     optimized_weighting_policy = OptimizedWeightingPolicyUsingMPTCostFunction(rf, r, cov, symbols, V0, c)
-    optimized_portfolio = OptimizedPortfolio(optimized_weighting_policy, totalworth, presetdate)
+    optimized_portfolio = OptimizedPortfolio(optimized_weighting_policy, totalworth, presetdate, cacheddir=cacheddir)
     return optimized_portfolio
