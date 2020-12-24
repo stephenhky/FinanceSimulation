@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 import pandas as pd
 
-from .numerics import optimized_portfolio_on_sharperatio, optimized_portfolio_expectation_maximization
+from .numerics import optimized_portfolio_on_sharperatio, optimized_portfolio_mpt_costfunction
 
 
 class OptimizedWeightingPolicy(ABC):
@@ -134,7 +134,7 @@ class OptimizedWeightingPolicyUsingMPTCostFunction(OptimizedWeightingPolicy):
 
     def optimize(self, r, cov, symbols=None):
         super(OptimizedWeightingPolicyUsingMPTCostFunction, self).optimize(r, cov, symbols=symbols)
-        self.optimized_sol = optimized_portfolio_expectation_maximization(r, cov, self.rf, self.V0, self.c)
+        self.optimized_sol = optimized_portfolio_mpt_costfunction(r, cov, self.rf, self.V0, self.c)
         self.optimized = True
 
         self.optimized_unnormalized_weights = self.optimized_sol.x
