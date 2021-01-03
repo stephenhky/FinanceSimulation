@@ -144,7 +144,7 @@ def get_optimized_portfolio_on_sharpe_ratio(
         cacheddir=cacheddir
     )
     optimized_weighting_policy = OptimizedWeightingPolicyUsingMPTSharpeRatio(rf, r, cov, symbols, minweight=minweight)
-    optimized_portfolio = OptimizedPortfolio(optimized_weighting_policy, totalworth, presetdate)
+    optimized_portfolio = OptimizedPortfolio(optimized_weighting_policy, totalworth, presetdate, cacheddir=cacheddir)
     return optimized_portfolio
 
 
@@ -155,8 +155,8 @@ def get_optimized_portfolio_on_mpt_costfunction(
         presetdate,
         estimating_startdate,
         estimating_enddate,
-        V0=1.,
-        c=10.,
+        lamb,
+        V0=10.,
         lazy=False,
         cacheddir=None
 ):
@@ -167,6 +167,6 @@ def get_optimized_portfolio_on_mpt_costfunction(
         lazy=lazy,
         cacheddir=cacheddir
     )
-    optimized_weighting_policy = OptimizedWeightingPolicyUsingMPTCostFunction(rf, r, cov, symbols, V0, c)
-    optimized_portfolio = OptimizedPortfolio(optimized_weighting_policy, totalworth, presetdate)
+    optimized_weighting_policy = OptimizedWeightingPolicyUsingMPTCostFunction(rf, r, cov, symbols, lamb, V0=V0)
+    optimized_portfolio = OptimizedPortfolio(optimized_weighting_policy, totalworth, presetdate, cacheddir=cacheddir)
     return optimized_portfolio

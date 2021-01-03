@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 import pandas as pd
 
-from .numerics import optimized_portfolio_on_sharperatio, optimized_portfolio_expectation_maximization
+from .numerics import optimized_portfolio_on_sharperatio, optimized_portfolio_mpt_costfunction
 
 
 class OptimizedWeightingPolicy(ABC):
@@ -124,17 +124,17 @@ class OptimizedWeightingPolicyUsingMPTSharpeRatio(OptimizedWeightingPolicy):
 
 
 class OptimizedWeightingPolicyUsingMPTCostFunction(OptimizedWeightingPolicy):
-    def __init__(self, rf, r=None, cov=None, symbols=None, V0=None, c=None):
+    def __init__(self, rf, r=None, cov=None, symbols=None, lamb=None, V0=10.0):
         super(OptimizedWeightingPolicyUsingMPTCostFunction, self).__init__(rf, r=r, cov=cov, symbols=symbols)
+        self.lamb = lamb
         self.V0 = V0
-        self.c = c
 
         if r is not None and cov is not None:
             self.optimize(r, cov, symbols=symbols)
 
     def optimize(self, r, cov, symbols=None):
         super(OptimizedWeightingPolicyUsingMPTCostFunction, self).optimize(r, cov, symbols=symbols)
-        self.optimized_sol = optimized_portfolio_expectation_maximization(r, cov, self.rf, self.V0, self.c)
+        self.optimized_sol = optimized_portfolio_mpt_costfunction(r, cov, self.rf, self.lamb, V0=self.V0)
         self.optimized = True
 
         self.optimized_unnormalized_weights = self.optimized_sol.x
@@ -168,5 +168,5 @@ class OptimizedWeightingPolicyUsingMPTCostFunction(OptimizedWeightingPolicy):
         summary = super(OptimizedWeightingPolicyUsingMPTCostFunction, self).portfolio_summary
         summary['mpt_costfunction'] = self.mpt_costfunction
         summary['V0'] = self.V0
-        summary['c'] = self.c
+        summary['lamb'] = self.lamb
         return summary

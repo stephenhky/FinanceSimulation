@@ -39,7 +39,7 @@ class TestPortfolio(unittest.TestCase):
 
         optimized_portfolio = get_optimized_portfolio_on_mpt_costfunction(0.0123, selected_symbols, 1000,
                                                                           enddate, startdate, enddate,
-                                                                          1., 10.)
+                                                                          0.1)
 
         summary = optimized_portfolio.summary
 
