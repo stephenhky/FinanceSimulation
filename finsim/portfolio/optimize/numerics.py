@@ -22,7 +22,7 @@ def optimized_portfolio_on_sharperatio(r, cov, rf, minweight=0.):
     )
 
 
-def optimized_portfolio_mpt_costfunction(r, cov, rf, lamb, V0=10):
+def optimized_portfolio_mpt_costfunction(r, cov, rf, lamb, V0=10.):
     func = partial(mpt_costfunction, r=r, cov=cov, rf=rf, lamb=lamb, V0=V0)
     nbstocks = len(r)
     constraints = [

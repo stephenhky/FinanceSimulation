@@ -16,3 +16,10 @@ def mpt_costfunction(weights, r, cov, rf, lamb, V0=10):
     weightmat = np.expand_dims(weights[:-1], axis=0)
     c = lamb * V0
     return weights[-1]*rf + np.dot(weights[:-1], r) - 0.5*c/V0*(weightmat @ cov @ weightmat.T)[0, 0]
+
+
+@nb.njit(nb.float64(nb.float64[:], nb.float64[:], nb.float64[:, :], nb.float64, nb.float64, nb.float64))
+def mpt_costfunction(weights, r, cov, rf, lamb, V0=10):
+    weightmat = np.expand_dims(weights[:-1], axis=0)
+    c = lamb * V0
+    return weights[-1]*rf + np.dot(weights[:-1], r) - 0.5*c/V0*(weightmat @ cov @ weightmat.T)[0, 0]

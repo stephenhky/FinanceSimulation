@@ -72,6 +72,7 @@ def get_yahoofinance_data(symbol, startdate, enddate, cacheddir=None):
                 df = pd.read_hdf(os.path.join(cacheddir, '{}.h5'.format(symbol)), 'yahoodata')
                 if len(df) > 0:
                     df = df[(df['TimeStamp'] >= startdate) & (df['TimeStamp'] <= enddate)]
+                metatable_h5file.close()
                 return df
 
         df = extract_online_yahoofinance_data(symbol, startdate, enddate)
