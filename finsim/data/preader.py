@@ -4,21 +4,19 @@ import os
 import logging
 
 import pandas as pd
-from pandas_datareader import data
-from pandas_datareader._utils import RemoteDataError
+import yfinance as yf
 import tables as tb
+from tqdm import tqdm
 
 
-# native yahoo reader
 def extract_online_yahoofinance_data(symbol, startdate, enddate):
     try:
-        df = data.DataReader(
-            name=symbol,
-            data_source='yahoo',
+        df = yf.download(
+            symbol,
             start=datetime.strptime(startdate, '%Y-%m-%d'),
             end=datetime.strptime(enddate, '%Y-%m-%d')
         )
-    except (KeyError, RemoteDataError) as e:
+    except:
         logging.warning('Symbol {} does not exist between {} and {}.'.format(symbol, startdate, enddate))
         return pd.DataFrame({
             'TimeStamp': [],
@@ -26,8 +24,8 @@ def extract_online_yahoofinance_data(symbol, startdate, enddate):
             'Low': [],
             'Open': [],
             'Close': [],
+            'Adj Close': [],
             'Volume': [],
-            'Adj Close': []
         })
 
     oricols = df.columns
@@ -36,6 +34,36 @@ def extract_online_yahoofinance_data(symbol, startdate, enddate):
     df = df[['TimeStamp'] + list(oricols)]
 
     return df
+
+
+def extract_batch_online_yahoofinance_data(symbols, startdate, enddate):
+    combined_df = yf.download(
+        ' '.join(symbols),
+        start=datetime.strptime(startdate, '%Y-%m-%d'),
+        end=datetime.strptime(enddate, '%Y-%m-%d'),
+        group_by='ticker'
+    )
+
+    dataframes = {}
+    for symbol in symbols:
+        try:
+            df = combined_df[symbol].copy()
+            oricols = df.columns
+            df['TimeStamp'] = df.index
+            df = df[['TimeStamp'] + list(oricols)]
+            dataframes[symbol] = df
+        except:
+            dataframes[symbol] = pd.DataFrame({
+                'TimeStamp': [],
+                'High': [],
+                'Low': [],
+                'Open': [],
+                'Close': [],
+                'Adj Close': [],
+                'Volume': [],
+            })
+
+    return dataframes
 
 
 # yahoo reader with local cache
@@ -111,3 +139,43 @@ def get_yahoofinance_data(symbol, startdate, enddate, cacheddir=None):
         return df
     else:
         raise TypeError('Type of cacheddir has to be str, but got {} instead!'.format(type(cacheddir)))
+
+
+def generating_cached_yahoofinance_data(symbols, startdate, enddate, cacheddir, slicebatch=50):
+    if not os.path.exists(cacheddir) or (os.path.exists(cacheddir) and not os.path.isdir(cacheddir)):
+        logging.info('Creating directory: {}'.format(cacheddir))
+        os.makedirs(cacheddir)
+    # start as a new file
+    logging.info('Creating file: {}'.format(os.path.join(cacheddir, METATABLE_FILENAME)))
+    metatable_h5file = tb.open_file(os.path.join(cacheddir, METATABLE_FILENAME), 'w')
+    table = metatable_h5file.create_table('/', 'metatable', METATABLE_ROWDES, title='metatable')
+
+    nbsymbols = len(symbols)
+    for startidx in tqdm(range(0, nbsymbols, slicebatch)):
+        dataframes = extract_batch_online_yahoofinance_data(
+            symbols[startidx:min(startidx+slicebatch, nbsymbols)],
+            startdate,
+            enddate
+        )
+
+        for symbol in dataframes:
+            df = dataframes[symbol]
+            logging.debug('Caching data for {} from {} to {}'.format(symbol, startdate, enddate))
+            df.to_hdf(os.path.join(cacheddir, '{}.h5'.format(symbol)), 'yahoodata')
+
+            logging.debug('Creating symbol {} in metatable'.format(symbol))
+            newrow = table.row
+            newrow['symbol'] = symbol
+            newrow['query_startdate'] = startdate
+            newrow['query_enddate'] = enddate
+            if len(df) > 0:
+                newrow['data_startdate'] = datetime.strftime(df['TimeStamp'][0].date(), '%Y-%m-%d')
+                newrow['data_enddate'] = datetime.strftime(df['TimeStamp'][-1].date(), '%Y-%m-%d')
+            else:
+                newrow['data_startdate'] = '0000-00-00'
+                newrow['data_enddate'] = '0000-00-00'
+            newrow.append()
+
+        table.flush()
+
+    metatable_h5file.close()

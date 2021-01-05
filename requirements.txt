@@ -1,9 +1,9 @@
 numpy>=1.18.0
 scipy>=1.6.0
-numba>=0.49.0
+numba>=0.50.0
 requests>=2.22.0
-pandas>=1.1.0
-pandas-datareader>=0.9.0
+pandas>=1.2.0
 quandl>=3.5.0
 tqdm>=4.49.0
 tables>=3.6.0
+yfinance>=0.1.55
