@@ -2,11 +2,13 @@
 from datetime import datetime, timedelta
 import os
 import logging
+from time import sleep
 
 import pandas as pd
 import yfinance as yf
 import tables as tb
 from tqdm import tqdm
+from requests.exceptions import ConnectionError
 
 
 def extract_online_yahoofinance_data(symbol, startdate, enddate):
@@ -36,12 +38,13 @@ def extract_online_yahoofinance_data(symbol, startdate, enddate):
     return df
 
 
-def extract_batch_online_yahoofinance_data(symbols, startdate, enddate):
+def extract_batch_online_yahoofinance_data(symbols, startdate, enddate, threads=True):
     combined_df = yf.download(
         ' '.join(symbols),
         start=datetime.strptime(startdate, '%Y-%m-%d'),
         end=datetime.strptime(enddate, '%Y-%m-%d'),
-        group_by='ticker'
+        group_by='ticker',
+        threads=threads
     )
 
     dataframes = {}
@@ -141,7 +144,7 @@ def get_yahoofinance_data(symbol, startdate, enddate, cacheddir=None):
         raise TypeError('Type of cacheddir has to be str, but got {} instead!'.format(type(cacheddir)))
 
 
-def generating_cached_yahoofinance_data(symbols, startdate, enddate, cacheddir, slicebatch=50):
+def generating_cached_yahoofinance_data(symbols, startdate, enddate, cacheddir, slicebatch=50, waittime=1, threads=True):
     if not os.path.exists(cacheddir) or (os.path.exists(cacheddir) and not os.path.isdir(cacheddir)):
         logging.info('Creating directory: {}'.format(cacheddir))
         os.makedirs(cacheddir)
@@ -152,11 +155,18 @@ def generating_cached_yahoofinance_data(symbols, startdate, enddate, cacheddir, 
 
     nbsymbols = len(symbols)
     for startidx in tqdm(range(0, nbsymbols, slicebatch)):
-        dataframes = extract_batch_online_yahoofinance_data(
-            symbols[startidx:min(startidx+slicebatch, nbsymbols)],
-            startdate,
-            enddate
-        )
+        success = False
+        while not success:
+            try:
+                dataframes = extract_batch_online_yahoofinance_data(
+                    symbols[startidx:min(startidx+slicebatch, nbsymbols)],
+                    startdate,
+                    enddate,
+                    threads=threads
+                )
+                success = True
+            except:
+                sleep(waittime)
 
         for symbol in dataframes:
             df = dataframes[symbol]
