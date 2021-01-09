@@ -185,6 +185,8 @@ def finding_missing_symbols_in_cache(symbols, startdate, enddate, cacheddir):
 def generating_cached_yahoofinance_data(symbols, startdate, enddate, cacheddir, slicebatch=50, waittime=1, threads=True):
     tocache_symbols = finding_missing_symbols_in_cache(symbols, startdate, enddate, cacheddir)
 
+    logging.info('Total number of symbols: {}'.format(len(symbols)))
+    logging.info('Total number of symbols needed to cache: {}'.format(len(tocache_symbols)))
     if not os.path.exists(cacheddir) or (os.path.exists(cacheddir) and not os.path.isdir(cacheddir)):
         logging.info('Creating directory: {}'.format(cacheddir))
         os.makedirs(cacheddir)
