@@ -3,12 +3,12 @@ from datetime import datetime, timedelta
 import os
 import logging
 from time import sleep
+import glob
 
 import pandas as pd
 import yfinance as yf
 import tables as tb
 from tqdm import tqdm
-from requests.exceptions import ConnectionError
 
 
 def extract_online_yahoofinance_data(symbol, startdate, enddate):
@@ -32,6 +32,7 @@ def extract_online_yahoofinance_data(symbol, startdate, enddate):
 
     oricols = df.columns
     df['TimeStamp'] = df.index
+    # df['TimeStamp'] = df['TimeStamp'].dt.strftime('%Y-%m-%d')
     # df['Date'] = df['TimeStamp'].apply(lambda ts: ts.date())
     df = df[['TimeStamp'] + list(oricols)]
 
@@ -53,6 +54,7 @@ def extract_batch_online_yahoofinance_data(symbols, startdate, enddate, threads=
             df = combined_df[symbol].copy()
             oricols = df.columns
             df['TimeStamp'] = df.index
+            # df['TimeStamp'] = df['TimeStamp'].dt.strftime('%Y-%m-%d')
             df = df[['TimeStamp'] + list(oricols)]
             dataframes[symbol] = df
         except:
@@ -99,6 +101,10 @@ def get_yahoofinance_data(symbol, startdate, enddate, cacheddir=None):
         preexist = False
         for row in table.where('symbol=="{}"'.format(symbol)):
             preexist = True
+            # print("{} <= {}: {}".format(row['query_startdate'].decode('utf-8'), startdate,
+            #                                     row['query_startdate'].decode('utf-8') <= startdate))
+            # print("{} <= {}: {}".format(row['query_enddate'].decode('utf-8'), enddate,
+            #                                     row['query_enddate'].decode('utf-8') >= enddate))
             if row['query_startdate'].decode('utf-8') <= startdate and row['query_enddate'].decode('utf-8') >= enddate:
                 df = pd.read_hdf(os.path.join(cacheddir, '{}.h5'.format(symbol)), 'yahoodata')
                 if len(df) > 0:
@@ -144,22 +150,59 @@ def get_yahoofinance_data(symbol, startdate, enddate, cacheddir=None):
         raise TypeError('Type of cacheddir has to be str, but got {} instead!'.format(type(cacheddir)))
 
 
+def finding_missing_symbols_in_cache(symbols, startdate, enddate, cacheddir):
+    if not os.path.exists(os.path.join(cacheddir, METATABLE_FILENAME)):
+        return symbols
+
+    # in table
+    metatable = pd.read_hdf(os.path.join(cacheddir, METATABLE_FILENAME), 'metatable')
+    existing_within_range_symbols = list(
+        metatable['symbol'][
+            (metatable['query_startdate'] <= startdate) & (metatable['query_enddate'] >= enddate)
+        ]
+    )
+    if logging.root.level >= logging.DEBUG:
+        logging.debug('exisiting within range symbols')
+        for symbol in existing_within_range_symbols:
+            logging.debug('\t{}'.format(symbol))
+
+    # check what are in the cached directories
+    existing_symbols = [
+        os.path.basename(filepath)
+        for filepath in glob.glob(os.path.join(cacheddir, '*.h5'))
+    ]
+    existing_symbols = [filename[:-3] for filename in existing_symbols if filename != METATABLE_FILENAME]
+    if logging.root.level >= logging.DEBUG:
+        logging.debug('exisiting symbols')
+        for symbol in existing_symbols:
+            logging.debug('\t{}'.format(symbol))
+
+    existing_valid_symbols = set(existing_within_range_symbols) & set(existing_symbols)
+
+    return sorted(list(set(symbols) - set(existing_valid_symbols)))
+
+
 def generating_cached_yahoofinance_data(symbols, startdate, enddate, cacheddir, slicebatch=50, waittime=1, threads=True):
+    tocache_symbols = finding_missing_symbols_in_cache(symbols, startdate, enddate, cacheddir)
+
     if not os.path.exists(cacheddir) or (os.path.exists(cacheddir) and not os.path.isdir(cacheddir)):
         logging.info('Creating directory: {}'.format(cacheddir))
         os.makedirs(cacheddir)
-    # start as a new file
-    logging.info('Creating file: {}'.format(os.path.join(cacheddir, METATABLE_FILENAME)))
-    metatable_h5file = tb.open_file(os.path.join(cacheddir, METATABLE_FILENAME), 'w')
-    table = metatable_h5file.create_table('/', 'metatable', METATABLE_ROWDES, title='metatable')
+    if not os.path.exists(os.path.join(cacheddir, METATABLE_FILENAME)):
+        logging.info('Creating file: {}'.format(os.path.join(cacheddir, METATABLE_FILENAME)))
+        metatable_h5file = tb.open_file(os.path.join(cacheddir, METATABLE_FILENAME), 'w')
+        table = metatable_h5file.create_table('/', 'metatable', METATABLE_ROWDES, title='metatable')
+    else:
+        metatable_h5file = tb.open_file(os.path.join(cacheddir, METATABLE_FILENAME), 'r+')
+        table = metatable_h5file.root.metatable
 
-    nbsymbols = len(symbols)
+    nbsymbols = len(tocache_symbols)
     for startidx in tqdm(range(0, nbsymbols, slicebatch)):
         success = False
         while not success:
             try:
                 dataframes = extract_batch_online_yahoofinance_data(
-                    symbols[startidx:min(startidx+slicebatch, nbsymbols)],
+                    tocache_symbols[startidx:min(startidx + slicebatch, nbsymbols)],
                     startdate,
                     enddate,
                     threads=threads
