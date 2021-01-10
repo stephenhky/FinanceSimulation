@@ -77,8 +77,8 @@ class OptimizedPortfolio(Portfolio):
         self.policy = policy
         self.totalworth = totalworth
         self.presetdate = presetdate
-        self.compute()
         self.cacheddir = cacheddir
+        self.compute()
 
     def compute(self):
         prices = {
