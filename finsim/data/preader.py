@@ -43,7 +43,7 @@ def extract_batch_online_yahoofinance_data(symbols, startdate, enddate, threads=
     combined_df = yf.download(
         ' '.join(symbols),
         start=datetime.strptime(startdate, '%Y-%m-%d'),
-        end=datetime.strptime(enddate, '%Y-%m-%d'),
+        end=datetime.strptime(enddate, '%Y-%m-%d') + timedelta(days=1),
         group_by='ticker',
         threads=threads
     )
