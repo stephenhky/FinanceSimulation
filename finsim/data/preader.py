@@ -145,6 +145,8 @@ def get_yahoofinance_data(symbol, startdate, enddate, cacheddir=None):
         table.flush()
         metatable_h5file.close()
 
+        df = df[~df['Close'].isna()]
+
         return df
     else:
         raise TypeError('Type of cacheddir has to be str, but got {} instead!'.format(type(cacheddir)))
@@ -215,6 +217,7 @@ def generating_cached_yahoofinance_data(symbols, startdate, enddate, cacheddir, 
 
         for symbol in dataframes:
             df = dataframes[symbol]
+            df = df[~df['Close'].isna()]
             logging.debug('Caching data for {} from {} to {}'.format(symbol, startdate, enddate))
             df.to_hdf(os.path.join(cacheddir, '{}.h5'.format(symbol)), 'yahoodata')
 
