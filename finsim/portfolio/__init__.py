@@ -1,4 +1,4 @@
 
 from .portfolio import OptimizedPortfolio
-from .portfolio import get_optimized_portfolio_on_sharpe_ratio, get_optimized_portfolio_on_mpt_costfunction
+from .portfolio import get_optimized_portfolio_on_sharpe_ratio, get_optimized_portfolio_on_mpt_costfunction, get_optimized_portfolio_on_mpt_entropy_costfunction
 from .numerics import get_BlackScholesMerton_stocks_estimation

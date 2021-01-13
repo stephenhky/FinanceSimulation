@@ -81,8 +81,18 @@ def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=F
                 df_i = stocks_data_dfs[i]
                 df_j = stocks_data_dfs[j]
                 minlen = min(len(df_i), len(df_j))
-                assert df_i['TimeStamp'][-minlen] == df_j['TimeStamp'][-minlen]
-                assert df_i['TimeStamp'][-1] == df_j['TimeStamp'][-1]
+                try:
+                    assert df_i['TimeStamp'][-minlen] == df_j['TimeStamp'][-minlen]
+                except AssertionError as e:
+                    logging.warning('{}: {}'.format(symbols[i], df_i['TimeStamp'][-minlen]))
+                    logging.warning('{}: {}'.format(symbols[j], df_j['TimeStamp'][-minlen]))
+                    raise e
+                try:
+                    assert df_i['TimeStamp'][-1] == df_j['TimeStamp'][-1]
+                except AssertionError as e:
+                    logging.warning('{}: {}'.format(symbols[i], df_i['TimeStamp'][-1]))
+                    logging.warning('{}: {}'.format(symbols[j], df_j['TimeStamp'][-1]))
+                    raise e
 
                 ts = df_i['TimeStamp'][-minlen:]
                 multiprices = np.array([np.array(df_i['Close'][-minlen:]), np.array(df_j['Close'][-minlen:])])
