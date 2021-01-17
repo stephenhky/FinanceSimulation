@@ -5,9 +5,8 @@ from tqdm import tqdm
 import pandas as pd
 
 from .optimize.policy import OptimizedWeightingPolicyUsingMPTSharpeRatio, OptimizedWeightingPolicyUsingMPTCostFunction, OptimizedWeightingPolicyUsingMPTEntropyCostFunction
-from .numerics import get_BlackScholesMerton_stocks_estimation
-from .numerics import get_symbol_closing_price
-from ..data.preader import get_yahoofinance_data
+from . import get_BlackScholesMerton_stocks_estimation
+from ..data.preader import get_yahoofinance_data, get_symbol_closing_price
 
 
 class Portfolio:
@@ -92,6 +91,9 @@ class OptimizedPortfolio(Portfolio):
             self.symbols_nbshares[symbol] = component['nbshares']
 
         self.summary = summary
+
+    def extract_portfolio(self):
+        return Portfolio(self.symbols_nbshares.copy(), cacheddir=self.cacheddir)
 
     @property
     def portfolio_symbols(self):
