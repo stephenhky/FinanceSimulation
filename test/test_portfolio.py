@@ -4,6 +4,7 @@ import unittest
 import numpy as np
 
 from finsim.portfolio import get_optimized_portfolio_on_sharpe_ratio, get_optimized_portfolio_on_mpt_costfunction
+from finsim.portfolio import OptimizedPortfolio, Portfolio
 
 
 class TestPortfolio(unittest.TestCase):
@@ -31,6 +32,10 @@ class TestPortfolio(unittest.TestCase):
                      )
         )
 
+        simplified_portfolio = optimized_portfolio.get_portfolio()
+        self.assertTrue(isinstance(simplified_portfolio, Portfolio))
+        self.assertFalse(isinstance(simplified_portfolio, OptimizedPortfolio))
+
     def test_modern_postfolio_costfunction(self):
         selected_symbols = ['NVDA', 'AMZN', 'BAH', 'GD']
 
@@ -54,6 +59,9 @@ class TestPortfolio(unittest.TestCase):
                        [0.42612949, 0.37066551, 0.34781397, 1.        ]]
                      )
         )
+        simplified_portfolio = optimized_portfolio.get_portfolio()
+        self.assertTrue(isinstance(simplified_portfolio, Portfolio))
+        self.assertFalse(isinstance(simplified_portfolio, OptimizedPortfolio))
 
 
 if __name__ == '__main__':
