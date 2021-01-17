@@ -153,6 +153,13 @@ def get_yahoofinance_data(symbol, startdate, enddate, cacheddir=None):
         raise TypeError('Type of cacheddir has to be str, but got {} instead!'.format(type(cacheddir)))
 
 
+def get_symbol_closing_price(symbol, datestr, epsilon=1e-10, cacheddir=None):
+    try:
+        return get_yahoofinance_data(symbol, datestr, datestr, cacheddir=cacheddir)['Close'][0]
+    except KeyError:
+        return epsilon
+
+
 def finding_missing_symbols_in_cache(symbols, startdate, enddate, cacheddir):
     if not os.path.exists(os.path.join(cacheddir, METATABLE_FILENAME)):
         return symbols
