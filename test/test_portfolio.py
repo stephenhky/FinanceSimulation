@@ -1,6 +1,6 @@
 
 import unittest
-from tempfile import TemporaryFile
+import os
 
 import numpy as np
 
@@ -75,6 +75,7 @@ class TestPortfolio(unittest.TestCase):
         )
         self.assertTrue(isinstance(reloaded_portfolio, Portfolio))
         self.assertFalse(isinstance(reloaded_portfolio, OptimizedPortfolio))
+        os.remove('portfolio.json')
 
 
 if __name__ == '__main__':
