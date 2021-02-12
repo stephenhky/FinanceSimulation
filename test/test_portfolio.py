@@ -1,5 +1,6 @@
 
 import unittest
+from tempfile import TemporaryFile
 
 import numpy as np
 
@@ -20,16 +21,17 @@ class TestPortfolio(unittest.TestCase):
 
         summary = optimized_portfolio.summary
         
-        self.assertAlmostEqual(summary['yield'], 0.29045820465394034)
-        self.assertAlmostEqual(summary['volatility'], 0.24309206546829054)
-        self.assertAlmostEqual(summary['sharpe_ratio'], 1.1442504473278414)
+        self.assertAlmostEqual(summary['yield'], 0.2905, places=4)
+        self.assertAlmostEqual(summary['volatility'], 0.2431, places=4)
+        self.assertAlmostEqual(summary['sharpe_ratio'], 1.1442, places=4)
         np.testing.assert_array_almost_equal(
             summary['correlation'],
             np.array([[1., 0.38132613, 0.28049998, 0.42612949],
                       [0.38132613, 1., 0.19692159, 0.37066551],
                       [0.28049998, 0.19692159, 1., 0.34781397],
                       [0.42612949, 0.37066551, 0.34781397, 1.]]
-                     )
+                     ),
+            decimal=4
         )
 
         simplified_portfolio = optimized_portfolio.get_portfolio()
@@ -48,20 +50,31 @@ class TestPortfolio(unittest.TestCase):
 
         summary = optimized_portfolio.summary
 
-        self.assertAlmostEqual(summary['yield'], 0.3115743402331405)
-        self.assertAlmostEqual(summary['volatility'], 0.2620352447045725)
-        self.assertAlmostEqual(summary['mpt_costfunction'], 6.737315202603957)
+        self.assertAlmostEqual(summary['yield'], 0.3116, places=4)
+        self.assertAlmostEqual(summary['volatility'], 0.2620, places=4)
+        self.assertAlmostEqual(summary['mpt_costfunction'], 6.7373, places=4)
         np.testing.assert_array_almost_equal(
             summary['correlation'],
             np.array([[1.        , 0.38132613, 0.28049998, 0.42612949],
                        [0.38132613, 1.        , 0.19692159, 0.37066551],
                        [0.28049998, 0.19692159, 1.        , 0.34781397],
                        [0.42612949, 0.37066551, 0.34781397, 1.        ]]
-                     )
+                     ),
+            decimal=4
         )
         simplified_portfolio = optimized_portfolio.get_portfolio()
         self.assertTrue(isinstance(simplified_portfolio, Portfolio))
         self.assertFalse(isinstance(simplified_portfolio, OptimizedPortfolio))
+
+
+        optimized_portfolio.save_to_json(open('portfolio.json', 'w'))
+        reloaded_portfolio = Portfolio.load_from_json(open('portfolio.json', 'r'))
+        self.assertAlmostEqual(
+            optimized_portfolio.get_portfolio_value('2020-03-31'),
+            reloaded_portfolio.get_portfolio_value('2020-03-31')
+        )
+        self.assertTrue(isinstance(reloaded_portfolio, Portfolio))
+        self.assertFalse(isinstance(reloaded_portfolio, OptimizedPortfolio))
 
 
 if __name__ == '__main__':

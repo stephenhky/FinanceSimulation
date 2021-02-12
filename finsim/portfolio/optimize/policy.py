@@ -8,6 +8,15 @@ import pandas as pd
 from .numerics import optimized_portfolio_on_sharperatio, optimized_portfolio_mpt_costfunction, optimized_portfolio_mpt_entropy_costfunction
 
 
+def mat_to_list(mat):
+    return [
+        [
+            mat[i, j] for j in range(mat.shape[1])
+        ]
+        for i in range(mat.shape[0])
+    ]
+
+
 class OptimizedWeightingPolicy(ABC):
     def __init__(self, rf, r=None, cov=None, symbols=None):
         self.rf = rf
@@ -78,6 +87,10 @@ class OptimizedWeightingPolicy(ABC):
         }
         return summary
 
+    @property
+    def policytype(self):
+        return 'AbstractOptimizedWeightingPolicy'
+
 
 class OptimizedWeightingPolicyUsingMPTSharpeRatio(OptimizedWeightingPolicy):
     def __init__(self, rf, r=None, cov=None, symbols=None, minweight=0.):
@@ -121,6 +134,10 @@ class OptimizedWeightingPolicyUsingMPTSharpeRatio(OptimizedWeightingPolicy):
         summary = super(OptimizedWeightingPolicyUsingMPTSharpeRatio, self).portfolio_summary
         summary['sharpe_ratio'] = self.optimized_sharpe_ratio
         return summary
+
+    @property
+    def policytype(self):
+        return 'OptimizedWeightingPolicyUsingMPTSharpeRatio'
 
 
 class OptimizedWeightingPolicyUsingMPTCostFunction(OptimizedWeightingPolicy):
@@ -170,6 +187,10 @@ class OptimizedWeightingPolicyUsingMPTCostFunction(OptimizedWeightingPolicy):
         summary['V0'] = self.V0
         summary['lamb'] = self.lamb
         return summary
+
+    @property
+    def policytype(self):
+        return 'OptimizedWeightingPolicyUsingMPTCostFunction'
 
 
 class OptimizedWeightingPolicyUsingMPTEntropyCostFunction(OptimizedWeightingPolicy):
@@ -221,3 +242,7 @@ class OptimizedWeightingPolicyUsingMPTEntropyCostFunction(OptimizedWeightingPoli
         summary['lamb0'] = self.lamb0
         summary['lamb1'] = self.lamb1
         return summary
+
+    @property
+    def policytype(self):
+        return 'OptimizedWeightingPolicyUsingMPTEntropyCostFunction'
