@@ -1,4 +1,5 @@
 
+import json
 import logging
 
 from tqdm import tqdm
@@ -67,6 +68,14 @@ class Portfolio:
             nbshares = self.symbols_nbshares[symbol]
             self.symbols_nbshares[symbol] = nbshares * factor
 
+    def save_to_json(self, fileobj):
+        json.dump(self.symbols_nbshares, fileobj)
+
+    @classmethod
+    def load_from_json(cls, fileobj, cacheddir=None):
+        symbols_nbshares = json.load(fileobj)
+        return cls(symbols_nbshares, cacheddir=cacheddir)
+
 
 class OptimizedPortfolio(Portfolio):
     def __init__(self, policy, totalworth, presetdate, cacheddir=None):
@@ -121,3 +130,9 @@ class OptimizedPortfolio(Portfolio):
     def get_portfolio(self):
         return Portfolio(self.symbols_nbshares, cacheddir=self.cacheddir)
 
+    def save_to_json(self, fileobj):
+        self.get_portfolio().save_to_json(fileobj)
+
+    @classmethod
+    def load_from_json(cls, fileobj, cacheddir=None):
+        raise NotImplementedError('OptimizedPortfolio does not implement loading from json. Use Portfolio to load instead.')
