@@ -47,7 +47,7 @@ class Portfolio:
                     predf[stocks_data_dfs[max_timearray_ref].columns[1:]] = 0
                     stocks_data_dfs[i] = predf.append(stocks_data_dfs[i])
 
-        df = pd.DataFrame(stocks_data_dfs[max_timearray_ref]['TimeStamp'])
+        df = pd.DataFrame(stocks_data_dfs[max_timearray_ref]['TimeStamp'].copy())
         df['value'] = sum([
             self.symbols_nbshares[sym] * stocks_data_dfs[i]['Close']
             for i, sym in enumerate(self.symbols_nbshares.keys())
