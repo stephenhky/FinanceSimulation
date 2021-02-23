@@ -33,6 +33,17 @@ class TestRisk(unittest.TestCase):
         upside_risk = risk.numba_estimate_upside_risk(ts, S_array, 0.0)
         self.assertAlmostEqual(upside_risk, np.sqrt(0.02/5))
 
+    def test_beta(self):
+        timestamps = np.array(['2021-02-16T00:00:00.000000000', 
+                               '2021-02-17T00:00:00.000000000', 
+                               '2021-02-18T00:00:00.000000000', 
+                               '2021-02-19T00:00:00.000000000'], 
+                              dtype='datetime64[ns]')
+        index_prices = 100*np.exp([0., 0.02, 0.02+0.01, 0.02+0.01-0.015])
+        stock_prices = 10*np.exp([0., 0.04, 0.04+0.02, 0.04+0.02-0.03])
+        beta = risk.estimate_beta(timestamps, stock_prices, index_prices)
+        self.assertAlmostEqual(beta, 2.0)
+
 
 if __name__ == '__main__':
     unittest.main()
