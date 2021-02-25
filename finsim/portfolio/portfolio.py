@@ -1,6 +1,7 @@
 
 import json
 import logging
+from collections import defaultdict
 
 from tqdm import tqdm
 import pandas as pd
@@ -54,6 +55,40 @@ class Portfolio:
         ])
         return df
 
+    def __add__(self, other):
+        assert isinstance(other, Portfolio)
+
+        symshares1 = defaultdict(lambda: 0, self.symbols_nbshares)
+        symshares2 = defaultdict(lambda: 0, other.symbols_nbshares)
+        all_symbols = set(symshares1.keys()).union(symshares2.keys())
+
+        total_symbols_shares = {symbol: symshares2[symbol] + symshares1[symbol] for symbol in all_symbols}
+        return Portfolio(total_symbols_shares)
+
+    def __sub__(self, other):
+        assert isinstance(other, Portfolio)
+
+        symshares1 = defaultdict(lambda: 0, self.symbols_nbshares)
+        symshares2 = defaultdict(lambda: 0, other.symbols_nbshares)
+        all_symbols = set(symshares1.keys()).union(symshares2.keys())
+
+        symbols_diff_shares = {symbol: symshares1[symbol] - symshares2[symbol] for symbol in all_symbols}
+        return Portfolio(symbols_diff_shares)
+
+    def __eq__(self, other):
+        assert isinstance(other, Portfolio)
+
+        for symbol, nbshares in self.symbols_nbshares.items():
+            if symbol not in other.symbols_shares:
+                return False
+            if other.symbols_nbshares[symbol] != nbshares:
+                return False
+
+        return True
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     @property
     def portfolio_symbols_nbshares(self):
         return self.symbols_nbshares
@@ -67,6 +102,11 @@ class Portfolio:
         for symbol in self.symbols_nbshares:
             nbshares = self.symbols_nbshares[symbol]
             self.symbols_nbshares[symbol] = nbshares * factor
+            
+    def __mul__(self, other):
+        assert isinstance(other, int) or isinstance(other, float)
+        newshares = {symbol: nbshares*other for symbol, nbshares in self.symbols_nbshares.items()}
+        return Portfolio(newshares)
 
     def save_to_json(self, fileobj):
         json.dump(self.symbols_nbshares, fileobj)
