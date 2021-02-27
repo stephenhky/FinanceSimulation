@@ -63,7 +63,7 @@ class Portfolio:
         all_symbols = set(symshares1.keys()).union(symshares2.keys())
 
         total_symbols_shares = {symbol: symshares2[symbol] + symshares1[symbol] for symbol in all_symbols}
-        return Portfolio(total_symbols_shares)
+        return Portfolio(total_symbols_shares, cacheddir=self.cacheddir)
 
     def __sub__(self, other):
         assert isinstance(other, Portfolio)
@@ -73,7 +73,7 @@ class Portfolio:
         all_symbols = set(symshares1.keys()).union(symshares2.keys())
 
         symbols_diff_shares = {symbol: symshares1[symbol] - symshares2[symbol] for symbol in all_symbols}
-        return Portfolio(symbols_diff_shares)
+        return Portfolio(symbols_diff_shares, cacheddir=self.cacheddir)
 
     def __eq__(self, other):
         assert isinstance(other, Portfolio)
@@ -106,7 +106,7 @@ class Portfolio:
     def __mul__(self, other):
         assert isinstance(other, int) or isinstance(other, float)
         newshares = {symbol: nbshares*other for symbol, nbshares in self.symbols_nbshares.items()}
-        return Portfolio(newshares)
+        return Portfolio(newshares, cacheddir=self.cacheddir)
 
     def save_to_json(self, fileobj):
         json.dump(self.symbols_nbshares, fileobj)
@@ -119,11 +119,10 @@ class Portfolio:
 
 class OptimizedPortfolio(Portfolio):
     def __init__(self, policy, totalworth, presetdate, cacheddir=None):
-        super(OptimizedPortfolio, self).__init__({})
+        super(OptimizedPortfolio, self).__init__({}, cacheddir=cacheddir)
         self.policy = policy
         self.totalworth = totalworth
         self.presetdate = presetdate
-        self.cacheddir = cacheddir
         self.compute()
 
     def compute(self):
