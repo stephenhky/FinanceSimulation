@@ -33,6 +33,12 @@ class DynamicPortfolio(Portfolio):
         start = 0
         end = len(self.timeseries)
         idx = (end-start) // 2
+
+        if date < self.timeseries[0]['date']:
+            return (-1)
+        if date >= self.timeseries[end-1]['date']:
+            return (end-1)
+
         found = False
         while not found:
             if date >= self.timeseries[idx]['date'] and (idx >= len(self.timeseries) or date < self.timeseries[idx+1]['date']):
