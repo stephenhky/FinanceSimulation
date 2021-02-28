@@ -59,7 +59,6 @@ class DynamicPortfolio(Portfolio):
         # date is a string, of format '%Y-%m-%d', such as '2020-02-23'
         self.timeseriesidx = self.find_cursor_for_date(date)
         self.symbols_nbshares = self.timeseries[self.timeseriesidx]['portfolio'].symbols_nbshares.copy()
-        logging.debug('MOVED!')
 
     def trade(
             self,
@@ -87,13 +86,9 @@ class DynamicPortfolio(Portfolio):
 
         symbols_nbshares = defaultdict(lambda : 0, buy_stocks)
         if check_valid:
-            logging.debug('CHECK VALID')
-            logging.debug(self.symbols_nbshares)
             if raise_insufficient_stock_error:
                 errorfound = False
                 for symbol, nbshares in sell_stocks.items():
-                    logging.debug('{}: {} < {}'.format(symbol, nbshares, self.symbols_nbshares[symbol]))
-                    logging.debug(nbshares > self.symbols_nbshares[symbol])
                     if nbshares > self.symbols_nbshares[symbol]:
                         logging.error('Insufficient stock {} ({} shares, but want to sell {} shares)'.format(symbol, self.symbols_nbshares[symbol], nbshares))
                         errorfound = True
@@ -101,15 +96,11 @@ class DynamicPortfolio(Portfolio):
                     raise InsufficientSharesException('Insufficient stocks.')
             else:
                 for symbol, nbshares in sell_stocks.items():
-                    logging.debug('{}: {} < {}'.format(symbol, nbshares, self.symbols_nbshares[symbol]))
-                    logging.debug(nbshares > self.symbols_nbshares[symbol])
                     if nbshares > self.symbols_nbshares[symbol]:
-                        logging.debug('UPDATE sell_stocks')
                         sell_stocks[symbol] = self.symbols_nbshares[symbol]
 
         for symbol, nbshares in sell_stocks.items():
             symbols_nbshares[symbol] -= nbshares
-        # logging.debug(symbols_nbshares)
 
         difference_portfolio = Portfolio(symbols_nbshares, cacheddir=self.cacheddir)
         self.timeseries.append({
