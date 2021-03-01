@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from operator import itemgetter
 from collections import defaultdict
 import logging
+import json
 
 import pandas as pd
 from .portfolio import Portfolio
@@ -55,10 +56,11 @@ class DynamicPortfolio(Portfolio):
                 idx = (end-start) // 2
         return idx
 
-    def move_cursor_to_date(self, date):
+    def move_cursor_to_date(self, newdate):
         # date is a string, of format '%Y-%m-%d', such as '2020-02-23'
-        self.timeseriesidx = self.find_cursor_for_date(date)
+        self.timeseriesidx = self.find_cursor_for_date(newdate)
         self.symbols_nbshares = self.timeseries[self.timeseriesidx]['portfolio'].symbols_nbshares.copy()
+        self.current_date = newdate
 
     def trade(
             self,
@@ -139,3 +141,47 @@ class DynamicPortfolio(Portfolio):
             )
 
         return pd.concat(dataframes)
+
+    def generate_dynamic_portfolio_dict(self):
+        dynport_dict = {'name': 'DynamicPortfolio'}
+        dynport_dict['current_date'] = self.current_date
+        dynport_dict['timeseries'] = []
+        for portdict in self.timeseries:
+            trade_date = portdict['date']
+            portfolio = portdict['portfolio']
+            dynport_dict['timeseries'].append({
+                'date': trade_date,
+                'portfolio': portfolio.symbols_nbshares
+            })
+        return dynport_dict
+
+    def save_to_json(self, fileobj):
+        dynport_dict = self.generate_dynamic_portfolio_dict()
+        json.dump(dynport_dict, fileobj)
+
+    def dumps_json(self):
+        dynport_dict = self.generate_dynamic_portfolio_dict()
+        return json.dumps(dynport_dict)
+
+    @classmethod
+    def load_from_dict(cls, dynportdict, cacheddir=None):
+        assert dynportdict['name'] == 'DynamicPortfolio'
+        dynport = cls(
+            dynportdict['timeseries'][0]['portfolio'],
+            dynportdict['timeseries'][0]['date'],
+            cacheddir=cacheddir
+        )
+        for portdict in dynportdict['timeseries'][1:]:
+            tradedate = portdict['date']
+            symbols_nbshares = portdict['portfolio']
+            dynport.timeseries.append({'date': tradedate,
+                                       'portfolio': Portfolio(symbols_nbshares, cacheddir=cacheddir)
+                                       })
+
+        dynport.move_cursor_to_date(dynportdict['current_date'])
+        return dynport
+    
+    @classmethod
+    def load_from_json(cls, fileobj, cacheddir=None):
+        dynportinfo = json.load(fileobj)
+        return cls.load_from_dict(dynportinfo, cacheddir=cacheddir)

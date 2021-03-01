@@ -111,10 +111,17 @@ class Portfolio:
     def save_to_json(self, fileobj):
         json.dump(self.symbols_nbshares, fileobj)
 
+    def dumps_json(self):
+        return json.dumps(self.symbols_nbshares)
+
     @classmethod
     def load_from_json(cls, fileobj, cacheddir=None):
         symbols_nbshares = json.load(fileobj)
         return cls(symbols_nbshares, cacheddir=cacheddir)
+
+    @classmethod
+    def load_from_dict(cls, portdict, cacheddir=None):
+        return cls(portdict, cacheddir=cacheddir)
 
 
 class OptimizedPortfolio(Portfolio):
@@ -172,6 +179,13 @@ class OptimizedPortfolio(Portfolio):
     def save_to_json(self, fileobj):
         self.get_portfolio().save_to_json(fileobj)
 
+    def dumps_json(self):
+        return self.get_portfolio().dumps_json()
+
     @classmethod
     def load_from_json(cls, fileobj, cacheddir=None):
+        raise NotImplementedError('OptimizedPortfolio does not implement loading from json. Use Portfolio to load instead.')
+
+    @classmethod
+    def load_from_dict(cls, portdict, cacheddir=None):
         raise NotImplementedError('OptimizedPortfolio does not implement loading from json. Use Portfolio to load instead.')
