@@ -48,7 +48,7 @@ class Portfolio:
                     predf[stocks_data_dfs[max_timearray_ref].columns[1:]] = 0
                     stocks_data_dfs[i] = predf.append(stocks_data_dfs[i])
 
-        df = pd.DataFrame(stocks_data_dfs[max_timearray_ref]['TimeStamp'])
+        df = pd.DataFrame(stocks_data_dfs[max_timearray_ref]['TimeStamp'].copy())
         df['value'] = sum([
             self.symbols_nbshares[sym] * stocks_data_dfs[i]['Close']
             for i, sym in enumerate(self.symbols_nbshares.keys())
@@ -111,10 +111,17 @@ class Portfolio:
     def save_to_json(self, fileobj):
         json.dump(self.symbols_nbshares, fileobj)
 
+    def dumps_json(self):
+        return json.dumps(self.symbols_nbshares)
+
     @classmethod
     def load_from_json(cls, fileobj, cacheddir=None):
         symbols_nbshares = json.load(fileobj)
         return cls(symbols_nbshares, cacheddir=cacheddir)
+
+    @classmethod
+    def load_from_dict(cls, portdict, cacheddir=None):
+        return cls(portdict, cacheddir=cacheddir)
 
 
 class OptimizedPortfolio(Portfolio):
@@ -172,6 +179,13 @@ class OptimizedPortfolio(Portfolio):
     def save_to_json(self, fileobj):
         self.get_portfolio().save_to_json(fileobj)
 
+    def dumps_json(self):
+        return self.get_portfolio().dumps_json()
+
     @classmethod
     def load_from_json(cls, fileobj, cacheddir=None):
+        raise NotImplementedError('OptimizedPortfolio does not implement loading from json. Use Portfolio to load instead.')
+
+    @classmethod
+    def load_from_dict(cls, portdict, cacheddir=None):
         raise NotImplementedError('OptimizedPortfolio does not implement loading from json. Use Portfolio to load instead.')
