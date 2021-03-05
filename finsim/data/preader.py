@@ -4,6 +4,7 @@ import os
 import logging
 from time import sleep
 import glob
+from functools import lru_cache
 
 import pandas as pd
 import yfinance as yf
@@ -245,3 +246,12 @@ def generating_cached_yahoofinance_data(symbols, startdate, enddate, cacheddir, 
         table.flush()
 
     metatable_h5file.close()
+
+
+@lru_cache(maxsize=30)
+def get_dividends_df(symbol):
+    ticker = yf.Ticker(symbol)
+    df = pd.DataFrame(ticker.dividends)
+    df['TimeStamp'] = df.index.map(lambda item: datetime.strftime(item, '%Y-%m-%d'))
+    df = df[['TimeStamp', 'Dividends']]
+    return df

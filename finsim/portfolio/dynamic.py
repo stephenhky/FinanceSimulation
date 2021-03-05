@@ -5,8 +5,10 @@ from collections import defaultdict
 import logging
 import json
 
+import numpy as np
 import pandas as pd
 from .portfolio import Portfolio
+from ..data.preader import get_dividends_df
 
 
 class InsufficientSharesException(Exception):
@@ -140,7 +142,9 @@ class DynamicPortfolio(Portfolio):
                 )
             )
 
-        return pd.concat(dataframes)
+        df = pd.concat(dataframes)
+        df['TimeStamp'] = df['TimeStamp'].map(lambda ts: datetime.strftime(ts, '%Y-%m-%d'))
+        return df
 
     def generate_dynamic_portfolio_dict(self):
         dynport_dict = {'name': 'DynamicPortfolio'}
@@ -185,3 +189,58 @@ class DynamicPortfolio(Portfolio):
     def load_from_json(cls, fileobj, cacheddir=None):
         dynportinfo = json.load(fileobj)
         return cls.load_from_dict(dynportinfo, cacheddir=cacheddir)
+
+
+class DynamicPortfolioWithDividends(DynamicPortfolio):
+    def __init__(self, symbol_nbshares, current_date, cash=0., cacheddir=None):
+        # current_date is a string, of format '%Y-%m-%d', such as '2020-02-23'
+        super(DynamicPortfolioWithDividends, self).__init__(symbol_nbshares, current_date, cacheddir=cacheddir)
+        self.startcash = cash
+        self.cashtimeseries = [{'date': current_date, 'cash': self.startcash}]
+
+    def calculate_cash_from_dividends(self, enddate):
+        startdate = self.timeseries[0]['date']
+        self.cashtimeseries = [{'date': startdate, 'dividend': 0., 'cash': self.startcash}]
+
+        for i, periodinfo in enumerate(self.timeseries):
+            series_startdate = periodinfo['date']
+            series_enddate = self.timeseries[i+1]['date'] if i < len(self.timeseries)-1 else enddate
+
+            symbol_dividends_dataframes = []
+            for symbol, nbshares in periodinfo['portfolio'].symbols_nbshares.items():
+                dividend_df = get_dividends_df(symbol)
+                if len(dividend_df) == 0:
+                    continue
+                dividend_df = dividend_df[(dividend_df['TimeStamp']>=series_startdate) & (dividend_df['TimeStamp']<series_enddate)].copy()
+                if len(dividend_df) == 0:
+                    continue
+                dividend_df['Dividends'] *= nbshares
+                symbol_dividends_dataframes.append(dividend_df)
+
+            if len(symbol_dividends_dataframes) == 0:
+                continue
+
+            period_dividend_dataframe = pd.concat(symbol_dividends_dataframes)
+            period_dividend_dataframe = period_dividend_dataframe.sort_values('TimeStamp')
+
+            for dividend_date, dividend in zip(period_dividend_dataframe['TimeStamp'], period_dividend_dataframe['Dividends']):
+                cash = self.cashtimeseries[-1]['cash']
+                self.cashtimeseries.append({'date': dividend_date, 'dividend': dividend, 'cash': cash+dividend})
+
+    def get_portfolio_values_overtime(self, startdate, enddate, cacheddir=None):
+        worthdf = super(DynamicPortfolioWithDividends, self).get_portfolio_values_overtime(startdate, enddate, cacheddir=cacheddir)
+        worthdf.rename(columns={'value': 'stock_value'}, inplace=True)
+        self.calculate_cash_from_dividends(enddate)
+        
+        dividends_df = pd.DataFrame.from_records(self.cashtimeseries) if len(self.cashtimeseries) > 0 else pd.DataFrame(
+            np.empty(0, dtype=[('date', 'S20'), ('dividend', 'f8'), ('cash', 'f8')])
+        )
+        dividends_df = dividends_df.rename(columns={'date': 'TimeStamp'})
+        dividends_df = dividends_df.sort_values('TimeStamp')
+        dividends_df['TimeStamp'] = dividends_df['TimeStamp'].astype(str)
+        worthdf = worthdf.merge(dividends_df, on='TimeStamp', how='left')
+        worthdf['cash'] = worthdf['cash'].ffill()
+        worthdf = worthdf.fillna(0.)
+        worthdf['value'] = worthdf['stock_value'] + worthdf['cash']
+
+        return worthdf
