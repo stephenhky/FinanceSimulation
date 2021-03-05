@@ -236,7 +236,7 @@ class DynamicPortfolioWithDividends(DynamicPortfolio):
             np.empty(0, dtype=[('date', 'S20'), ('dividend', 'f8'), ('cash', 'f8')])
         )
         dividends_df = dividends_df.rename(columns={'date': 'TimeStamp'})
-        dividends_df = dividends_df.groupby('TimeStamp').aggregate({'dividend': 'sum', 'cash': 'sum'}).reset_index()
+        dividends_df = dividends_df.groupby('TimeStamp').aggregate({'dividend': 'sum', 'cash': 'max'}).reset_index()
         dividends_df = dividends_df.sort_values('TimeStamp')
         dividends_df['TimeStamp'] = dividends_df['TimeStamp'].astype(str)
         worthdf = worthdf.merge(dividends_df, on='TimeStamp', how='left')
