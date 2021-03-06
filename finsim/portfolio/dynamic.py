@@ -55,7 +55,7 @@ class DynamicPortfolio(Portfolio):
                     start = idx
                 elif self.timeseries[idx]['date'] >= date:
                     end = idx
-                idx = (end-start) // 2
+                idx = (start+end) // 2
         return idx
 
     def move_cursor_to_date(self, newdate):
