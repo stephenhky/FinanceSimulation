@@ -79,7 +79,7 @@ class Portfolio:
         assert isinstance(other, Portfolio)
 
         for symbol, nbshares in self.symbols_nbshares.items():
-            if symbol not in other.symbols_shares:
+            if symbol not in other.symbols_nbshares:
                 return False
             if other.symbols_nbshares[symbol] != nbshares:
                 return False
