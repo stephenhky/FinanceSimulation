@@ -1,0 +1,22 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.7.4
+
+    working_directory: ~/finsim
+
+    steps:
+      - checkout
+
+      - run:
+          name: Installing Packages
+          command: |
+            pip install -U .
+            pip install -U pytest
+
+      - run:
+          name: Run Unit Tests
+          command: |
+            pytest
+
