@@ -1,22 +1,37 @@
 version: 2
+
+shared: &shared
+  working_directory: ~/finsim
+
+  steps:
+    - checkout
+
+    - run:
+        name: Installing Packages
+        command: |
+          pip install --upgrade --user pip
+          pip install --upgrade --user .
+          pip install --upgrade --user pytest
+
+    - run:
+        name: Run Unit Tests
+        command: |
+          pytest
+
+
+
 jobs:
-  build:
+  py37:
+    <<: *shared
     docker:
-      - image: circleci/python:3.7.4
+      - image: circleci/python:3.7
 
-    working_directory: ~/finsim
+  py38:
+    <<: *shared
+    docker:
+      - image: circleci/python:3.8
 
-    steps:
-      - checkout
-
-      - run:
-          name: Installing Packages
-          command: |
-            pip install --upgrade --user pip
-            pip install --upgrade --user .
-            pip install --upgrade --user pytest
-
-      - run:
-          name: Run Unit Tests
-          command: |
-            pytest
+  py39:
+    <<: *shared
+    docker:
+      - image: circleci/python:3.9
