@@ -12,8 +12,9 @@ jobs:
       - run:
           name: Installing Packages
           command: |
-            pip install -U .
-            pip install -U pytest
+            pip install --upgrade --user pip
+            pip install --upgrade --user .
+            pip install --upgrade --user pytest
 
       - run:
           name: Run Unit Tests
