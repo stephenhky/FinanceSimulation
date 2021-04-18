@@ -8,3 +8,4 @@ tqdm>=4.49.0
 tables>=3.6.0
 yfinance>=0.1.55
 openpyxl>=3.0.0
+Cython>=0.29.0

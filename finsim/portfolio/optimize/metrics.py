@@ -1,30 +1,31 @@
 
-import numpy as np
-import numba as nb
+from .native.numbametrics import numba_sharpe_ratio, numba_mpt_costfunction, numba_mpt_entropy_costfunction
+from .native.cythonmetrics import cython_sharpe_ratio, cython_mpt_costfunction, cython_mpt_entropy_costfunction
 
 
-@nb.njit(nb.float64(nb.float64[:], nb.float64[:], nb.float64[:, :], nb.float64))
-def sharpe_ratio(weights, r, cov, rf):
-    yieldrate = np.sum(weights * r)
-    sqweights = np.expand_dims(weights, axis=1) @ np.expand_dims(weights, axis=0)
-    volatility = np.sqrt(np.sum(sqweights * cov))
-    return (yieldrate - rf) / volatility
+def sharpe_ratio(weights, r, cov, rf, lowlevellang='C'):
+    if lowlevellang == 'C':
+        return cython_sharpe_ratio(weights, r, cov, rf)
+    elif lowlevellang == 'N':
+        return numba_sharpe_ratio(weights, r, cov, rf)
+    else:
+        raise ValueError('Unknown low-level language: {}. (Should be "N" (numba), "C" (Cython), or "F" (Fortran).)'.format(lowlevellang))
 
 
-@nb.njit(nb.float64(nb.float64[:], nb.float64[:], nb.float64[:, :], nb.float64, nb.float64, nb.float64))
-def mpt_costfunction(weights, r, cov, rf, lamb, V0=10):
-    weightmat = np.expand_dims(weights[:-1], axis=0)
-    c = lamb * V0
-    return weights[-1]*rf + np.dot(weights[:-1], r) - 0.5*c/V0*(weightmat @ cov @ weightmat.T)[0, 0]
+def mpt_costfunction(weights, r, cov, rf, lamb, V0=10., lowlevellang='C'):
+    if lowlevellang == 'C':
+        return cython_mpt_costfunction(weights, r, cov, rf, lamb, V0)
+    elif lowlevellang == 'N':
+        return numba_mpt_costfunction(weights, r, cov, rf, lamb, V0=V0)
+    else:
+        raise ValueError('Unknown low-level language: {}. (Should be "N" (numba), "C" (Cython), or "F" (Fortran).)'.format(lowlevellang))
 
 
-@nb.njit(nb.float64(nb.float64[:], nb.float64[:], nb.float64[:, :], nb.float64, nb.float64, nb.float64, nb.float64))
-def mpt_entropy_costfunction(weights, r, cov, rf, lamb0, lamb1, V=10):
-    weightmat = np.expand_dims(weights[:-1], axis=0)
-    c0 = lamb0 * V
-    c1 = lamb1 * V
-    yield_val = weights[-1]*rf + np.dot(weights[:-1], r)
-    cov_val = - 0.5 * c0 / V * (weightmat @ cov @ weightmat.T)[0, 0]
-    sumweights = np.sum(weights[:-1])
-    entropy_val = - 0.5 * c1 / V * np.sum(weights[:-1] * (np.log(weights[-1]) - sumweights)) / sumweights
-    return yield_val + cov_val + entropy_val
+def mpt_entropy_costfunction(weights, r, cov, rf, lamb0, lamb1, V=10., lowlevellang='C'):
+    if lowlevellang == 'C':
+        return cython_mpt_entropy_costfunction(weights, r, cov, rf, lamb0, lamb1, V)
+    elif lowlevellang == 'N':
+        return numba_mpt_entropy_costfunction(weights, r, cov, rf, lamb0, lamb1, V=V)
+    else:
+        raise ValueError('Unknown low-level language: {}. (Should be "N" (numba), "C" (Cython), or "F" (Fortran).)'.format(lowlevellang))
+
