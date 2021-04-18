@@ -45,7 +45,8 @@ setup(
         'finsim.estimate.native',
         'finsim.simulation',
         'finsim.portfolio',
-        'finsim.portfolio.optimize'
+        'finsim.portfolio.optimize',
+        'finsim.portfolio.optimize.native'
     ],
     install_requires=install_requirements(),
     tests_require=[
