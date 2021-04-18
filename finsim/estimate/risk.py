@@ -3,25 +3,40 @@ import numpy as np
 from scipy import stats
 
 from .native.numbarisk import numba_estimate_downside_risk, numba_estimate_upside_risk
+from .native.cythonrisk import cython_estimate_downside_risk, cython_estimate_upside_risk
 from .constants import dividing_factors_dict
 
 
-def estimate_downside_risk(timestamps, prices, target_return, unit='year'):
+def estimate_downside_risk(timestamps, prices, target_return, unit='year', lowlevellang='C'):
     dividing_factor = dividing_factors_dict[unit]
 
     ts = np.array(timestamps, dtype='datetime64[s]')
     ts = np.array(ts, dtype=np.float) / dividing_factor
 
-    return numba_estimate_downside_risk(ts, prices, target_return)
+    if lowlevellang == 'C':
+        return cython_estimate_downside_risk(ts, prices, target_return)
+    elif lowlevellang == 'N':
+        return numba_estimate_downside_risk(ts, prices, target_return)
+    else:
+        raise ValueError(
+            'Unknown low-level language: {}. (Should be "N" (numba), "C" (Cython), or "F" (Fortran).)'.format(
+                lowlevellang))
 
 
-def estimate_upside_risk(timestamps, prices, target_return, unit='year'):
+def estimate_upside_risk(timestamps, prices, target_return, unit='year', lowlevellang='C'):
     dividing_factor = dividing_factors_dict[unit]
 
     ts = np.array(timestamps, dtype='datetime64[s]')
     ts = np.array(ts, dtype=np.float) / dividing_factor
 
-    return numba_estimate_upside_risk(ts, prices, target_return)
+    if lowlevellang == 'C':
+        return cython_estimate_upside_risk(ts, prices, target_return)
+    elif lowlevellang == 'N':
+        return numba_estimate_upside_risk(ts, prices, target_return)
+    else:
+        raise ValueError(
+            'Unknown low-level language: {}. (Should be "N" (numba), "C" (Cython), or "F" (Fortran).)'.format(
+                lowlevellang))
 
 
 def estimate_beta(timestamps, prices, market_prices, unit='year'):

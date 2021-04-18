@@ -4,10 +4,17 @@ import numpy as np
 
 try:
     from Cython.Build import cythonize
-    ext_modules = cythonize(['finsim/portfolio/optimize/native/cythonmetrics.pyx'])
+    ext_modules = cythonize(['finsim/portfolio/optimize/native/cythonmetrics.pyx',
+                             'finsim/estimate/native/cythonfit.pyx',
+                             'finsim/estimate/native/cythonrisk.pyx'])
 except ImportError:
     ext_modules = [Extension('finsim.portfolio.optimize.native.cynthonmetrics',
-                             sources=['finsim/portfolio/optimize/native/cythonmetrics.c'])]
+                             sources=['finsim/portfolio/optimize/native/cythonmetrics.c']),
+                   Extension('finsim.estimate.native.cythonfit',
+                             sources=['finsim/estimate/native/cythonfit.c']),
+                   Extension('finsim.estimate.native.cythonrisk',
+                             sources=['finsim/estimate/native/cythonrisk.c'])
+                   ]
 
 def readme():
     with open('README.md') as f:
