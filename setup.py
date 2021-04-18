@@ -1,5 +1,13 @@
 
-from setuptools import setup
+from setuptools import setup, Extension
+import numpy as np
+
+try:
+    from Cython.Build import cythonize
+    ext_modules = cythonize(['finsim/portfolio/optimize/native/cythonmetrics.pyx'])
+except ImportError:
+    ext_modules = [Extension('finsim.portfolio.optimize.native.cynthonmetrics',
+                             sources=['finsim/portfolio/optimize/native/cythonmetrics.c'])]
 
 def readme():
     with open('README.md') as f:
@@ -29,6 +37,8 @@ setup(
       "Programming Language :: Python :: 3.7",
       "Programming Language :: Python :: 3.8",
       "Programming Language :: Python :: 3.9",
+      "Programming Language :: Cython",
+      "Programming Language :: C",
       "Intended Audience :: Science/Research",
       "Intended Audience :: Developers",
       "Intended Audience :: Financial and Insurance Industry"
@@ -48,12 +58,15 @@ setup(
         'finsim.portfolio.optimize',
         'finsim.portfolio.optimize.native'
     ],
+    include_dirs=[np.get_include()],
+    setup_requires=['Cython', 'numpy', ],
     install_requires=install_requirements(),
     tests_require=[
       'unittest2', 'pytest'
     ],
     # scripts=[],
     include_package_data=True,
+    ext_modules=ext_modules,
     test_suite="test",
     zip_safe=False
 )

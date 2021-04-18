@@ -10,13 +10,13 @@ shared: &shared
         name: Installing Packages
         command: |
           pip install --upgrade --user pip
+          pip install --upgrade --user Cython
           pip install --upgrade --user .
-          pip install --upgrade --user pytest
 
     - run:
         name: Run Unit Tests
         command: |
-          pytest
+          python setup.py test
 
 
 
