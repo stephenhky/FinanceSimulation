@@ -7,6 +7,14 @@ shared: &shared
     - checkout
 
     - run:
+        name: Apt Install
+        command: |
+          sudo apt-get update
+          sudo apt-get install -y libc6
+          sudo apt-get install -y g++
+          sudo apt-get install -y gfortran
+
+    - run:
         name: Installing Packages
         command: |
           pip install --upgrade --user pip

@@ -1,6 +1,7 @@
 
-from setuptools import setup, Extension
-import numpy as np
+# Reference: https://stackoverflow.com/questions/7932028/setup-py-for-packages-that-depend-on-both-cython-and-f2py
+
+from setuptools import setup
 
 try:
     from Cython.Build import cythonize
@@ -8,13 +9,38 @@ try:
                              'finsim/estimate/native/cythonfit.pyx',
                              'finsim/estimate/native/cythonrisk.pyx'])
 except ImportError:
-    ext_modules = [Extension('finsim.portfolio.optimize.native.cynthonmetrics',
-                             sources=['finsim/portfolio/optimize/native/cythonmetrics.c']),
-                   Extension('finsim.estimate.native.cythonfit',
-                             sources=['finsim/estimate/native/cythonfit.c']),
-                   Extension('finsim.estimate.native.cythonrisk',
-                             sources=['finsim/estimate/native/cythonrisk.c'])
-                   ]
+    from setuptools import Extension
+    ext_modules = [
+        Extension('finsim.portfolio.optimize.native.cynthonmetrics',
+                  sources=['finsim/portfolio/optimize/native/cythonmetrics.c']),
+        Extension('finsim.estimate.native.cythonfit',
+                  sources=['finsim/estimate/native/cythonfit.c']),
+        Extension('finsim.estimate.native.cythonrisk',
+                  sources=['finsim/estimate/native/cythonrisk.c'])
+    ]
+
+import numpy as np
+from numpy.distutils.core import setup
+from numpy.distutils.core import Extension as fortranExtension
+
+fortran_ext_modules = [
+    fortranExtension(
+        'finsim.portfolio.optimize.native.fortranmetrics',
+        sources=['finsim/portfolio/optimize/native/fortranmetrics.f90',
+                 'finsim/portfolio/optimize/native/fortranmetrics.pyf']
+    ),
+    fortranExtension(
+        'finsim.estimate.native.fortranfit',
+        sources=['finsim/estimate/native/fortranfit.f90',
+                 'finsim/estimate/native/fortranfit.pyf']
+    ),
+    fortranExtension(
+        'finsim.estimate.native.fortranrisk',
+        sources=['finsim/estimate/native/fortranrisk.f90',
+                 'finsim/estimate/native/fortranrisk.pyf']
+    )
+]
+
 
 def readme():
     with open('README.md') as f:
@@ -33,7 +59,7 @@ def package_description():
 
 setup(
     name='finsim',
-    version="0.6.6",
+    version="0.6.7",
     description="Financial simulation and inference",
     long_description=package_description(),
     long_description_content_type='text/markdown',
@@ -46,6 +72,7 @@ setup(
       "Programming Language :: Python :: 3.9",
       "Programming Language :: Cython",
       "Programming Language :: C",
+      "Programming Language :: Fortran",
       "Intended Audience :: Science/Research",
       "Intended Audience :: Developers",
       "Intended Audience :: Financial and Insurance Industry"
@@ -73,7 +100,7 @@ setup(
     ],
     # scripts=[],
     include_package_data=True,
-    ext_modules=ext_modules,
+    ext_modules=fortran_ext_modules+ext_modules,
     test_suite="test",
     zip_safe=False
 )

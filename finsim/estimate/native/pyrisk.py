@@ -1,10 +1,8 @@
 
 import numpy as np
-import numba as nb
 
 
-@nb.njit(nb.float64(nb.float64[:], nb.float64[:], nb.float64))
-def numba_estimate_downside_risk(ts, prices, target_return):
+def python_estimate_downside_risk(ts, prices, target_return):
     dlogS = np.log(prices[1:] / prices[:-1])
     dt = ts[1:] - ts[:-1]
 
@@ -15,8 +13,7 @@ def numba_estimate_downside_risk(ts, prices, target_return):
     return downside_risk
 
 
-@nb.njit(nb.float64(nb.float64[:], nb.float64[:], nb.float64))
-def numba_estimate_upside_risk(ts, prices, target_return):
+def python_estimate_upside_risk(ts, prices, target_return):
     dlogS = np.log(prices[1:] / prices[:-1])
     dt = ts[1:] - ts[:-1]
 

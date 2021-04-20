@@ -1,10 +1,8 @@
 
 import numpy as np
-import numba as nb
 
 
-@nb.njit(nb.types.Tuple((nb.float64, nb.float64))(nb.float64[:], nb.float64[:]))
-def numba_fit_BlackScholesMerton_model(ts, prices):
+def python_fit_BlackScholesMerton_model(ts, prices):
     dlogS = np.log(prices[1:] / prices[:-1])
     dt = ts[1:] - ts[:-1]
 
@@ -14,8 +12,7 @@ def numba_fit_BlackScholesMerton_model(ts, prices):
     return r, sigma
 
 
-@nb.njit(nb.types.Tuple((nb.float64[:], nb.float64[:, :]))(nb.float64[:], nb.float64[:, :]))
-def numba_fit_multivariate_BlackScholesMerton_model(ts, multiprices):
+def python_fit_multivariate_BlackScholesMerton_model(ts, multiprices):
     dlogS = np.log(multiprices[:, 1:] / multiprices[:, :-1])
     dt = ts[1:] - ts[:-1]
 

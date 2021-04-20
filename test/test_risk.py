@@ -10,28 +10,73 @@ class TestRisk(unittest.TestCase):
     def test_nodownward_movement(self):
         ts = np.linspace(0, 10, 11)
         S = np.linspace(1.0, 1.8, 11)
-        downside_risk = risk.numba_estimate_downside_risk(ts, S, 0.0)
-        self.assertAlmostEqual(downside_risk, 0.0)
+        self.assertAlmostEqual(
+            risk.python_estimate_downside_risk(ts, S, 0.0),
+            0.0
+        )
+        self.assertAlmostEqual(
+            risk.cython_estimate_downside_risk(ts, S, 0.0),
+            0.0
+        )
+        self.assertAlmostEqual(
+            risk.fortranrisk.fortran_estimate_downside_risk(ts, S, 0.0),
+            0.0
+        )
 
     def test_somedownward_movement(self):
         r_fake_array = np.array([0.1, 0.2, -0.1, -0.1, 0.3, 0.4])
         S_array = np.exp(np.cumsum(r_fake_array))
         ts = np.linspace(0, 5, 6)
-        downside_risk = risk.numba_estimate_downside_risk(ts, S_array, 0.0)
-        self.assertAlmostEqual(downside_risk, np.sqrt(0.02/5))
+        expected_downside_risk = np.sqrt(0.02/5)
+
+        self.assertAlmostEqual(
+            risk.python_estimate_downside_risk(ts, S_array, 0.0),
+            expected_downside_risk
+        )
+        self.assertAlmostEqual(
+            risk.cython_estimate_downside_risk(ts, S_array, 0.0),
+            expected_downside_risk
+        )
+        self.assertAlmostEqual(
+            risk.fortranrisk.fortran_estimate_downside_risk(ts, S_array, 0.0),
+            expected_downside_risk
+        )
 
     def test_noupward_movement(self):
         ts = np.linspace(0, 10, 11)
         S = np.linspace(1.0, 0.5, 11)
-        upside_risk = risk.numba_estimate_upside_risk(ts, S, 0.0)
-        self.assertAlmostEqual(upside_risk, 0.0)
+
+        self.assertAlmostEqual(
+            risk.python_estimate_upside_risk(ts, S, 0.0),
+            0.0
+        )
+        self.assertAlmostEqual(
+            risk.cython_estimate_upside_risk(ts, S, 0.0),
+            0.0
+        )
+        self.assertAlmostEqual(
+            risk.fortranrisk.fortran_estimate_upside_risk(ts, S, 0.0),
+            0.0
+        )
 
     def test_someupward_movement(self):
         r_fake_array = np.array([-0.1, -0.2, 0.1, 0.1, -0.3, -0.4])
         S_array = np.exp(np.cumsum(r_fake_array))
         ts = np.linspace(0, 5, 6)
-        upside_risk = risk.numba_estimate_upside_risk(ts, S_array, 0.0)
-        self.assertAlmostEqual(upside_risk, np.sqrt(0.02/5))
+        expected_upside_risk = np.sqrt(0.02/5)
+
+        self.assertAlmostEqual(
+            risk.python_estimate_upside_risk(ts, S_array, 0.0),
+            expected_upside_risk
+        )
+        self.assertAlmostEqual(
+            risk.cython_estimate_upside_risk(ts, S_array, 0.0),
+            expected_upside_risk
+        )
+        self.assertAlmostEqual(
+            risk.fortranrisk.fortran_estimate_upside_risk(ts, S_array, 0.0),
+            expected_upside_risk
+        )
 
     def test_beta(self):
         timestamps = np.array(['2021-02-16T00:00:00.000000000', 
