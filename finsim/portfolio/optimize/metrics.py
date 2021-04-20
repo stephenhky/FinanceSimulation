@@ -4,7 +4,7 @@ from .native.cythonmetrics import cython_sharpe_ratio, cython_mpt_costfunction, 
 from .native.fortranmetrics import fortranmetrics
 
 
-def sharpe_ratio(weights, r, cov, rf, lowlevellang='C'):
+def sharpe_ratio(weights, r, cov, rf, lowlevellang='F'):
     if lowlevellang == 'C':
         return cython_sharpe_ratio(weights, r, cov, rf)
     elif lowlevellang == 'P':
@@ -15,7 +15,7 @@ def sharpe_ratio(weights, r, cov, rf, lowlevellang='C'):
         raise ValueError('Unknown low-level language: {}. (Should be "P" (Python), "C" (Cython), or "F" (Fortran).)'.format(lowlevellang))
 
 
-def mpt_costfunction(weights, r, cov, rf, lamb, V0=10., lowlevellang='C'):
+def mpt_costfunction(weights, r, cov, rf, lamb, V0=10., lowlevellang='F'):
     if lowlevellang == 'C':
         return cython_mpt_costfunction(weights, r, cov, rf, lamb, V0)
     elif lowlevellang == 'P':
@@ -26,7 +26,7 @@ def mpt_costfunction(weights, r, cov, rf, lamb, V0=10., lowlevellang='C'):
         raise ValueError('Unknown low-level language: {}. (Should be "P" (Python), "C" (Cython), or "F" (Fortran).)'.format(lowlevellang))
 
 
-def mpt_entropy_costfunction(weights, r, cov, rf, lamb0, lamb1, V=10., lowlevellang='C'):
+def mpt_entropy_costfunction(weights, r, cov, rf, lamb0, lamb1, V=10., lowlevellang='F'):
     if lowlevellang == 'C':
         return cython_mpt_entropy_costfunction(weights, r, cov, rf, lamb0, lamb1, V)
     elif lowlevellang == 'P':

@@ -1,0 +1,26 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module fortranrisk ! in 
+    interface  ! in :fortranrisk
+        module fortranrisk ! in :fortranrisk:fortranrisk.f90
+            function fortran_estimate_downside_risk(nbpts,ts,prices,target_return) result (downside_risk) ! in :fortranrisk:fortranrisk.f90:fortranrisk
+                integer, optional,intent(in),check(len(ts)>=nbpts),depend(ts) :: nbpts=len(ts)
+                real dimension(nbpts),intent(in) :: ts
+                real dimension(nbpts),intent(in),depend(nbpts) :: prices
+                real intent(in) :: target_return
+                real :: downside_risk
+            end function fortran_estimate_downside_risk
+            function fortran_estimate_upside_risk(nbpts,ts,prices,target_return) result (upside_risk) ! in :fortranrisk:fortranrisk.f90:fortranrisk
+                integer, optional,intent(in),check(len(ts)>=nbpts),depend(ts) :: nbpts=len(ts)
+                real dimension(nbpts),intent(in) :: ts
+                real dimension(nbpts),intent(in),depend(nbpts) :: prices
+                real intent(in) :: target_return
+                real :: upside_risk
+            end function fortran_estimate_upside_risk
+        end module fortranrisk
+    end interface 
+end python module fortranrisk
+
+! This file was auto-generated with f2py (version:1.20.2).
+! See http://cens.ioc.ee/projects/f2py2e/

@@ -33,6 +33,11 @@ fortran_ext_modules = [
         'finsim.estimate.native.fortranfit',
         sources=['finsim/estimate/native/fortranfit.f90',
                  'finsim/estimate/native/fortranfit.pyf']
+    ),
+    fortranExtension(
+        'finsim.estimate.native.fortranrisk',
+        sources=['finsim/estimate/native/fortranrisk.f90',
+                 'finsim/estimate/native/fortranrisk.pyf']
     )
 ]
 
@@ -67,6 +72,7 @@ setup(
       "Programming Language :: Python :: 3.9",
       "Programming Language :: Cython",
       "Programming Language :: C",
+      "Programming Language :: Fortran",
       "Intended Audience :: Science/Research",
       "Intended Audience :: Developers",
       "Intended Audience :: Financial and Insurance Industry"

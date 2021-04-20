@@ -9,7 +9,7 @@ from .native.fortranfit import fortranfit
 
 # Note: always round-off to seconds first, but flexible about the unit to be used.
 
-def fit_BlackScholesMerton_model(timestamps, prices, unit='year', lowlevellang='C'):
+def fit_BlackScholesMerton_model(timestamps, prices, unit='year', lowlevellang='F'):
     dividing_factor = dividing_factors_dict[unit]
 
     ts = np.array(timestamps, dtype='datetime64[s]')
