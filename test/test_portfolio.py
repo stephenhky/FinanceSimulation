@@ -21,9 +21,9 @@ class TestPortfolio(unittest.TestCase):
 
         summary = optimized_portfolio.summary
         
-        self.assertAlmostEqual(summary['yield'], 0.2905, places=4)
-        self.assertAlmostEqual(summary['volatility'], 0.2431, places=4)
-        self.assertAlmostEqual(summary['sharpe_ratio'], 1.1442, places=4)
+        self.assertAlmostEqual(summary['yield'], 0.2837451882660389, places=4)
+        self.assertAlmostEqual(summary['volatility'], 0.24625264201343075, places=4)
+        self.assertAlmostEqual(summary['sharpe_ratio'], 1.1023037433624268, places=4)
         np.testing.assert_array_almost_equal(
             summary['correlation'],
             np.array([[1., 0.38132613, 0.28049998, 0.42612949],
@@ -50,9 +50,9 @@ class TestPortfolio(unittest.TestCase):
 
         summary = optimized_portfolio.summary
 
-        self.assertAlmostEqual(summary['yield'], 0.3116, places=4)
-        self.assertAlmostEqual(summary['volatility'], 0.2620, places=4)
-        self.assertAlmostEqual(summary['mpt_costfunction'], 6.7373, places=4)
+        self.assertAlmostEqual(summary['yield'], 0.2837451882660389, places=4)
+        self.assertAlmostEqual(summary['volatility'], 0.24625264201343075, places=4)
+        self.assertAlmostEqual(summary['mpt_costfunction'], 2.1005125045776367, places=4)
         np.testing.assert_array_almost_equal(
             summary['correlation'],
             np.array([[1.        , 0.38132613, 0.28049998, 0.42612949],
