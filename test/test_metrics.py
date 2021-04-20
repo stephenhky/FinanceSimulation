@@ -35,14 +35,38 @@ class TestMetrics(unittest.TestCase):
         r = np.array([0.1, 0.05, 0.15])
         cov = np.array([[1., 0.4, -0.3], [0.4, 1., 0.05], [-0.3, 0.05, 1.]])
         rf = 0.001
+
+        lamb01cost = 0.077475
         self.assertAlmostEqual(
-            metrics.mpt_costfunction(weights, r, cov, rf, 0.1, V0=10),
-            0.077475,
+            metrics.mpt_costfunction(weights, r, cov, rf, 0.1, V0=10, lowlevellang='C'),
+            lamb01cost,
             delta=1e-6
         )
         self.assertAlmostEqual(
-            metrics.mpt_costfunction(weights, r, cov, rf, 0.2, V0=10),
-            0.059750000000000004,
+            metrics.mpt_costfunction(weights, r, cov, rf, 0.1, V0=10, lowlevellang='N'),
+            lamb01cost,
+            delta=1e-6
+        )
+        self.assertAlmostEqual(
+            metrics.mpt_costfunction(weights, r, cov, rf, 0.1, V0=10, lowlevellang='F'),
+            lamb01cost,
+            delta=1e-6
+        )
+
+        lamb02cost = 0.059750000000000004
+        self.assertAlmostEqual(
+            metrics.mpt_costfunction(weights, r, cov, rf, 0.2, V0=10, lowlevellang='C'),
+            lamb02cost,
+            delta=1e-6
+        )
+        self.assertAlmostEqual(
+            metrics.mpt_costfunction(weights, r, cov, rf, 0.2, V0=10, lowlevellang='N'),
+            lamb02cost,
+            delta=1e-6
+        )
+        self.assertAlmostEqual(
+            metrics.mpt_costfunction(weights, r, cov, rf, 0.2, V0=10, lowlevellang='F'),
+            lamb02cost,
             delta=1e-6
         )
 
@@ -51,14 +75,38 @@ class TestMetrics(unittest.TestCase):
         r = np.array([0.1, 0.05, 0.15])
         cov = np.array([[1., 0.4, -0.3], [0.4, 1., 0.05], [-0.3, 0.05, 1.]])
         rf = 0.001
+
+        case1cost = 0.08170682914813143
         self.assertAlmostEqual(
-            metrics.mpt_entropy_costfunction(weights, r, cov, rf, 0.1, 0.01, V=10),
-            0.0897721895621705,
+            metrics.mpt_entropy_costfunction(weights, r, cov, rf, 0.1, 0.01, V=10, lowlevellang='C'),
+            case1cost,
             delta=1e-6
         )
         self.assertAlmostEqual(
-            metrics.mpt_entropy_costfunction(weights, r, cov, rf, 0.1, 0.1, V=10),
-            0.20044689562170498,
+            metrics.mpt_entropy_costfunction(weights, r, cov, rf, 0.1, 0.01, V=10, lowlevellang='N'),
+            case1cost,
+            delta=1e-6
+        )
+        self.assertAlmostEqual(
+            metrics.mpt_entropy_costfunction(weights, r, cov, rf, 0.1, 0.01, V=10, lowlevellang='F'),
+            case1cost,
+            delta=1e-6
+        )
+
+        case2cost = 0.11979329148131437
+        self.assertAlmostEqual(
+            metrics.mpt_entropy_costfunction(weights, r, cov, rf, 0.1, 0.1, V=10, lowlevellang='C'),
+            case2cost,
+            delta=1e-6
+        )
+        self.assertAlmostEqual(
+            metrics.mpt_entropy_costfunction(weights, r, cov, rf, 0.1, 0.1, V=10, lowlevellang='N'),
+            case2cost,
+            delta=1e-6
+        )
+        self.assertAlmostEqual(
+            metrics.mpt_entropy_costfunction(weights, r, cov, rf, 0.1, 0.1, V=10, lowlevellang='F'),
+            case2cost,
             delta=1e-6
         )
 

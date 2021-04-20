@@ -24,5 +24,5 @@ def cython_mpt_entropy_costfunction(np.ndarray weights, np.ndarray r, np.ndarray
     cdef double yield_val = weights[-1]*rf + np.dot(weights[:-1], r)
     cdef double cov_val = - 0.5 * c0 / V * (weightmat @ cov @ weightmat.T)[0, 0]
     cdef double sumweights = np.sum(weights[:-1])
-    cdef double entropy_val = - 0.5 * c1 / V * np.sum(weights[:-1] * (np.log(weights[-1]) - sumweights)) / sumweights
+    cdef double entropy_val = - 0.5 * c1 / V * np.sum(weights[:-1] * (np.log(weights[:-1]) - np.log(sumweights))) / sumweights
     return yield_val + cov_val + entropy_val

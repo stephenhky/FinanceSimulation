@@ -20,6 +20,8 @@ def mpt_costfunction(weights, r, cov, rf, lamb, V0=10., lowlevellang='C'):
         return cython_mpt_costfunction(weights, r, cov, rf, lamb, V0)
     elif lowlevellang == 'N':
         return numba_mpt_costfunction(weights, r, cov, rf, lamb, V0=V0)
+    elif lowlevellang == 'F':
+        return fortranmetrics.f90_mpt_costfunction(weights, r, cov, rf, lamb, V0)
     else:
         raise ValueError('Unknown low-level language: {}. (Should be "N" (numba), "C" (Cython), or "F" (Fortran).)'.format(lowlevellang))
 
@@ -29,6 +31,8 @@ def mpt_entropy_costfunction(weights, r, cov, rf, lamb0, lamb1, V=10., lowlevell
         return cython_mpt_entropy_costfunction(weights, r, cov, rf, lamb0, lamb1, V)
     elif lowlevellang == 'N':
         return numba_mpt_entropy_costfunction(weights, r, cov, rf, lamb0, lamb1, V=V)
+    elif lowlevellang == 'F':
+        return fortranmetrics.f90_mpt_entropy_costfunction(weights, r, cov, rf, lamb0, lamb1, V)
     else:
         raise ValueError('Unknown low-level language: {}. (Should be "N" (numba), "C" (Cython), or "F" (Fortran).)'.format(lowlevellang))
 

@@ -26,5 +26,5 @@ def numba_mpt_entropy_costfunction(weights, r, cov, rf, lamb0, lamb1, V=10.):
     yield_val = weights[-1]*rf + np.dot(weights[:-1], r)
     cov_val = - 0.5 * c0 / V * (weightmat @ cov @ weightmat.T)[0, 0]
     sumweights = np.sum(weights[:-1])
-    entropy_val = - 0.5 * c1 / V * np.sum(weights[:-1] * (np.log(weights[-1]) - sumweights)) / sumweights
+    entropy_val = - 0.5 * c1 / V * np.sum(weights[:-1] * (np.log(weights[:-1]) - np.log(sumweights))) / sumweights
     return yield_val + cov_val + entropy_val
