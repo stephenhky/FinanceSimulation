@@ -10,21 +10,31 @@ try:
                              'finsim/estimate/native/cythonrisk.pyx'])
 except ImportError:
     from setuptools import Extension
-    ext_modules = [Extension('finsim.portfolio.optimize.native.cynthonmetrics',
-                             sources=['finsim/portfolio/optimize/native/cythonmetrics.c']),
-                   Extension('finsim.estimate.native.cythonfit',
-                             sources=['finsim/estimate/native/cythonfit.c']),
-                   Extension('finsim.estimate.native.cythonrisk',
-                             sources=['finsim/estimate/native/cythonrisk.c'])
-                   ]
+    ext_modules = [
+        Extension('finsim.portfolio.optimize.native.cynthonmetrics',
+                  sources=['finsim/portfolio/optimize/native/cythonmetrics.c']),
+        Extension('finsim.estimate.native.cythonfit',
+                  sources=['finsim/estimate/native/cythonfit.c']),
+        Extension('finsim.estimate.native.cythonrisk',
+                  sources=['finsim/estimate/native/cythonrisk.c'])
+    ]
 
 import numpy as np
 from numpy.distutils.core import setup
 from numpy.distutils.core import Extension as fortranExtension
 
-fortran_ext_modules = [fortranExtension('finsim.portfolio.optimize.native.fortranmetrics',
-                                        sources=['finsim/portfolio/optimize/native/fortranmetrics.f90',
-                                                 'finsim/portfolio/optimize/native/fortranmetrics.pyf'])]
+fortran_ext_modules = [
+    fortranExtension(
+        'finsim.portfolio.optimize.native.fortranmetrics',
+        sources=['finsim/portfolio/optimize/native/fortranmetrics.f90',
+                 'finsim/portfolio/optimize/native/fortranmetrics.pyf']
+    ),
+    fortranExtension(
+        'finsim.estimate.native.fortranfit',
+        sources=['finsim/estimate/native/fortranfit.f90',
+                 'finsim/estimate/native/fortranfit.pyf']
+    )
+]
 
 
 def readme():

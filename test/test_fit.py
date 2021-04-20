@@ -10,7 +10,7 @@ from finsim.estimate.fit import fit_BlackScholesMerton_model
 
 
 class TestParameterFitting(unittest.TestCase):
-    def test_fit(self):
+    def fit_differentbackend(self, lowlevellang):
         bsm_simulator = BlackScholesMertonStockPrices(100, 0.04, 0.02)
         prices = bsm_simulator.generate_time_series(100, 1, nbsimulations=1000)
         timestamps = np.array(
@@ -22,7 +22,7 @@ class TestParameterFitting(unittest.TestCase):
         )
         info = [
             (r, sigma)
-            for r, sigma in map(lambda i: fit_BlackScholesMerton_model(timestamps, prices[i, :], unit='day'), range(1000))
+            for r, sigma in map(lambda i: fit_BlackScholesMerton_model(timestamps, prices[i, :], unit='day', lowlevellang=lowlevellang), range(1000))
         ]
         mean_r = np.mean([item[0] for item in info])
         mean_sigma = np.mean([item[1] for item in info])
@@ -30,7 +30,14 @@ class TestParameterFitting(unittest.TestCase):
         self.assertAlmostEqual(mean_r, 0.04, delta=1.96*0.02/sqrt(1000))
         self.assertAlmostEqual(mean_sigma, 0.02, delta=1.96*0.02/sqrt(1000))
 
+    def test_fit_Cython(self):
+        self.fit_differentbackend('C')
 
+    def test_fit_fortran(self):
+        self.fit_differentbackend('F')
+
+    def test_fit_python(self):
+        self.fit_differentbackend('P')
 
 
 if __name__ == '__main__':
