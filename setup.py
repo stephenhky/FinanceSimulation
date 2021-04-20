@@ -59,7 +59,7 @@ def package_description():
 
 setup(
     name='finsim',
-    version="0.6.7a1",
+    version="0.6.7",
     description="Financial simulation and inference",
     long_description=package_description(),
     long_description_content_type='text/markdown',
