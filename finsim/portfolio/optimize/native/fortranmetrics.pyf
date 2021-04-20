@@ -1,0 +1,26 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module fortranmetrics ! in 
+    interface  ! in :fortranmetrics
+        module fortranmetrics ! in :fortranmetrics:fortranmetrics.f90
+            function f90_sharpe_ratio(nbsymbols,weights,r,cov,rf) result (sharpe_ratio) ! in :fortranmetrics:fortranmetrics.f90:fortranmetrics
+                integer, optional,intent(in),check(len(weights)>=nbsymbols),depend(weights) :: nbsymbols=len(weights)
+                real dimension(nbsymbols),intent(in) :: weights
+                real dimension(nbsymbols),intent(in),depend(nbsymbols) :: r
+                real dimension(nbsymbols,nbsymbols),intent(in),depend(nbsymbols,nbsymbols) :: cov
+                real intent(in) :: rf
+                real :: sharpe_ratio
+            end function f90_sharpe_ratio
+            function l1norm(length,vec1,vec2) result (l1dist) ! in :fortranmetrics:fortranmetrics.f90:fortranmetrics
+                integer, optional,intent(in),check(len(vec1)>=length),depend(vec1) :: length=len(vec1)
+                real dimension(length),intent(in) :: vec1
+                real dimension(length),intent(in),depend(length) :: vec2
+                real :: l1dist
+            end function l1norm
+        end module fortranmetrics
+    end interface 
+end python module fortranmetrics
+
+! This file was auto-generated with f2py (version:1.20.2).
+! See http://cens.ioc.ee/projects/f2py2e/

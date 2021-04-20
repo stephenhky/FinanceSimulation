@@ -12,7 +12,7 @@ def fit_BlackScholesMerton_model(timestamps, prices, unit='year', lowlevellang='
     dividing_factor = dividing_factors_dict[unit]
 
     ts = np.array(timestamps, dtype='datetime64[s]')
-    ts = np.array(ts, dtype=np.float) / dividing_factor
+    ts = np.array(ts, dtype=np.float64) / dividing_factor
 
     if lowlevellang == 'C':
         return cython_fit_BlackScholesMerton_model(ts, prices)
@@ -28,7 +28,7 @@ def fit_multivariate_BlackScholesMerton_model(timestamps, multiprices, unit='yea
     dividing_factor = dividing_factors_dict[unit]
 
     ts = np.array(timestamps, dtype='datetime64[s]')
-    ts = np.array(ts, dtype=np.float) / dividing_factor
+    ts = np.array(ts, dtype=np.float64) / dividing_factor
 
     if lowlevellang == 'C':
         return cython_fit_multivariate_BlackScholesMerton_model(ts, multiprices)

@@ -1,6 +1,7 @@
 
 from .native.numbametrics import numba_sharpe_ratio, numba_mpt_costfunction, numba_mpt_entropy_costfunction
 from .native.cythonmetrics import cython_sharpe_ratio, cython_mpt_costfunction, cython_mpt_entropy_costfunction
+from .native.fortranmetrics import fortranmetrics
 
 
 def sharpe_ratio(weights, r, cov, rf, lowlevellang='C'):
@@ -8,6 +9,8 @@ def sharpe_ratio(weights, r, cov, rf, lowlevellang='C'):
         return cython_sharpe_ratio(weights, r, cov, rf)
     elif lowlevellang == 'N':
         return numba_sharpe_ratio(weights, r, cov, rf)
+    elif lowlevellang == 'F':
+        return fortranmetrics.f90_sharpe_ratio(weights, r, cov, rf)
     else:
         raise ValueError('Unknown low-level language: {}. (Should be "N" (numba), "C" (Cython), or "F" (Fortran).)'.format(lowlevellang))
 

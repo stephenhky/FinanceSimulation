@@ -11,7 +11,7 @@ def estimate_downside_risk(timestamps, prices, target_return, unit='year', lowle
     dividing_factor = dividing_factors_dict[unit]
 
     ts = np.array(timestamps, dtype='datetime64[s]')
-    ts = np.array(ts, dtype=np.float) / dividing_factor
+    ts = np.array(ts, dtype=np.float64) / dividing_factor
 
     if lowlevellang == 'C':
         return cython_estimate_downside_risk(ts, prices, target_return)
@@ -27,7 +27,7 @@ def estimate_upside_risk(timestamps, prices, target_return, unit='year', lowleve
     dividing_factor = dividing_factors_dict[unit]
 
     ts = np.array(timestamps, dtype='datetime64[s]')
-    ts = np.array(ts, dtype=np.float) / dividing_factor
+    ts = np.array(ts, dtype=np.float64) / dividing_factor
 
     if lowlevellang == 'C':
         return cython_estimate_upside_risk(ts, prices, target_return)
@@ -43,7 +43,7 @@ def estimate_beta(timestamps, prices, market_prices, unit='year'):
     dividing_factor = dividing_factors_dict[unit]
 
     ts = np.array(timestamps, dtype='datetime64[s]')
-    ts = np.array(ts, dtype=np.float) / dividing_factor
+    ts = np.array(ts, dtype=np.float64) / dividing_factor
     dt = ts[1:] - ts[:-1]
 
     dlogprices = np.log(prices[1:] / prices[:-1])

@@ -12,9 +12,21 @@ class TestMetrics(unittest.TestCase):
         r = np.array([0.1, 0.05, 0.15])
         cov = np.array([[1., 0.4, -0.3], [0.4, 1., 0.05], [-0.3, 0.05, 1.]])
         rf = 0.001
+        expected_sharpe_ratio = 0.12200850769256662
+
         self.assertAlmostEqual(
-            metrics.sharpe_ratio(weights, r, cov, rf),
-            0.12200850769256662,
+            metrics.sharpe_ratio(weights, r, cov, rf, lowlevellang='C'),
+            expected_sharpe_ratio,
+            delta=1e-6
+        )
+        self.assertAlmostEqual(
+            metrics.sharpe_ratio(weights, r, cov, rf, lowlevellang='N'),
+            expected_sharpe_ratio,
+            delta=1e-6
+        )
+        self.assertAlmostEqual(
+            metrics.sharpe_ratio(weights, r, cov, rf, lowlevellang='F'),
+            expected_sharpe_ratio,
             delta=1e-6
         )
 
