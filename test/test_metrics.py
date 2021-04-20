@@ -20,7 +20,7 @@ class TestMetrics(unittest.TestCase):
             delta=1e-6
         )
         self.assertAlmostEqual(
-            metrics.sharpe_ratio(weights, r, cov, rf, lowlevellang='N'),
+            metrics.sharpe_ratio(weights, r, cov, rf, lowlevellang='P'),
             expected_sharpe_ratio,
             delta=1e-6
         )
@@ -43,7 +43,7 @@ class TestMetrics(unittest.TestCase):
             delta=1e-6
         )
         self.assertAlmostEqual(
-            metrics.mpt_costfunction(weights, r, cov, rf, 0.1, V0=10, lowlevellang='N'),
+            metrics.mpt_costfunction(weights, r, cov, rf, 0.1, V0=10, lowlevellang='P'),
             lamb01cost,
             delta=1e-6
         )
@@ -60,7 +60,7 @@ class TestMetrics(unittest.TestCase):
             delta=1e-6
         )
         self.assertAlmostEqual(
-            metrics.mpt_costfunction(weights, r, cov, rf, 0.2, V0=10, lowlevellang='N'),
+            metrics.mpt_costfunction(weights, r, cov, rf, 0.2, V0=10, lowlevellang='P'),
             lamb02cost,
             delta=1e-6
         )
@@ -83,7 +83,7 @@ class TestMetrics(unittest.TestCase):
             delta=1e-6
         )
         self.assertAlmostEqual(
-            metrics.mpt_entropy_costfunction(weights, r, cov, rf, 0.1, 0.01, V=10, lowlevellang='N'),
+            metrics.mpt_entropy_costfunction(weights, r, cov, rf, 0.1, 0.01, V=10, lowlevellang='P'),
             case1cost,
             delta=1e-6
         )
@@ -100,7 +100,7 @@ class TestMetrics(unittest.TestCase):
             delta=1e-6
         )
         self.assertAlmostEqual(
-            metrics.mpt_entropy_costfunction(weights, r, cov, rf, 0.1, 0.1, V=10, lowlevellang='N'),
+            metrics.mpt_entropy_costfunction(weights, r, cov, rf, 0.1, 0.1, V=10, lowlevellang='P'),
             case2cost,
             delta=1e-6
         )
