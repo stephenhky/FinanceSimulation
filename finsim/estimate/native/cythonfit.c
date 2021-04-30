@@ -1709,7 +1709,7 @@ static PyTypeObject *__pyx_ptype_5numpy_character = 0;
 static PyTypeObject *__pyx_ptype_5numpy_ufunc = 0;
 
 /* Module declarations from 'finsim.estimate.native.cythonfit' */
-static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t = { "float64_t", NULL, sizeof(__pyx_t_5numpy_float64_t), { 0 }, 0, 'R', 0, 0 };
+static __Pyx_TypeInfo __Pyx_TypeInfo_double = { "double", NULL, sizeof(double), { 0 }, 0, 'R', 0, 0 };
 #define __Pyx_MODULE_NAME "finsim.estimate.native.cythonfit"
 extern int __pyx_module_is_main_finsim__estimate__native__cythonfit;
 int __pyx_module_is_main_finsim__estimate__native__cythonfit = 0;
@@ -1795,9 +1795,9 @@ static PyObject *__pyx_codeobj__11;
 /* "finsim/estimate/native/cythonfit.pyx":7
  * 
  * 
- * def cython_fit_BlackScholesMerton_model(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=1] prices):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ * def cython_fit_BlackScholesMerton_model(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  */
 
 /* Python wrapper */
@@ -1916,20 +1916,20 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_cython_fit_BlackS
   __pyx_pybuffernd_prices.rcbuffer = &__pyx_pybuffer_prices;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_ts.rcbuffer->pybuffer, (PyObject*)__pyx_v_ts, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 7, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_ts.rcbuffer->pybuffer, (PyObject*)__pyx_v_ts, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 7, __pyx_L1_error)
   }
   __pyx_pybuffernd_ts.diminfo[0].strides = __pyx_pybuffernd_ts.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_ts.diminfo[0].shape = __pyx_pybuffernd_ts.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_prices.rcbuffer->pybuffer, (PyObject*)__pyx_v_prices, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 7, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_prices.rcbuffer->pybuffer, (PyObject*)__pyx_v_prices, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 7, __pyx_L1_error)
   }
   __pyx_pybuffernd_prices.diminfo[0].strides = __pyx_pybuffernd_prices.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_prices.diminfo[0].shape = __pyx_pybuffernd_prices.rcbuffer->pybuffer.shape[0];
 
   /* "finsim/estimate/native/cythonfit.pyx":8
  * 
- * def cython_fit_BlackScholesMerton_model(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=1] prices):
- *     cdef np.ndarray[np.float64_t, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ * def cython_fit_BlackScholesMerton_model(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices):
+ *     cdef np.ndarray[double, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  * 
  */
   __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 8, __pyx_L1_error)
@@ -1965,7 +1965,7 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_cython_fit_BlackS
   __pyx_t_6 = ((PyArrayObject *)__pyx_t_1);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dlogS.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dlogS.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_dlogS = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_dlogS.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 8, __pyx_L1_error)
     } else {__pyx_pybuffernd_dlogS.diminfo[0].strides = __pyx_pybuffernd_dlogS.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_dlogS.diminfo[0].shape = __pyx_pybuffernd_dlogS.rcbuffer->pybuffer.shape[0];
@@ -1976,9 +1976,9 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_cython_fit_BlackS
   __pyx_t_1 = 0;
 
   /* "finsim/estimate/native/cythonfit.pyx":9
- * def cython_fit_BlackScholesMerton_model(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=1] prices):
- *     cdef np.ndarray[np.float64_t, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]             # <<<<<<<<<<<<<<
+ * def cython_fit_BlackScholesMerton_model(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices):
+ *     cdef np.ndarray[double, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]             # <<<<<<<<<<<<<<
  * 
  *     cdef double r = np.mean(dlogS / dt)
  */
@@ -1994,7 +1994,7 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_cython_fit_BlackS
   __pyx_t_7 = ((PyArrayObject *)__pyx_t_5);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dt.rcbuffer->pybuffer, (PyObject*)__pyx_t_7, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dt.rcbuffer->pybuffer, (PyObject*)__pyx_t_7, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_dt = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_dt.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 9, __pyx_L1_error)
     } else {__pyx_pybuffernd_dt.diminfo[0].strides = __pyx_pybuffernd_dt.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_dt.diminfo[0].shape = __pyx_pybuffernd_dt.rcbuffer->pybuffer.shape[0];
@@ -2005,7 +2005,7 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_cython_fit_BlackS
   __pyx_t_5 = 0;
 
   /* "finsim/estimate/native/cythonfit.pyx":11
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  * 
  *     cdef double r = np.mean(dlogS / dt)             # <<<<<<<<<<<<<<
  *     cdef double sigma = np.std(dlogS / np.sqrt(dt))
@@ -2120,9 +2120,9 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_cython_fit_BlackS
   /* "finsim/estimate/native/cythonfit.pyx":7
  * 
  * 
- * def cython_fit_BlackScholesMerton_model(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=1] prices):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ * def cython_fit_BlackScholesMerton_model(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  */
 
   /* function exit code */
@@ -2160,9 +2160,9 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_cython_fit_BlackS
 /* "finsim/estimate/native/cythonfit.pyx":17
  * 
  * 
- * def cython_fit_multivariate_BlackScholesMerton_model(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=2] multiprices):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=2] dlogS = np.log(multiprices[:, 1:] / multiprices[:, :-1])
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ * def cython_fit_multivariate_BlackScholesMerton_model(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=2] multiprices):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=2] dlogS = np.log(multiprices[:, 1:] / multiprices[:, :-1])
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  */
 
 /* Python wrapper */
@@ -2267,7 +2267,7 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_2cython_fit_multi
   npy_intp __pyx_t_9;
   npy_intp __pyx_t_10;
   npy_intp __pyx_t_11;
-  __pyx_t_5numpy_float64_t __pyx_t_12;
+  double __pyx_t_12;
   Py_ssize_t __pyx_t_13;
   int __pyx_t_14;
   PyArrayObject *__pyx_t_15 = NULL;
@@ -2301,20 +2301,20 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_2cython_fit_multi
   __pyx_pybuffernd_multiprices.rcbuffer = &__pyx_pybuffer_multiprices;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_ts.rcbuffer->pybuffer, (PyObject*)__pyx_v_ts, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 17, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_ts.rcbuffer->pybuffer, (PyObject*)__pyx_v_ts, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 17, __pyx_L1_error)
   }
   __pyx_pybuffernd_ts.diminfo[0].strides = __pyx_pybuffernd_ts.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_ts.diminfo[0].shape = __pyx_pybuffernd_ts.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_multiprices.rcbuffer->pybuffer, (PyObject*)__pyx_v_multiprices, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 17, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_multiprices.rcbuffer->pybuffer, (PyObject*)__pyx_v_multiprices, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 17, __pyx_L1_error)
   }
   __pyx_pybuffernd_multiprices.diminfo[0].strides = __pyx_pybuffernd_multiprices.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_multiprices.diminfo[0].shape = __pyx_pybuffernd_multiprices.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_multiprices.diminfo[1].strides = __pyx_pybuffernd_multiprices.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_multiprices.diminfo[1].shape = __pyx_pybuffernd_multiprices.rcbuffer->pybuffer.shape[1];
 
   /* "finsim/estimate/native/cythonfit.pyx":18
  * 
- * def cython_fit_multivariate_BlackScholesMerton_model(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=2] multiprices):
- *     cdef np.ndarray[np.float64_t, ndim=2] dlogS = np.log(multiprices[:, 1:] / multiprices[:, :-1])             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ * def cython_fit_multivariate_BlackScholesMerton_model(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=2] multiprices):
+ *     cdef np.ndarray[double, ndim=2] dlogS = np.log(multiprices[:, 1:] / multiprices[:, :-1])             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  * 
  */
   __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 18, __pyx_L1_error)
@@ -2350,7 +2350,7 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_2cython_fit_multi
   __pyx_t_6 = ((PyArrayObject *)__pyx_t_1);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dlogS.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dlogS.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) {
       __pyx_v_dlogS = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_dlogS.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 18, __pyx_L1_error)
     } else {__pyx_pybuffernd_dlogS.diminfo[0].strides = __pyx_pybuffernd_dlogS.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_dlogS.diminfo[0].shape = __pyx_pybuffernd_dlogS.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_dlogS.diminfo[1].strides = __pyx_pybuffernd_dlogS.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_dlogS.diminfo[1].shape = __pyx_pybuffernd_dlogS.rcbuffer->pybuffer.shape[1];
@@ -2361,11 +2361,11 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_2cython_fit_multi
   __pyx_t_1 = 0;
 
   /* "finsim/estimate/native/cythonfit.pyx":19
- * def cython_fit_multivariate_BlackScholesMerton_model(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=2] multiprices):
- *     cdef np.ndarray[np.float64_t, ndim=2] dlogS = np.log(multiprices[:, 1:] / multiprices[:, :-1])
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]             # <<<<<<<<<<<<<<
+ * def cython_fit_multivariate_BlackScholesMerton_model(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=2] multiprices):
+ *     cdef np.ndarray[double, ndim=2] dlogS = np.log(multiprices[:, 1:] / multiprices[:, :-1])
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]             # <<<<<<<<<<<<<<
  * 
- *     cdef np.ndarray[np.float64_t, ndim=1] r = np.zeros(multiprices.shape[0])
+ *     cdef np.ndarray[double, ndim=1] r = np.zeros(multiprices.shape[0])
  */
   __pyx_t_1 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_ts), __pyx_slice_); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 19, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -2379,7 +2379,7 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_2cython_fit_multi
   __pyx_t_7 = ((PyArrayObject *)__pyx_t_5);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dt.rcbuffer->pybuffer, (PyObject*)__pyx_t_7, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dt.rcbuffer->pybuffer, (PyObject*)__pyx_t_7, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_dt = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_dt.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 19, __pyx_L1_error)
     } else {__pyx_pybuffernd_dt.diminfo[0].strides = __pyx_pybuffernd_dt.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_dt.diminfo[0].shape = __pyx_pybuffernd_dt.rcbuffer->pybuffer.shape[0];
@@ -2390,9 +2390,9 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_2cython_fit_multi
   __pyx_t_5 = 0;
 
   /* "finsim/estimate/native/cythonfit.pyx":21
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  * 
- *     cdef np.ndarray[np.float64_t, ndim=1] r = np.zeros(multiprices.shape[0])             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] r = np.zeros(multiprices.shape[0])             # <<<<<<<<<<<<<<
  *     for i in range(multiprices.shape[0]):
  *         r[i] = np.mean((dlogS / dt)[i, :])
  */
@@ -2423,7 +2423,7 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_2cython_fit_multi
   __pyx_t_8 = ((PyArrayObject *)__pyx_t_5);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_r.rcbuffer->pybuffer, (PyObject*)__pyx_t_8, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 1, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_r.rcbuffer->pybuffer, (PyObject*)__pyx_t_8, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_r = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_r.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 21, __pyx_L1_error)
     } else {__pyx_pybuffernd_r.diminfo[0].strides = __pyx_pybuffernd_r.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_r.diminfo[0].shape = __pyx_pybuffernd_r.rcbuffer->pybuffer.shape[0];
@@ -2435,10 +2435,10 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_2cython_fit_multi
 
   /* "finsim/estimate/native/cythonfit.pyx":22
  * 
- *     cdef np.ndarray[np.float64_t, ndim=1] r = np.zeros(multiprices.shape[0])
+ *     cdef np.ndarray[double, ndim=1] r = np.zeros(multiprices.shape[0])
  *     for i in range(multiprices.shape[0]):             # <<<<<<<<<<<<<<
  *         r[i] = np.mean((dlogS / dt)[i, :])
- *     cdef np.ndarray[np.float64_t, ndim=2] cov = np.cov(dlogS / np.sqrt(dt))
+ *     cdef np.ndarray[double, ndim=2] cov = np.cov(dlogS / np.sqrt(dt))
  */
   __pyx_t_9 = (__pyx_v_multiprices->dimensions[0]);
   __pyx_t_10 = __pyx_t_9;
@@ -2446,10 +2446,10 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_2cython_fit_multi
     __pyx_v_i = __pyx_t_11;
 
     /* "finsim/estimate/native/cythonfit.pyx":23
- *     cdef np.ndarray[np.float64_t, ndim=1] r = np.zeros(multiprices.shape[0])
+ *     cdef np.ndarray[double, ndim=1] r = np.zeros(multiprices.shape[0])
  *     for i in range(multiprices.shape[0]):
  *         r[i] = np.mean((dlogS / dt)[i, :])             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=2] cov = np.cov(dlogS / np.sqrt(dt))
+ *     cdef np.ndarray[double, ndim=2] cov = np.cov(dlogS / np.sqrt(dt))
  * 
  */
     __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 23, __pyx_L1_error)
@@ -2489,7 +2489,7 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_2cython_fit_multi
     if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 23, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_12 = __pyx_PyFloat_AsDouble(__pyx_t_5); if (unlikely((__pyx_t_12 == ((npy_float64)-1)) && PyErr_Occurred())) __PYX_ERR(0, 23, __pyx_L1_error)
+    __pyx_t_12 = __pyx_PyFloat_AsDouble(__pyx_t_5); if (unlikely((__pyx_t_12 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 23, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_t_13 = __pyx_v_i;
     __pyx_t_14 = -1;
@@ -2501,13 +2501,13 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_2cython_fit_multi
       __Pyx_RaiseBufferIndexError(__pyx_t_14);
       __PYX_ERR(0, 23, __pyx_L1_error)
     }
-    *__Pyx_BufPtrStrided1d(__pyx_t_5numpy_float64_t *, __pyx_pybuffernd_r.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_r.diminfo[0].strides) = __pyx_t_12;
+    *__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_r.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_r.diminfo[0].strides) = __pyx_t_12;
   }
 
   /* "finsim/estimate/native/cythonfit.pyx":24
  *     for i in range(multiprices.shape[0]):
  *         r[i] = np.mean((dlogS / dt)[i, :])
- *     cdef np.ndarray[np.float64_t, ndim=2] cov = np.cov(dlogS / np.sqrt(dt))             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=2] cov = np.cov(dlogS / np.sqrt(dt))             # <<<<<<<<<<<<<<
  * 
  *     return r, cov
  */
@@ -2559,7 +2559,7 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_2cython_fit_multi
   __pyx_t_15 = ((PyArrayObject *)__pyx_t_5);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_cov.rcbuffer->pybuffer, (PyObject*)__pyx_t_15, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_cov.rcbuffer->pybuffer, (PyObject*)__pyx_t_15, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) {
       __pyx_v_cov = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_cov.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 24, __pyx_L1_error)
     } else {__pyx_pybuffernd_cov.diminfo[0].strides = __pyx_pybuffernd_cov.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_cov.diminfo[0].shape = __pyx_pybuffernd_cov.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_cov.diminfo[1].strides = __pyx_pybuffernd_cov.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_cov.diminfo[1].shape = __pyx_pybuffernd_cov.rcbuffer->pybuffer.shape[1];
@@ -2570,7 +2570,7 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_2cython_fit_multi
   __pyx_t_5 = 0;
 
   /* "finsim/estimate/native/cythonfit.pyx":26
- *     cdef np.ndarray[np.float64_t, ndim=2] cov = np.cov(dlogS / np.sqrt(dt))
+ *     cdef np.ndarray[double, ndim=2] cov = np.cov(dlogS / np.sqrt(dt))
  * 
  *     return r, cov             # <<<<<<<<<<<<<<
  */
@@ -2590,9 +2590,9 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_2cython_fit_multi
   /* "finsim/estimate/native/cythonfit.pyx":17
  * 
  * 
- * def cython_fit_multivariate_BlackScholesMerton_model(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=2] multiprices):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=2] dlogS = np.log(multiprices[:, 1:] / multiprices[:, :-1])
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ * def cython_fit_multivariate_BlackScholesMerton_model(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=2] multiprices):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=2] dlogS = np.log(multiprices[:, 1:] / multiprices[:, :-1])
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  */
 
   /* function exit code */
@@ -3741,9 +3741,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
 
   /* "finsim/estimate/native/cythonfit.pyx":8
  * 
- * def cython_fit_BlackScholesMerton_model(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=1] prices):
- *     cdef np.ndarray[np.float64_t, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ * def cython_fit_BlackScholesMerton_model(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices):
+ *     cdef np.ndarray[double, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  * 
  */
   __pyx_slice_ = PySlice_New(__pyx_int_1, Py_None, Py_None); if (unlikely(!__pyx_slice_)) __PYX_ERR(0, 8, __pyx_L1_error)
@@ -3755,9 +3755,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
 
   /* "finsim/estimate/native/cythonfit.pyx":18
  * 
- * def cython_fit_multivariate_BlackScholesMerton_model(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=2] multiprices):
- *     cdef np.ndarray[np.float64_t, ndim=2] dlogS = np.log(multiprices[:, 1:] / multiprices[:, :-1])             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ * def cython_fit_multivariate_BlackScholesMerton_model(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=2] multiprices):
+ *     cdef np.ndarray[double, ndim=2] dlogS = np.log(multiprices[:, 1:] / multiprices[:, :-1])             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  * 
  */
   __pyx_slice__3 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__3)) __PYX_ERR(0, 18, __pyx_L1_error)
@@ -3795,9 +3795,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   /* "finsim/estimate/native/cythonfit.pyx":7
  * 
  * 
- * def cython_fit_BlackScholesMerton_model(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=1] prices):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ * def cython_fit_BlackScholesMerton_model(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  */
   __pyx_tuple__8 = PyTuple_Pack(6, __pyx_n_s_ts, __pyx_n_s_prices, __pyx_n_s_dlogS, __pyx_n_s_dt, __pyx_n_s_r, __pyx_n_s_sigma); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 7, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__8);
@@ -3807,9 +3807,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   /* "finsim/estimate/native/cythonfit.pyx":17
  * 
  * 
- * def cython_fit_multivariate_BlackScholesMerton_model(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=2] multiprices):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=2] dlogS = np.log(multiprices[:, 1:] / multiprices[:, :-1])
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ * def cython_fit_multivariate_BlackScholesMerton_model(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=2] multiprices):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=2] dlogS = np.log(multiprices[:, 1:] / multiprices[:, :-1])
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  */
   __pyx_tuple__10 = PyTuple_Pack(7, __pyx_n_s_ts, __pyx_n_s_multiprices, __pyx_n_s_dlogS, __pyx_n_s_dt, __pyx_n_s_r, __pyx_n_s_i, __pyx_n_s_cov); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 17, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__10);
@@ -4164,9 +4164,9 @@ if (!__Pyx_RefNanny) {
   /* "finsim/estimate/native/cythonfit.pyx":7
  * 
  * 
- * def cython_fit_BlackScholesMerton_model(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=1] prices):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ * def cython_fit_BlackScholesMerton_model(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  */
   __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_6finsim_8estimate_6native_9cythonfit_1cython_fit_BlackScholesMerton_model, NULL, __pyx_n_s_finsim_estimate_native_cythonfit_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 7, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -4176,9 +4176,9 @@ if (!__Pyx_RefNanny) {
   /* "finsim/estimate/native/cythonfit.pyx":17
  * 
  * 
- * def cython_fit_multivariate_BlackScholesMerton_model(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=2] multiprices):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=2] dlogS = np.log(multiprices[:, 1:] / multiprices[:, :-1])
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ * def cython_fit_multivariate_BlackScholesMerton_model(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=2] multiprices):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=2] dlogS = np.log(multiprices[:, 1:] / multiprices[:, :-1])
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  */
   __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_6finsim_8estimate_6native_9cythonfit_3cython_fit_multivariate_BlackScholesMerton_model, NULL, __pyx_n_s_finsim_estimate_native_cythonfit_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 17, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);

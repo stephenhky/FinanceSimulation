@@ -24,11 +24,11 @@ class TestStockSimulations(unittest.TestCase):
         self.assertAlmostEqual(average_s, expected_s, delta=1.96*sqrt(variance_s))
 
     def test_BlackScholesMertonStocks(self):
-        self.backend_test_BlackScholesMertonStocks(100, 0.04, 0.02, 100, 0.1, 10000)
+        self.backend_test_BlackScholesMertonStocks(100., 0.04, 0.02, 100, 0.1, 10000)
 
-        for S in np.random.lognormal(100, 10, size=3):
-            for r in np.random.lognormal(0.04, 0.01, size=3):
-                for sigma in np.random.lognormal(0.01, 0.0001, size=3):
+        for S in np.random.normal(100., 5., size=3):
+            for r in np.random.normal(0.1, 0.01, size=3):
+                for sigma in np.random.uniform(0.001, 0.05, size=3):
                     self.backend_test_BlackScholesMertonStocks(S, r, sigma, 100, 0.1, 10000)
 
     def test_HestonStocks(self):

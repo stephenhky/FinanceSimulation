@@ -1,10 +1,13 @@
 module f90brownian
     implicit none
     private
-    public inv_errfcn, normaldistsampling
+    public inv_errfcn, normaldistsampling, initialize_random_seeds, lognormal_price_simulation
+
+    real, parameter :: sqrt2 = sqrt(2.)
 
 contains
 
+    ! reference: https://people.maths.ox.ac.uk/gilesm/files/gems_erfinv.pdf
     function inv_errfcn(x) result(z)
         real, intent(in) :: x
         real :: w, p
@@ -46,16 +49,59 @@ contains
         real :: uniform_r, u
 
         call random_number(uniform_r)
-        write(*,*) uniform_r
         u = 2*uniform_r - 1
 
-        z = inv_errfcn(u) * sqrt(2.)
+        z = inv_errfcn(u) * sqrt2
 
     end function normaldistsampling
+
+
+    ! normal distribution: https://en.wikipedia.org/wiki/Normal_distribution
+    function initialize_random_seeds() result(k)
+        integer :: values(1:8), k
+        integer, dimension(:), allocatable :: seed
+
+        call date_and_time(values=values)
+        call random_seed(size=k)
+        allocate(seed(1:k))
+        seed(:) = values(8)
+
+    end function initialize_random_seeds
+
+
+    function lognormal_price_simulation(logS0, r, sigma, dt, nbsteps, nbsimulations) result(S)
+        real, intent(in) :: logS0, r, sigma, dt
+        integer, intent(in) :: nbsteps, nbsimulations
+        real, dimension(nbsimulations, nbsteps) :: logS, S
+        integer :: i, j
+        real :: sigmasq, sqrtdt
+        real :: z
+
+        sigmasq = sigma*sigma
+        sqrtdt = sqrt(dt)
+
+        do i=1, nbsimulations
+            logS(i, 1) = logS0
+            S(i, 1) = exp(logS0)
+            do j=2, nbsteps
+                z = normaldistsampling()
+                logS(i, j) = logS(i, j-1) + (r-0.5*sigmasq)*dt + sigma*z*sqrtdt
+                S(i, j) = exp(logS(i, j))
+            end do
+        end do
+
+
+    end function lognormal_price_simulation
 
 
 
 end module f90brownian
 
-! reference: https://people.maths.ox.ac.uk/gilesm/files/gems_erfinv.pdf
-! normal distribution: https://en.wikipedia.org/wiki/Normal_distribution
+
+
+
+
+
+! f2py --overwrite-signature -h brownian.pyf -m f90brownian brownian.f90
+! f2py -c brownian.pyf brownian.f90 -m f90brownian
+

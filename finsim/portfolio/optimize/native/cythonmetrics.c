@@ -1713,7 +1713,7 @@ static PyTypeObject *__pyx_ptype_5numpy_character = 0;
 static PyTypeObject *__pyx_ptype_5numpy_ufunc = 0;
 
 /* Module declarations from 'finsim.portfolio.optimize.native.cythonmetrics' */
-static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t = { "float64_t", NULL, sizeof(__pyx_t_5numpy_float64_t), { 0 }, 0, 'R', 0, 0 };
+static __Pyx_TypeInfo __Pyx_TypeInfo_double = { "double", NULL, sizeof(double), { 0 }, 0, 'R', 0, 0 };
 #define __Pyx_MODULE_NAME "finsim.portfolio.optimize.native.cythonmetrics"
 extern int __pyx_module_is_main_finsim__portfolio__optimize__native__cythonmetrics;
 int __pyx_module_is_main_finsim__portfolio__optimize__native__cythonmetrics = 0;
@@ -1813,8 +1813,8 @@ static PyObject *__pyx_n_s_weights;
 static PyObject *__pyx_n_s_yield_val;
 static PyObject *__pyx_n_s_yieldrate;
 static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_cython_sharpe_ratio(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_weights, PyArrayObject *__pyx_v_r, PyArrayObject *__pyx_v_cov, float __pyx_v_rf); /* proto */
-static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_2cython_mpt_costfunction(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_weights, PyArrayObject *__pyx_v_r, PyArrayObject *__pyx_v_cov, float __pyx_v_rf, float __pyx_v_lamb, float __pyx_v_V0); /* proto */
-static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_4cython_mpt_entropy_costfunction(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_weights, PyArrayObject *__pyx_v_r, PyArrayObject *__pyx_v_cov, float __pyx_v_rf, float __pyx_v_lamb0, float __pyx_v_lamb1, float __pyx_v_V); /* proto */
+static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_2cython_mpt_costfunction(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_weights, PyArrayObject *__pyx_v_r, PyArrayObject *__pyx_v_cov, double __pyx_v_rf, double __pyx_v_lamb, double __pyx_v_V0); /* proto */
+static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_4cython_mpt_entropy_costfunction(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_weights, PyArrayObject *__pyx_v_r, PyArrayObject *__pyx_v_cov, double __pyx_v_rf, double __pyx_v_lamb0, double __pyx_v_lamb1, double __pyx_v_V); /* proto */
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_1;
 static PyObject *__pyx_int_neg_1;
@@ -1833,9 +1833,9 @@ static PyObject *__pyx_codeobj__10;
 /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":7
  * 
  * 
- * def cython_sharpe_ratio(np.ndarray[np.float64_t, ndim=1] weights, np.ndarray[np.float64_t, ndim=1] r, np.ndarray[np.float64_t, ndim=2] cov, float rf):             # <<<<<<<<<<<<<<
- *     cdef float yieldrate = np.sum(weights * r)
- *     cdef np.ndarray[np.float64_t, ndim=2] sqweights = np.expand_dims(weights, axis=1) @ np.expand_dims(weights, axis=0)
+ * def cython_sharpe_ratio(np.ndarray[double, ndim=1] weights, np.ndarray[double, ndim=1] r, np.ndarray[double, ndim=2] cov, float rf):             # <<<<<<<<<<<<<<
+ *     cdef double yieldrate = np.sum(weights * r)
+ *     cdef np.ndarray[double, ndim=2] sqweights = np.expand_dims(weights, axis=1) @ np.expand_dims(weights, axis=0)
  */
 
 /* Python wrapper */
@@ -1933,9 +1933,9 @@ static PyObject *__pyx_pw_6finsim_9portfolio_8optimize_6native_13cythonmetrics_1
 }
 
 static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_cython_sharpe_ratio(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_weights, PyArrayObject *__pyx_v_r, PyArrayObject *__pyx_v_cov, float __pyx_v_rf) {
-  float __pyx_v_yieldrate;
+  double __pyx_v_yieldrate;
   PyArrayObject *__pyx_v_sqweights = 0;
-  float __pyx_v_volatility;
+  double __pyx_v_volatility;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_cov;
   __Pyx_Buffer __pyx_pybuffer_cov;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_r;
@@ -1950,7 +1950,7 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_c
   PyObject *__pyx_t_2 = NULL;
   PyObject *__pyx_t_3 = NULL;
   PyObject *__pyx_t_4 = NULL;
-  float __pyx_t_5;
+  double __pyx_t_5;
   PyObject *__pyx_t_6 = NULL;
   PyArrayObject *__pyx_t_7 = NULL;
   PyObject *__pyx_t_8 = NULL;
@@ -1976,26 +1976,26 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_c
   __pyx_pybuffernd_cov.rcbuffer = &__pyx_pybuffer_cov;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_weights.rcbuffer->pybuffer, (PyObject*)__pyx_v_weights, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 7, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_weights.rcbuffer->pybuffer, (PyObject*)__pyx_v_weights, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 7, __pyx_L1_error)
   }
   __pyx_pybuffernd_weights.diminfo[0].strides = __pyx_pybuffernd_weights.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_weights.diminfo[0].shape = __pyx_pybuffernd_weights.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_r.rcbuffer->pybuffer, (PyObject*)__pyx_v_r, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 7, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_r.rcbuffer->pybuffer, (PyObject*)__pyx_v_r, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 7, __pyx_L1_error)
   }
   __pyx_pybuffernd_r.diminfo[0].strides = __pyx_pybuffernd_r.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_r.diminfo[0].shape = __pyx_pybuffernd_r.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_cov.rcbuffer->pybuffer, (PyObject*)__pyx_v_cov, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 7, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_cov.rcbuffer->pybuffer, (PyObject*)__pyx_v_cov, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 7, __pyx_L1_error)
   }
   __pyx_pybuffernd_cov.diminfo[0].strides = __pyx_pybuffernd_cov.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_cov.diminfo[0].shape = __pyx_pybuffernd_cov.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_cov.diminfo[1].strides = __pyx_pybuffernd_cov.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_cov.diminfo[1].shape = __pyx_pybuffernd_cov.rcbuffer->pybuffer.shape[1];
 
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":8
  * 
- * def cython_sharpe_ratio(np.ndarray[np.float64_t, ndim=1] weights, np.ndarray[np.float64_t, ndim=1] r, np.ndarray[np.float64_t, ndim=2] cov, float rf):
- *     cdef float yieldrate = np.sum(weights * r)             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=2] sqweights = np.expand_dims(weights, axis=1) @ np.expand_dims(weights, axis=0)
- *     cdef float volatility = np.sqrt(np.sum(sqweights * cov))
+ * def cython_sharpe_ratio(np.ndarray[double, ndim=1] weights, np.ndarray[double, ndim=1] r, np.ndarray[double, ndim=2] cov, float rf):
+ *     cdef double yieldrate = np.sum(weights * r)             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=2] sqweights = np.expand_dims(weights, axis=1) @ np.expand_dims(weights, axis=0)
+ *     cdef double volatility = np.sqrt(np.sum(sqweights * cov))
  */
   __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 8, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -2020,15 +2020,15 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_c
   if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 8, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_5 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_5 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 8, __pyx_L1_error)
+  __pyx_t_5 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_5 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 8, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_yieldrate = __pyx_t_5;
 
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":9
- * def cython_sharpe_ratio(np.ndarray[np.float64_t, ndim=1] weights, np.ndarray[np.float64_t, ndim=1] r, np.ndarray[np.float64_t, ndim=2] cov, float rf):
- *     cdef float yieldrate = np.sum(weights * r)
- *     cdef np.ndarray[np.float64_t, ndim=2] sqweights = np.expand_dims(weights, axis=1) @ np.expand_dims(weights, axis=0)             # <<<<<<<<<<<<<<
- *     cdef float volatility = np.sqrt(np.sum(sqweights * cov))
+ * def cython_sharpe_ratio(np.ndarray[double, ndim=1] weights, np.ndarray[double, ndim=1] r, np.ndarray[double, ndim=2] cov, float rf):
+ *     cdef double yieldrate = np.sum(weights * r)
+ *     cdef np.ndarray[double, ndim=2] sqweights = np.expand_dims(weights, axis=1) @ np.expand_dims(weights, axis=0)             # <<<<<<<<<<<<<<
+ *     cdef double volatility = np.sqrt(np.sum(sqweights * cov))
  *     return (yieldrate - rf) / volatility
  */
   __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 9, __pyx_L1_error)
@@ -2075,7 +2075,7 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_c
   __pyx_t_7 = ((PyArrayObject *)__pyx_t_3);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_sqweights.rcbuffer->pybuffer, (PyObject*)__pyx_t_7, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_sqweights.rcbuffer->pybuffer, (PyObject*)__pyx_t_7, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) {
       __pyx_v_sqweights = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_sqweights.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 9, __pyx_L1_error)
     } else {__pyx_pybuffernd_sqweights.diminfo[0].strides = __pyx_pybuffernd_sqweights.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_sqweights.diminfo[0].shape = __pyx_pybuffernd_sqweights.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_sqweights.diminfo[1].strides = __pyx_pybuffernd_sqweights.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_sqweights.diminfo[1].shape = __pyx_pybuffernd_sqweights.rcbuffer->pybuffer.shape[1];
@@ -2086,9 +2086,9 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_c
   __pyx_t_3 = 0;
 
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":10
- *     cdef float yieldrate = np.sum(weights * r)
- *     cdef np.ndarray[np.float64_t, ndim=2] sqweights = np.expand_dims(weights, axis=1) @ np.expand_dims(weights, axis=0)
- *     cdef float volatility = np.sqrt(np.sum(sqweights * cov))             # <<<<<<<<<<<<<<
+ *     cdef double yieldrate = np.sum(weights * r)
+ *     cdef np.ndarray[double, ndim=2] sqweights = np.expand_dims(weights, axis=1) @ np.expand_dims(weights, axis=0)
+ *     cdef double volatility = np.sqrt(np.sum(sqweights * cov))             # <<<<<<<<<<<<<<
  *     return (yieldrate - rf) / volatility
  * 
  */
@@ -2136,13 +2136,13 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_c
   if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 10, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_5 = __pyx_PyFloat_AsFloat(__pyx_t_3); if (unlikely((__pyx_t_5 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 10, __pyx_L1_error)
+  __pyx_t_5 = __pyx_PyFloat_AsDouble(__pyx_t_3); if (unlikely((__pyx_t_5 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 10, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_volatility = __pyx_t_5;
 
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":11
- *     cdef np.ndarray[np.float64_t, ndim=2] sqweights = np.expand_dims(weights, axis=1) @ np.expand_dims(weights, axis=0)
- *     cdef float volatility = np.sqrt(np.sum(sqweights * cov))
+ *     cdef np.ndarray[double, ndim=2] sqweights = np.expand_dims(weights, axis=1) @ np.expand_dims(weights, axis=0)
+ *     cdef double volatility = np.sqrt(np.sum(sqweights * cov))
  *     return (yieldrate - rf) / volatility             # <<<<<<<<<<<<<<
  * 
  * 
@@ -2162,9 +2162,9 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_c
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":7
  * 
  * 
- * def cython_sharpe_ratio(np.ndarray[np.float64_t, ndim=1] weights, np.ndarray[np.float64_t, ndim=1] r, np.ndarray[np.float64_t, ndim=2] cov, float rf):             # <<<<<<<<<<<<<<
- *     cdef float yieldrate = np.sum(weights * r)
- *     cdef np.ndarray[np.float64_t, ndim=2] sqweights = np.expand_dims(weights, axis=1) @ np.expand_dims(weights, axis=0)
+ * def cython_sharpe_ratio(np.ndarray[double, ndim=1] weights, np.ndarray[double, ndim=1] r, np.ndarray[double, ndim=2] cov, float rf):             # <<<<<<<<<<<<<<
+ *     cdef double yieldrate = np.sum(weights * r)
+ *     cdef np.ndarray[double, ndim=2] sqweights = np.expand_dims(weights, axis=1) @ np.expand_dims(weights, axis=0)
  */
 
   /* function exit code */
@@ -2202,9 +2202,9 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_c
 /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":14
  * 
  * 
- * def cython_mpt_costfunction(np.ndarray[np.float64_t, ndim=1] weights, np.ndarray[np.float64_t, ndim=1] r, np.ndarray[np.float64_t, ndim=2] cov, float rf, float lamb, float V0):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
- *     cdef float c = lamb * V0
+ * def cython_mpt_costfunction(np.ndarray[double, ndim=1] weights, np.ndarray[double, ndim=1] r, np.ndarray[double, ndim=2] cov, double rf, double lamb, double V0):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
+ *     cdef double c = lamb * V0
  */
 
 /* Python wrapper */
@@ -2214,9 +2214,9 @@ static PyObject *__pyx_pw_6finsim_9portfolio_8optimize_6native_13cythonmetrics_3
   PyArrayObject *__pyx_v_weights = 0;
   PyArrayObject *__pyx_v_r = 0;
   PyArrayObject *__pyx_v_cov = 0;
-  float __pyx_v_rf;
-  float __pyx_v_lamb;
-  float __pyx_v_V0;
+  double __pyx_v_rf;
+  double __pyx_v_lamb;
+  double __pyx_v_V0;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -2297,9 +2297,9 @@ static PyObject *__pyx_pw_6finsim_9portfolio_8optimize_6native_13cythonmetrics_3
     __pyx_v_weights = ((PyArrayObject *)values[0]);
     __pyx_v_r = ((PyArrayObject *)values[1]);
     __pyx_v_cov = ((PyArrayObject *)values[2]);
-    __pyx_v_rf = __pyx_PyFloat_AsFloat(values[3]); if (unlikely((__pyx_v_rf == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 14, __pyx_L3_error)
-    __pyx_v_lamb = __pyx_PyFloat_AsFloat(values[4]); if (unlikely((__pyx_v_lamb == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 14, __pyx_L3_error)
-    __pyx_v_V0 = __pyx_PyFloat_AsFloat(values[5]); if (unlikely((__pyx_v_V0 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 14, __pyx_L3_error)
+    __pyx_v_rf = __pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_rf == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 14, __pyx_L3_error)
+    __pyx_v_lamb = __pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_lamb == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 14, __pyx_L3_error)
+    __pyx_v_V0 = __pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_V0 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 14, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
@@ -2323,10 +2323,10 @@ static PyObject *__pyx_pw_6finsim_9portfolio_8optimize_6native_13cythonmetrics_3
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_2cython_mpt_costfunction(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_weights, PyArrayObject *__pyx_v_r, PyArrayObject *__pyx_v_cov, float __pyx_v_rf, float __pyx_v_lamb, float __pyx_v_V0) {
+static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_2cython_mpt_costfunction(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_weights, PyArrayObject *__pyx_v_r, PyArrayObject *__pyx_v_cov, double __pyx_v_rf, double __pyx_v_lamb, double __pyx_v_V0) {
   PyArrayObject *__pyx_v_weightmat = 0;
-  float __pyx_v_c;
-  float __pyx_v_cost;
+  double __pyx_v_c;
+  double __pyx_v_cost;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_cov;
   __Pyx_Buffer __pyx_pybuffer_cov;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_r;
@@ -2347,7 +2347,6 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_2
   PyObject *__pyx_t_8 = NULL;
   PyObject *__pyx_t_9 = NULL;
   double __pyx_t_10;
-  float __pyx_t_11;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -2370,26 +2369,26 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_2
   __pyx_pybuffernd_cov.rcbuffer = &__pyx_pybuffer_cov;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_weights.rcbuffer->pybuffer, (PyObject*)__pyx_v_weights, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 14, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_weights.rcbuffer->pybuffer, (PyObject*)__pyx_v_weights, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 14, __pyx_L1_error)
   }
   __pyx_pybuffernd_weights.diminfo[0].strides = __pyx_pybuffernd_weights.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_weights.diminfo[0].shape = __pyx_pybuffernd_weights.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_r.rcbuffer->pybuffer, (PyObject*)__pyx_v_r, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 14, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_r.rcbuffer->pybuffer, (PyObject*)__pyx_v_r, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 14, __pyx_L1_error)
   }
   __pyx_pybuffernd_r.diminfo[0].strides = __pyx_pybuffernd_r.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_r.diminfo[0].shape = __pyx_pybuffernd_r.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_cov.rcbuffer->pybuffer, (PyObject*)__pyx_v_cov, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 14, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_cov.rcbuffer->pybuffer, (PyObject*)__pyx_v_cov, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 14, __pyx_L1_error)
   }
   __pyx_pybuffernd_cov.diminfo[0].strides = __pyx_pybuffernd_cov.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_cov.diminfo[0].shape = __pyx_pybuffernd_cov.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_cov.diminfo[1].strides = __pyx_pybuffernd_cov.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_cov.diminfo[1].shape = __pyx_pybuffernd_cov.rcbuffer->pybuffer.shape[1];
 
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":15
  * 
- * def cython_mpt_costfunction(np.ndarray[np.float64_t, ndim=1] weights, np.ndarray[np.float64_t, ndim=1] r, np.ndarray[np.float64_t, ndim=2] cov, float rf, float lamb, float V0):
- *     cdef np.ndarray[np.float64_t, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)             # <<<<<<<<<<<<<<
- *     cdef float c = lamb * V0
- *     cdef float cost = weights[-1]*rf + np.dot(weights[:-1], r) - 0.5*c/V0*(weightmat @ cov @ weightmat.T)[0, 0]
+ * def cython_mpt_costfunction(np.ndarray[double, ndim=1] weights, np.ndarray[double, ndim=1] r, np.ndarray[double, ndim=2] cov, double rf, double lamb, double V0):
+ *     cdef np.ndarray[double, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)             # <<<<<<<<<<<<<<
+ *     cdef double c = lamb * V0
+ *     cdef double cost = weights[-1]*rf + np.dot(weights[:-1], r) - 0.5*c/V0*(weightmat @ cov @ weightmat.T)[0, 0]
  */
   __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 15, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -2415,7 +2414,7 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_2
   __pyx_t_5 = ((PyArrayObject *)__pyx_t_4);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_weightmat.rcbuffer->pybuffer, (PyObject*)__pyx_t_5, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_weightmat.rcbuffer->pybuffer, (PyObject*)__pyx_t_5, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) {
       __pyx_v_weightmat = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_weightmat.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 15, __pyx_L1_error)
     } else {__pyx_pybuffernd_weightmat.diminfo[0].strides = __pyx_pybuffernd_weightmat.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_weightmat.diminfo[0].shape = __pyx_pybuffernd_weightmat.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_weightmat.diminfo[1].strides = __pyx_pybuffernd_weightmat.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_weightmat.diminfo[1].shape = __pyx_pybuffernd_weightmat.rcbuffer->pybuffer.shape[1];
@@ -2426,18 +2425,18 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_2
   __pyx_t_4 = 0;
 
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":16
- * def cython_mpt_costfunction(np.ndarray[np.float64_t, ndim=1] weights, np.ndarray[np.float64_t, ndim=1] r, np.ndarray[np.float64_t, ndim=2] cov, float rf, float lamb, float V0):
- *     cdef np.ndarray[np.float64_t, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
- *     cdef float c = lamb * V0             # <<<<<<<<<<<<<<
- *     cdef float cost = weights[-1]*rf + np.dot(weights[:-1], r) - 0.5*c/V0*(weightmat @ cov @ weightmat.T)[0, 0]
+ * def cython_mpt_costfunction(np.ndarray[double, ndim=1] weights, np.ndarray[double, ndim=1] r, np.ndarray[double, ndim=2] cov, double rf, double lamb, double V0):
+ *     cdef np.ndarray[double, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
+ *     cdef double c = lamb * V0             # <<<<<<<<<<<<<<
+ *     cdef double cost = weights[-1]*rf + np.dot(weights[:-1], r) - 0.5*c/V0*(weightmat @ cov @ weightmat.T)[0, 0]
  *     return cost
  */
   __pyx_v_c = (__pyx_v_lamb * __pyx_v_V0);
 
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":17
- *     cdef np.ndarray[np.float64_t, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
- *     cdef float c = lamb * V0
- *     cdef float cost = weights[-1]*rf + np.dot(weights[:-1], r) - 0.5*c/V0*(weightmat @ cov @ weightmat.T)[0, 0]             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
+ *     cdef double c = lamb * V0
+ *     cdef double cost = weights[-1]*rf + np.dot(weights[:-1], r) - 0.5*c/V0*(weightmat @ cov @ weightmat.T)[0, 0]             # <<<<<<<<<<<<<<
  *     return cost
  * 
  */
@@ -2451,7 +2450,7 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_2
     __Pyx_RaiseBufferIndexError(__pyx_t_7);
     __PYX_ERR(0, 17, __pyx_L1_error)
   }
-  __pyx_t_4 = PyFloat_FromDouble(((*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_float64_t *, __pyx_pybuffernd_weights.rcbuffer->pybuffer.buf, __pyx_t_6, __pyx_pybuffernd_weights.diminfo[0].strides)) * __pyx_v_rf)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 17, __pyx_L1_error)
+  __pyx_t_4 = PyFloat_FromDouble(((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_weights.rcbuffer->pybuffer.buf, __pyx_t_6, __pyx_pybuffernd_weights.diminfo[0].strides)) * __pyx_v_rf)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 17, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 17, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
@@ -2537,13 +2536,13 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_2
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_11 = __pyx_PyFloat_AsFloat(__pyx_t_9); if (unlikely((__pyx_t_11 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 17, __pyx_L1_error)
+  __pyx_t_10 = __pyx_PyFloat_AsDouble(__pyx_t_9); if (unlikely((__pyx_t_10 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 17, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_v_cost = __pyx_t_11;
+  __pyx_v_cost = __pyx_t_10;
 
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":18
- *     cdef float c = lamb * V0
- *     cdef float cost = weights[-1]*rf + np.dot(weights[:-1], r) - 0.5*c/V0*(weightmat @ cov @ weightmat.T)[0, 0]
+ *     cdef double c = lamb * V0
+ *     cdef double cost = weights[-1]*rf + np.dot(weights[:-1], r) - 0.5*c/V0*(weightmat @ cov @ weightmat.T)[0, 0]
  *     return cost             # <<<<<<<<<<<<<<
  * 
  * 
@@ -2558,9 +2557,9 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_2
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":14
  * 
  * 
- * def cython_mpt_costfunction(np.ndarray[np.float64_t, ndim=1] weights, np.ndarray[np.float64_t, ndim=1] r, np.ndarray[np.float64_t, ndim=2] cov, float rf, float lamb, float V0):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
- *     cdef float c = lamb * V0
+ * def cython_mpt_costfunction(np.ndarray[double, ndim=1] weights, np.ndarray[double, ndim=1] r, np.ndarray[double, ndim=2] cov, double rf, double lamb, double V0):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
+ *     cdef double c = lamb * V0
  */
 
   /* function exit code */
@@ -2598,9 +2597,9 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_2
 /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":21
  * 
  * 
- * def cython_mpt_entropy_costfunction(np.ndarray[np.float64_t, ndim=1] weights, np.ndarray[np.float64_t, ndim=1] r, np.ndarray[np.float64_t, ndim=2] cov, float rf, float lamb0, float lamb1, float V):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
- *     cdef float c0 = lamb0 * V
+ * def cython_mpt_entropy_costfunction(np.ndarray[double, ndim=1] weights, np.ndarray[double, ndim=1] r, np.ndarray[double, ndim=2] cov, double rf, double lamb0, double lamb1, double V):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
+ *     cdef double c0 = lamb0 * V
  */
 
 /* Python wrapper */
@@ -2610,10 +2609,10 @@ static PyObject *__pyx_pw_6finsim_9portfolio_8optimize_6native_13cythonmetrics_5
   PyArrayObject *__pyx_v_weights = 0;
   PyArrayObject *__pyx_v_r = 0;
   PyArrayObject *__pyx_v_cov = 0;
-  float __pyx_v_rf;
-  float __pyx_v_lamb0;
-  float __pyx_v_lamb1;
-  float __pyx_v_V;
+  double __pyx_v_rf;
+  double __pyx_v_lamb0;
+  double __pyx_v_lamb1;
+  double __pyx_v_V;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -2703,10 +2702,10 @@ static PyObject *__pyx_pw_6finsim_9portfolio_8optimize_6native_13cythonmetrics_5
     __pyx_v_weights = ((PyArrayObject *)values[0]);
     __pyx_v_r = ((PyArrayObject *)values[1]);
     __pyx_v_cov = ((PyArrayObject *)values[2]);
-    __pyx_v_rf = __pyx_PyFloat_AsFloat(values[3]); if (unlikely((__pyx_v_rf == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 21, __pyx_L3_error)
-    __pyx_v_lamb0 = __pyx_PyFloat_AsFloat(values[4]); if (unlikely((__pyx_v_lamb0 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 21, __pyx_L3_error)
-    __pyx_v_lamb1 = __pyx_PyFloat_AsFloat(values[5]); if (unlikely((__pyx_v_lamb1 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 21, __pyx_L3_error)
-    __pyx_v_V = __pyx_PyFloat_AsFloat(values[6]); if (unlikely((__pyx_v_V == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 21, __pyx_L3_error)
+    __pyx_v_rf = __pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_rf == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 21, __pyx_L3_error)
+    __pyx_v_lamb0 = __pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_lamb0 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 21, __pyx_L3_error)
+    __pyx_v_lamb1 = __pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_lamb1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 21, __pyx_L3_error)
+    __pyx_v_V = __pyx_PyFloat_AsDouble(values[6]); if (unlikely((__pyx_v_V == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 21, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
@@ -2730,14 +2729,14 @@ static PyObject *__pyx_pw_6finsim_9portfolio_8optimize_6native_13cythonmetrics_5
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_4cython_mpt_entropy_costfunction(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_weights, PyArrayObject *__pyx_v_r, PyArrayObject *__pyx_v_cov, float __pyx_v_rf, float __pyx_v_lamb0, float __pyx_v_lamb1, float __pyx_v_V) {
+static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_4cython_mpt_entropy_costfunction(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_weights, PyArrayObject *__pyx_v_r, PyArrayObject *__pyx_v_cov, double __pyx_v_rf, double __pyx_v_lamb0, double __pyx_v_lamb1, double __pyx_v_V) {
   PyArrayObject *__pyx_v_weightmat = 0;
-  float __pyx_v_c0;
-  float __pyx_v_c1;
-  float __pyx_v_yield_val;
-  float __pyx_v_cov_val;
-  float __pyx_v_sumweights;
-  float __pyx_v_entropy_val;
+  double __pyx_v_c0;
+  double __pyx_v_c1;
+  double __pyx_v_yield_val;
+  double __pyx_v_cov_val;
+  double __pyx_v_sumweights;
+  double __pyx_v_entropy_val;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_cov;
   __Pyx_Buffer __pyx_pybuffer_cov;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_r;
@@ -2757,11 +2756,10 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_4
   int __pyx_t_7;
   PyObject *__pyx_t_8 = NULL;
   PyObject *__pyx_t_9 = NULL;
-  float __pyx_t_10;
-  double __pyx_t_11;
+  double __pyx_t_10;
+  PyObject *__pyx_t_11 = NULL;
   PyObject *__pyx_t_12 = NULL;
   PyObject *__pyx_t_13 = NULL;
-  PyObject *__pyx_t_14 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -2784,26 +2782,26 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_4
   __pyx_pybuffernd_cov.rcbuffer = &__pyx_pybuffer_cov;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_weights.rcbuffer->pybuffer, (PyObject*)__pyx_v_weights, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 21, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_weights.rcbuffer->pybuffer, (PyObject*)__pyx_v_weights, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 21, __pyx_L1_error)
   }
   __pyx_pybuffernd_weights.diminfo[0].strides = __pyx_pybuffernd_weights.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_weights.diminfo[0].shape = __pyx_pybuffernd_weights.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_r.rcbuffer->pybuffer, (PyObject*)__pyx_v_r, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 21, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_r.rcbuffer->pybuffer, (PyObject*)__pyx_v_r, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 21, __pyx_L1_error)
   }
   __pyx_pybuffernd_r.diminfo[0].strides = __pyx_pybuffernd_r.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_r.diminfo[0].shape = __pyx_pybuffernd_r.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_cov.rcbuffer->pybuffer, (PyObject*)__pyx_v_cov, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 21, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_cov.rcbuffer->pybuffer, (PyObject*)__pyx_v_cov, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) __PYX_ERR(0, 21, __pyx_L1_error)
   }
   __pyx_pybuffernd_cov.diminfo[0].strides = __pyx_pybuffernd_cov.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_cov.diminfo[0].shape = __pyx_pybuffernd_cov.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_cov.diminfo[1].strides = __pyx_pybuffernd_cov.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_cov.diminfo[1].shape = __pyx_pybuffernd_cov.rcbuffer->pybuffer.shape[1];
 
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":22
  * 
- * def cython_mpt_entropy_costfunction(np.ndarray[np.float64_t, ndim=1] weights, np.ndarray[np.float64_t, ndim=1] r, np.ndarray[np.float64_t, ndim=2] cov, float rf, float lamb0, float lamb1, float V):
- *     cdef np.ndarray[np.float64_t, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)             # <<<<<<<<<<<<<<
- *     cdef float c0 = lamb0 * V
- *     cdef float c1 = lamb1 * V
+ * def cython_mpt_entropy_costfunction(np.ndarray[double, ndim=1] weights, np.ndarray[double, ndim=1] r, np.ndarray[double, ndim=2] cov, double rf, double lamb0, double lamb1, double V):
+ *     cdef np.ndarray[double, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)             # <<<<<<<<<<<<<<
+ *     cdef double c0 = lamb0 * V
+ *     cdef double c1 = lamb1 * V
  */
   __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 22, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -2829,7 +2827,7 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_4
   __pyx_t_5 = ((PyArrayObject *)__pyx_t_4);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_weightmat.rcbuffer->pybuffer, (PyObject*)__pyx_t_5, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_weightmat.rcbuffer->pybuffer, (PyObject*)__pyx_t_5, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 2, 0, __pyx_stack) == -1)) {
       __pyx_v_weightmat = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_weightmat.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 22, __pyx_L1_error)
     } else {__pyx_pybuffernd_weightmat.diminfo[0].strides = __pyx_pybuffernd_weightmat.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_weightmat.diminfo[0].shape = __pyx_pybuffernd_weightmat.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_weightmat.diminfo[1].strides = __pyx_pybuffernd_weightmat.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_weightmat.diminfo[1].shape = __pyx_pybuffernd_weightmat.rcbuffer->pybuffer.shape[1];
@@ -2840,29 +2838,29 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_4
   __pyx_t_4 = 0;
 
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":23
- * def cython_mpt_entropy_costfunction(np.ndarray[np.float64_t, ndim=1] weights, np.ndarray[np.float64_t, ndim=1] r, np.ndarray[np.float64_t, ndim=2] cov, float rf, float lamb0, float lamb1, float V):
- *     cdef np.ndarray[np.float64_t, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
- *     cdef float c0 = lamb0 * V             # <<<<<<<<<<<<<<
- *     cdef float c1 = lamb1 * V
- *     cdef float yield_val = weights[-1]*rf + np.dot(weights[:-1], r)
+ * def cython_mpt_entropy_costfunction(np.ndarray[double, ndim=1] weights, np.ndarray[double, ndim=1] r, np.ndarray[double, ndim=2] cov, double rf, double lamb0, double lamb1, double V):
+ *     cdef np.ndarray[double, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
+ *     cdef double c0 = lamb0 * V             # <<<<<<<<<<<<<<
+ *     cdef double c1 = lamb1 * V
+ *     cdef double yield_val = weights[-1]*rf + np.dot(weights[:-1], r)
  */
   __pyx_v_c0 = (__pyx_v_lamb0 * __pyx_v_V);
 
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":24
- *     cdef np.ndarray[np.float64_t, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
- *     cdef float c0 = lamb0 * V
- *     cdef float c1 = lamb1 * V             # <<<<<<<<<<<<<<
- *     cdef float yield_val = weights[-1]*rf + np.dot(weights[:-1], r)
- *     cdef float cov_val = - 0.5 * c0 / V * (weightmat @ cov @ weightmat.T)[0, 0]
+ *     cdef np.ndarray[double, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
+ *     cdef double c0 = lamb0 * V
+ *     cdef double c1 = lamb1 * V             # <<<<<<<<<<<<<<
+ *     cdef double yield_val = weights[-1]*rf + np.dot(weights[:-1], r)
+ *     cdef double cov_val = - 0.5 * c0 / V * (weightmat @ cov @ weightmat.T)[0, 0]
  */
   __pyx_v_c1 = (__pyx_v_lamb1 * __pyx_v_V);
 
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":25
- *     cdef float c0 = lamb0 * V
- *     cdef float c1 = lamb1 * V
- *     cdef float yield_val = weights[-1]*rf + np.dot(weights[:-1], r)             # <<<<<<<<<<<<<<
- *     cdef float cov_val = - 0.5 * c0 / V * (weightmat @ cov @ weightmat.T)[0, 0]
- *     cdef float sumweights = np.sum(weights[:-1])
+ *     cdef double c0 = lamb0 * V
+ *     cdef double c1 = lamb1 * V
+ *     cdef double yield_val = weights[-1]*rf + np.dot(weights[:-1], r)             # <<<<<<<<<<<<<<
+ *     cdef double cov_val = - 0.5 * c0 / V * (weightmat @ cov @ weightmat.T)[0, 0]
+ *     cdef double sumweights = np.sum(weights[:-1])
  */
   __pyx_t_6 = -1L;
   __pyx_t_7 = -1;
@@ -2874,7 +2872,7 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_4
     __Pyx_RaiseBufferIndexError(__pyx_t_7);
     __PYX_ERR(0, 25, __pyx_L1_error)
   }
-  __pyx_t_4 = PyFloat_FromDouble(((*__Pyx_BufPtrStrided1d(__pyx_t_5numpy_float64_t *, __pyx_pybuffernd_weights.rcbuffer->pybuffer.buf, __pyx_t_6, __pyx_pybuffernd_weights.diminfo[0].strides)) * __pyx_v_rf)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __pyx_t_4 = PyFloat_FromDouble(((*__Pyx_BufPtrStrided1d(double *, __pyx_pybuffernd_weights.rcbuffer->pybuffer.buf, __pyx_t_6, __pyx_pybuffernd_weights.diminfo[0].strides)) * __pyx_v_rf)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 25, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 25, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
@@ -2934,23 +2932,23 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_4
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_10 = __pyx_PyFloat_AsFloat(__pyx_t_2); if (unlikely((__pyx_t_10 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 25, __pyx_L1_error)
+  __pyx_t_10 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_10 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 25, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_yield_val = __pyx_t_10;
 
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":26
- *     cdef float c1 = lamb1 * V
- *     cdef float yield_val = weights[-1]*rf + np.dot(weights[:-1], r)
- *     cdef float cov_val = - 0.5 * c0 / V * (weightmat @ cov @ weightmat.T)[0, 0]             # <<<<<<<<<<<<<<
- *     cdef float sumweights = np.sum(weights[:-1])
- *     cdef float entropy_val = - 0.5 * c1 / V * np.sum(weights[:-1] * (np.log(weights[:-1]) - np.log(sumweights))) / sumweights
+ *     cdef double c1 = lamb1 * V
+ *     cdef double yield_val = weights[-1]*rf + np.dot(weights[:-1], r)
+ *     cdef double cov_val = - 0.5 * c0 / V * (weightmat @ cov @ weightmat.T)[0, 0]             # <<<<<<<<<<<<<<
+ *     cdef double sumweights = np.sum(weights[:-1])
+ *     cdef double entropy_val = - 0.5 * c1 / V * np.sum(weights[:-1] * (np.log(weights[:-1]) - np.log(sumweights))) / sumweights
  */
-  __pyx_t_11 = (-0.5 * __pyx_v_c0);
+  __pyx_t_10 = (-0.5 * __pyx_v_c0);
   if (unlikely(__pyx_v_V == 0)) {
     PyErr_SetString(PyExc_ZeroDivisionError, "float division");
     __PYX_ERR(0, 26, __pyx_L1_error)
   }
-  __pyx_t_2 = PyFloat_FromDouble((__pyx_t_11 / __pyx_v_V)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 26, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble((__pyx_t_10 / __pyx_v_V)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 26, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_1 = __Pyx_PyNumber_MatrixMultiply(((PyObject *)__pyx_v_weightmat), ((PyObject *)__pyx_v_cov)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 26, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -2967,15 +2965,15 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_4
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_10 = __pyx_PyFloat_AsFloat(__pyx_t_9); if (unlikely((__pyx_t_10 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 26, __pyx_L1_error)
+  __pyx_t_10 = __pyx_PyFloat_AsDouble(__pyx_t_9); if (unlikely((__pyx_t_10 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 26, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
   __pyx_v_cov_val = __pyx_t_10;
 
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":27
- *     cdef float yield_val = weights[-1]*rf + np.dot(weights[:-1], r)
- *     cdef float cov_val = - 0.5 * c0 / V * (weightmat @ cov @ weightmat.T)[0, 0]
- *     cdef float sumweights = np.sum(weights[:-1])             # <<<<<<<<<<<<<<
- *     cdef float entropy_val = - 0.5 * c1 / V * np.sum(weights[:-1] * (np.log(weights[:-1]) - np.log(sumweights))) / sumweights
+ *     cdef double yield_val = weights[-1]*rf + np.dot(weights[:-1], r)
+ *     cdef double cov_val = - 0.5 * c0 / V * (weightmat @ cov @ weightmat.T)[0, 0]
+ *     cdef double sumweights = np.sum(weights[:-1])             # <<<<<<<<<<<<<<
+ *     cdef double entropy_val = - 0.5 * c1 / V * np.sum(weights[:-1] * (np.log(weights[:-1]) - np.log(sumweights))) / sumweights
  *     return yield_val + cov_val + entropy_val
  */
   __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 27, __pyx_L1_error)
@@ -3001,22 +2999,22 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_4
   if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_10 = __pyx_PyFloat_AsFloat(__pyx_t_9); if (unlikely((__pyx_t_10 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 27, __pyx_L1_error)
+  __pyx_t_10 = __pyx_PyFloat_AsDouble(__pyx_t_9); if (unlikely((__pyx_t_10 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
   __pyx_v_sumweights = __pyx_t_10;
 
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":28
- *     cdef float cov_val = - 0.5 * c0 / V * (weightmat @ cov @ weightmat.T)[0, 0]
- *     cdef float sumweights = np.sum(weights[:-1])
- *     cdef float entropy_val = - 0.5 * c1 / V * np.sum(weights[:-1] * (np.log(weights[:-1]) - np.log(sumweights))) / sumweights             # <<<<<<<<<<<<<<
+ *     cdef double cov_val = - 0.5 * c0 / V * (weightmat @ cov @ weightmat.T)[0, 0]
+ *     cdef double sumweights = np.sum(weights[:-1])
+ *     cdef double entropy_val = - 0.5 * c1 / V * np.sum(weights[:-1] * (np.log(weights[:-1]) - np.log(sumweights))) / sumweights             # <<<<<<<<<<<<<<
  *     return yield_val + cov_val + entropy_val
  */
-  __pyx_t_11 = (-0.5 * __pyx_v_c1);
+  __pyx_t_10 = (-0.5 * __pyx_v_c1);
   if (unlikely(__pyx_v_V == 0)) {
     PyErr_SetString(PyExc_ZeroDivisionError, "float division");
     __PYX_ERR(0, 28, __pyx_L1_error)
   }
-  __pyx_t_9 = PyFloat_FromDouble((__pyx_t_11 / __pyx_v_V)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __pyx_t_9 = PyFloat_FromDouble((__pyx_t_10 / __pyx_v_V)); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
@@ -3027,10 +3025,33 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_4
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
+  __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_log); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  __pyx_t_8 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_weights), __pyx_slice_); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __pyx_t_12 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_11))) {
+    __pyx_t_12 = PyMethod_GET_SELF(__pyx_t_11);
+    if (likely(__pyx_t_12)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_11);
+      __Pyx_INCREF(__pyx_t_12);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_11, function);
+    }
+  }
+  __pyx_t_3 = (__pyx_t_12) ? __Pyx_PyObject_Call2Args(__pyx_t_11, __pyx_t_12, __pyx_t_8) : __Pyx_PyObject_CallOneArg(__pyx_t_11, __pyx_t_8);
+  __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
+  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+  __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
   __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_log); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_12);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_8 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_weights), __pyx_slice_); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __pyx_t_8 = PyFloat_FromDouble(__pyx_v_sumweights); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
   __pyx_t_13 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_12))) {
@@ -3042,56 +3063,33 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_4
       __Pyx_DECREF_SET(__pyx_t_12, function);
     }
   }
-  __pyx_t_3 = (__pyx_t_13) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_13, __pyx_t_8) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_t_8);
+  __pyx_t_11 = (__pyx_t_13) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_13, __pyx_t_8) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_t_8);
   __Pyx_XDECREF(__pyx_t_13); __pyx_t_13 = 0;
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 28, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
+  if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
   __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 28, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_log); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 28, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_8 = PyFloat_FromDouble(__pyx_v_sumweights); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 28, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_14 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_13))) {
-    __pyx_t_14 = PyMethod_GET_SELF(__pyx_t_13);
-    if (likely(__pyx_t_14)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
-      __Pyx_INCREF(__pyx_t_14);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_13, function);
-    }
-  }
-  __pyx_t_12 = (__pyx_t_14) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_14, __pyx_t_8) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_t_8);
-  __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __pyx_t_12 = PyNumber_Subtract(__pyx_t_3, __pyx_t_11); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_12);
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyNumber_Subtract(__pyx_t_3, __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 28, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_12 = PyNumber_Multiply(__pyx_t_4, __pyx_t_13); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 28, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
+  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+  __pyx_t_11 = PyNumber_Multiply(__pyx_t_4, __pyx_t_12); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = NULL;
+  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+  __pyx_t_12 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_1))) {
-    __pyx_t_13 = PyMethod_GET_SELF(__pyx_t_1);
-    if (likely(__pyx_t_13)) {
+    __pyx_t_12 = PyMethod_GET_SELF(__pyx_t_1);
+    if (likely(__pyx_t_12)) {
       PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
-      __Pyx_INCREF(__pyx_t_13);
+      __Pyx_INCREF(__pyx_t_12);
       __Pyx_INCREF(function);
       __Pyx_DECREF_SET(__pyx_t_1, function);
     }
   }
-  __pyx_t_2 = (__pyx_t_13) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_13, __pyx_t_12) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_12);
-  __Pyx_XDECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+  __pyx_t_2 = (__pyx_t_12) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_12, __pyx_t_11) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_11);
+  __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
+  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
   if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -3105,13 +3103,13 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_4
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_10 = __pyx_PyFloat_AsFloat(__pyx_t_9); if (unlikely((__pyx_t_10 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 28, __pyx_L1_error)
+  __pyx_t_10 = __pyx_PyFloat_AsDouble(__pyx_t_9); if (unlikely((__pyx_t_10 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 28, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
   __pyx_v_entropy_val = __pyx_t_10;
 
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":29
- *     cdef float sumweights = np.sum(weights[:-1])
- *     cdef float entropy_val = - 0.5 * c1 / V * np.sum(weights[:-1] * (np.log(weights[:-1]) - np.log(sumweights))) / sumweights
+ *     cdef double sumweights = np.sum(weights[:-1])
+ *     cdef double entropy_val = - 0.5 * c1 / V * np.sum(weights[:-1] * (np.log(weights[:-1]) - np.log(sumweights))) / sumweights
  *     return yield_val + cov_val + entropy_val             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
@@ -3124,9 +3122,9 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_4
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":21
  * 
  * 
- * def cython_mpt_entropy_costfunction(np.ndarray[np.float64_t, ndim=1] weights, np.ndarray[np.float64_t, ndim=1] r, np.ndarray[np.float64_t, ndim=2] cov, float rf, float lamb0, float lamb1, float V):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
- *     cdef float c0 = lamb0 * V
+ * def cython_mpt_entropy_costfunction(np.ndarray[double, ndim=1] weights, np.ndarray[double, ndim=1] r, np.ndarray[double, ndim=2] cov, double rf, double lamb0, double lamb1, double V):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
+ *     cdef double c0 = lamb0 * V
  */
 
   /* function exit code */
@@ -3137,9 +3135,9 @@ static PyObject *__pyx_pf_6finsim_9portfolio_8optimize_6native_13cythonmetrics_4
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_8);
   __Pyx_XDECREF(__pyx_t_9);
+  __Pyx_XDECREF(__pyx_t_11);
   __Pyx_XDECREF(__pyx_t_12);
   __Pyx_XDECREF(__pyx_t_13);
-  __Pyx_XDECREF(__pyx_t_14);
   { PyObject *__pyx_type, *__pyx_value, *__pyx_tb;
     __Pyx_PyThreadState_declare
     __Pyx_PyThreadState_assign
@@ -4288,19 +4286,19 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
 
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":15
  * 
- * def cython_mpt_costfunction(np.ndarray[np.float64_t, ndim=1] weights, np.ndarray[np.float64_t, ndim=1] r, np.ndarray[np.float64_t, ndim=2] cov, float rf, float lamb, float V0):
- *     cdef np.ndarray[np.float64_t, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)             # <<<<<<<<<<<<<<
- *     cdef float c = lamb * V0
- *     cdef float cost = weights[-1]*rf + np.dot(weights[:-1], r) - 0.5*c/V0*(weightmat @ cov @ weightmat.T)[0, 0]
+ * def cython_mpt_costfunction(np.ndarray[double, ndim=1] weights, np.ndarray[double, ndim=1] r, np.ndarray[double, ndim=2] cov, double rf, double lamb, double V0):
+ *     cdef np.ndarray[double, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)             # <<<<<<<<<<<<<<
+ *     cdef double c = lamb * V0
+ *     cdef double cost = weights[-1]*rf + np.dot(weights[:-1], r) - 0.5*c/V0*(weightmat @ cov @ weightmat.T)[0, 0]
  */
   __pyx_slice_ = PySlice_New(Py_None, __pyx_int_neg_1, Py_None); if (unlikely(!__pyx_slice_)) __PYX_ERR(0, 15, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_slice_);
   __Pyx_GIVEREF(__pyx_slice_);
 
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":17
- *     cdef np.ndarray[np.float64_t, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
- *     cdef float c = lamb * V0
- *     cdef float cost = weights[-1]*rf + np.dot(weights[:-1], r) - 0.5*c/V0*(weightmat @ cov @ weightmat.T)[0, 0]             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
+ *     cdef double c = lamb * V0
+ *     cdef double cost = weights[-1]*rf + np.dot(weights[:-1], r) - 0.5*c/V0*(weightmat @ cov @ weightmat.T)[0, 0]             # <<<<<<<<<<<<<<
  *     return cost
  * 
  */
@@ -4333,9 +4331,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":7
  * 
  * 
- * def cython_sharpe_ratio(np.ndarray[np.float64_t, ndim=1] weights, np.ndarray[np.float64_t, ndim=1] r, np.ndarray[np.float64_t, ndim=2] cov, float rf):             # <<<<<<<<<<<<<<
- *     cdef float yieldrate = np.sum(weights * r)
- *     cdef np.ndarray[np.float64_t, ndim=2] sqweights = np.expand_dims(weights, axis=1) @ np.expand_dims(weights, axis=0)
+ * def cython_sharpe_ratio(np.ndarray[double, ndim=1] weights, np.ndarray[double, ndim=1] r, np.ndarray[double, ndim=2] cov, float rf):             # <<<<<<<<<<<<<<
+ *     cdef double yieldrate = np.sum(weights * r)
+ *     cdef np.ndarray[double, ndim=2] sqweights = np.expand_dims(weights, axis=1) @ np.expand_dims(weights, axis=0)
  */
   __pyx_tuple__5 = PyTuple_Pack(7, __pyx_n_s_weights, __pyx_n_s_r, __pyx_n_s_cov, __pyx_n_s_rf, __pyx_n_s_yieldrate, __pyx_n_s_sqweights, __pyx_n_s_volatility); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 7, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__5);
@@ -4345,9 +4343,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":14
  * 
  * 
- * def cython_mpt_costfunction(np.ndarray[np.float64_t, ndim=1] weights, np.ndarray[np.float64_t, ndim=1] r, np.ndarray[np.float64_t, ndim=2] cov, float rf, float lamb, float V0):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
- *     cdef float c = lamb * V0
+ * def cython_mpt_costfunction(np.ndarray[double, ndim=1] weights, np.ndarray[double, ndim=1] r, np.ndarray[double, ndim=2] cov, double rf, double lamb, double V0):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
+ *     cdef double c = lamb * V0
  */
   __pyx_tuple__7 = PyTuple_Pack(9, __pyx_n_s_weights, __pyx_n_s_r, __pyx_n_s_cov, __pyx_n_s_rf, __pyx_n_s_lamb, __pyx_n_s_V0, __pyx_n_s_weightmat, __pyx_n_s_c, __pyx_n_s_cost); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 14, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__7);
@@ -4357,9 +4355,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":21
  * 
  * 
- * def cython_mpt_entropy_costfunction(np.ndarray[np.float64_t, ndim=1] weights, np.ndarray[np.float64_t, ndim=1] r, np.ndarray[np.float64_t, ndim=2] cov, float rf, float lamb0, float lamb1, float V):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
- *     cdef float c0 = lamb0 * V
+ * def cython_mpt_entropy_costfunction(np.ndarray[double, ndim=1] weights, np.ndarray[double, ndim=1] r, np.ndarray[double, ndim=2] cov, double rf, double lamb0, double lamb1, double V):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
+ *     cdef double c0 = lamb0 * V
  */
   __pyx_tuple__9 = PyTuple_Pack(14, __pyx_n_s_weights, __pyx_n_s_r, __pyx_n_s_cov, __pyx_n_s_rf, __pyx_n_s_lamb0, __pyx_n_s_lamb1, __pyx_n_s_V, __pyx_n_s_weightmat, __pyx_n_s_c0, __pyx_n_s_c1, __pyx_n_s_yield_val, __pyx_n_s_cov_val, __pyx_n_s_sumweights, __pyx_n_s_entropy_val); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 21, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__9);
@@ -4715,9 +4713,9 @@ if (!__Pyx_RefNanny) {
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":7
  * 
  * 
- * def cython_sharpe_ratio(np.ndarray[np.float64_t, ndim=1] weights, np.ndarray[np.float64_t, ndim=1] r, np.ndarray[np.float64_t, ndim=2] cov, float rf):             # <<<<<<<<<<<<<<
- *     cdef float yieldrate = np.sum(weights * r)
- *     cdef np.ndarray[np.float64_t, ndim=2] sqweights = np.expand_dims(weights, axis=1) @ np.expand_dims(weights, axis=0)
+ * def cython_sharpe_ratio(np.ndarray[double, ndim=1] weights, np.ndarray[double, ndim=1] r, np.ndarray[double, ndim=2] cov, float rf):             # <<<<<<<<<<<<<<
+ *     cdef double yieldrate = np.sum(weights * r)
+ *     cdef np.ndarray[double, ndim=2] sqweights = np.expand_dims(weights, axis=1) @ np.expand_dims(weights, axis=0)
  */
   __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_6finsim_9portfolio_8optimize_6native_13cythonmetrics_1cython_sharpe_ratio, NULL, __pyx_n_s_finsim_portfolio_optimize_native_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 7, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -4727,9 +4725,9 @@ if (!__Pyx_RefNanny) {
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":14
  * 
  * 
- * def cython_mpt_costfunction(np.ndarray[np.float64_t, ndim=1] weights, np.ndarray[np.float64_t, ndim=1] r, np.ndarray[np.float64_t, ndim=2] cov, float rf, float lamb, float V0):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
- *     cdef float c = lamb * V0
+ * def cython_mpt_costfunction(np.ndarray[double, ndim=1] weights, np.ndarray[double, ndim=1] r, np.ndarray[double, ndim=2] cov, double rf, double lamb, double V0):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
+ *     cdef double c = lamb * V0
  */
   __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_6finsim_9portfolio_8optimize_6native_13cythonmetrics_3cython_mpt_costfunction, NULL, __pyx_n_s_finsim_portfolio_optimize_native_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 14, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -4739,9 +4737,9 @@ if (!__Pyx_RefNanny) {
   /* "finsim/portfolio/optimize/native/cythonmetrics.pyx":21
  * 
  * 
- * def cython_mpt_entropy_costfunction(np.ndarray[np.float64_t, ndim=1] weights, np.ndarray[np.float64_t, ndim=1] r, np.ndarray[np.float64_t, ndim=2] cov, float rf, float lamb0, float lamb1, float V):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
- *     cdef float c0 = lamb0 * V
+ * def cython_mpt_entropy_costfunction(np.ndarray[double, ndim=1] weights, np.ndarray[double, ndim=1] r, np.ndarray[double, ndim=2] cov, double rf, double lamb0, double lamb1, double V):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
+ *     cdef double c0 = lamb0 * V
  */
   __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_6finsim_9portfolio_8optimize_6native_13cythonmetrics_5cython_mpt_entropy_costfunction, NULL, __pyx_n_s_finsim_portfolio_optimize_native_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 21, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);

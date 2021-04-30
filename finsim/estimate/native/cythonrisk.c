@@ -1697,7 +1697,7 @@ static PyTypeObject *__pyx_ptype_5numpy_character = 0;
 static PyTypeObject *__pyx_ptype_5numpy_ufunc = 0;
 
 /* Module declarations from 'finsim.estimate.native.cythonrisk' */
-static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t = { "float64_t", NULL, sizeof(__pyx_t_5numpy_float64_t), { 0 }, 0, 'R', 0, 0 };
+static __Pyx_TypeInfo __Pyx_TypeInfo_double = { "double", NULL, sizeof(double), { 0 }, 0, 'R', 0, 0 };
 #define __Pyx_MODULE_NAME "finsim.estimate.native.cythonrisk"
 extern int __pyx_module_is_main_finsim__estimate__native__cythonrisk;
 int __pyx_module_is_main_finsim__estimate__native__cythonrisk = 0;
@@ -1760,8 +1760,8 @@ static PyObject *__pyx_n_s_target_return;
 static PyObject *__pyx_n_s_test;
 static PyObject *__pyx_n_s_ts;
 static PyObject *__pyx_n_s_upside_risk;
-static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_cython_estimate_downside_risk(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ts, PyArrayObject *__pyx_v_prices, float __pyx_v_target_return); /* proto */
-static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_2cython_estimate_upside_risk(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ts, PyArrayObject *__pyx_v_prices, float __pyx_v_target_return); /* proto */
+static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_cython_estimate_downside_risk(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ts, PyArrayObject *__pyx_v_prices, double __pyx_v_target_return); /* proto */
+static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_2cython_estimate_upside_risk(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ts, PyArrayObject *__pyx_v_prices, double __pyx_v_target_return); /* proto */
 static PyObject *__pyx_float_0_;
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_1;
@@ -1779,9 +1779,9 @@ static PyObject *__pyx_codeobj__8;
 /* "finsim/estimate/native/cythonrisk.pyx":6
  * 
  * 
- * def cython_estimate_downside_risk(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=1] prices, float target_return):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ * def cython_estimate_downside_risk(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices, double target_return):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  */
 
 /* Python wrapper */
@@ -1790,7 +1790,7 @@ static PyMethodDef __pyx_mdef_6finsim_8estimate_6native_10cythonrisk_1cython_est
 static PyObject *__pyx_pw_6finsim_8estimate_6native_10cythonrisk_1cython_estimate_downside_risk(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_ts = 0;
   PyArrayObject *__pyx_v_prices = 0;
-  float __pyx_v_target_return;
+  double __pyx_v_target_return;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -1843,7 +1843,7 @@ static PyObject *__pyx_pw_6finsim_8estimate_6native_10cythonrisk_1cython_estimat
     }
     __pyx_v_ts = ((PyArrayObject *)values[0]);
     __pyx_v_prices = ((PyArrayObject *)values[1]);
-    __pyx_v_target_return = __pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v_target_return == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 6, __pyx_L3_error)
+    __pyx_v_target_return = __pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_target_return == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 6, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
@@ -1866,12 +1866,12 @@ static PyObject *__pyx_pw_6finsim_8estimate_6native_10cythonrisk_1cython_estimat
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_cython_estimate_downside_risk(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ts, PyArrayObject *__pyx_v_prices, float __pyx_v_target_return) {
+static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_cython_estimate_downside_risk(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ts, PyArrayObject *__pyx_v_prices, double __pyx_v_target_return) {
   PyArrayObject *__pyx_v_dlogS = 0;
   PyArrayObject *__pyx_v_dt = 0;
   PyArrayObject *__pyx_v_rms_rarray = 0;
   PyArrayObject *__pyx_v_less_return_array = 0;
-  float __pyx_v_downside_risk;
+  double __pyx_v_downside_risk;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_dlogS;
   __Pyx_Buffer __pyx_pybuffer_dlogS;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_dt;
@@ -1897,7 +1897,7 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_cython_estimate
   PyArrayObject *__pyx_t_9 = NULL;
   PyObject *__pyx_t_10 = NULL;
   PyObject *__pyx_t_11 = NULL;
-  float __pyx_t_12;
+  double __pyx_t_12;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -1928,20 +1928,20 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_cython_estimate
   __pyx_pybuffernd_prices.rcbuffer = &__pyx_pybuffer_prices;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_ts.rcbuffer->pybuffer, (PyObject*)__pyx_v_ts, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 6, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_ts.rcbuffer->pybuffer, (PyObject*)__pyx_v_ts, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 6, __pyx_L1_error)
   }
   __pyx_pybuffernd_ts.diminfo[0].strides = __pyx_pybuffernd_ts.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_ts.diminfo[0].shape = __pyx_pybuffernd_ts.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_prices.rcbuffer->pybuffer, (PyObject*)__pyx_v_prices, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 6, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_prices.rcbuffer->pybuffer, (PyObject*)__pyx_v_prices, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 6, __pyx_L1_error)
   }
   __pyx_pybuffernd_prices.diminfo[0].strides = __pyx_pybuffernd_prices.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_prices.diminfo[0].shape = __pyx_pybuffernd_prices.rcbuffer->pybuffer.shape[0];
 
   /* "finsim/estimate/native/cythonrisk.pyx":7
  * 
- * def cython_estimate_downside_risk(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=1] prices, float target_return):
- *     cdef np.ndarray[np.float64_t, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ * def cython_estimate_downside_risk(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices, double target_return):
+ *     cdef np.ndarray[double, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  * 
  */
   __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 7, __pyx_L1_error)
@@ -1977,7 +1977,7 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_cython_estimate
   __pyx_t_6 = ((PyArrayObject *)__pyx_t_1);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dlogS.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dlogS.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_dlogS = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_dlogS.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 7, __pyx_L1_error)
     } else {__pyx_pybuffernd_dlogS.diminfo[0].strides = __pyx_pybuffernd_dlogS.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_dlogS.diminfo[0].shape = __pyx_pybuffernd_dlogS.rcbuffer->pybuffer.shape[0];
@@ -1988,11 +1988,11 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_cython_estimate
   __pyx_t_1 = 0;
 
   /* "finsim/estimate/native/cythonrisk.pyx":8
- * def cython_estimate_downside_risk(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=1] prices, float target_return):
- *     cdef np.ndarray[np.float64_t, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]             # <<<<<<<<<<<<<<
+ * def cython_estimate_downside_risk(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices, double target_return):
+ *     cdef np.ndarray[double, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]             # <<<<<<<<<<<<<<
  * 
- *     cdef np.ndarray[np.float64_t, ndim=1] rms_rarray = dlogS / np.sqrt(dt)
+ *     cdef np.ndarray[double, ndim=1] rms_rarray = dlogS / np.sqrt(dt)
  */
   __pyx_t_1 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_ts), __pyx_slice_); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 8, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -2006,7 +2006,7 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_cython_estimate
   __pyx_t_7 = ((PyArrayObject *)__pyx_t_5);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dt.rcbuffer->pybuffer, (PyObject*)__pyx_t_7, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dt.rcbuffer->pybuffer, (PyObject*)__pyx_t_7, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_dt = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_dt.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 8, __pyx_L1_error)
     } else {__pyx_pybuffernd_dt.diminfo[0].strides = __pyx_pybuffernd_dt.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_dt.diminfo[0].shape = __pyx_pybuffernd_dt.rcbuffer->pybuffer.shape[0];
@@ -2017,10 +2017,10 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_cython_estimate
   __pyx_t_5 = 0;
 
   /* "finsim/estimate/native/cythonrisk.pyx":10
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  * 
- *     cdef np.ndarray[np.float64_t, ndim=1] rms_rarray = dlogS / np.sqrt(dt)             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=1] less_return_array = target_return - rms_rarray
+ *     cdef np.ndarray[double, ndim=1] rms_rarray = dlogS / np.sqrt(dt)             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] less_return_array = target_return - rms_rarray
  *     less_return_array[less_return_array < 0] = 0.
  */
   __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 10, __pyx_L1_error)
@@ -2050,7 +2050,7 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_cython_estimate
   __pyx_t_8 = ((PyArrayObject *)__pyx_t_1);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_rms_rarray.rcbuffer->pybuffer, (PyObject*)__pyx_t_8, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_rms_rarray.rcbuffer->pybuffer, (PyObject*)__pyx_t_8, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_rms_rarray = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_rms_rarray.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 10, __pyx_L1_error)
     } else {__pyx_pybuffernd_rms_rarray.diminfo[0].strides = __pyx_pybuffernd_rms_rarray.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_rms_rarray.diminfo[0].shape = __pyx_pybuffernd_rms_rarray.rcbuffer->pybuffer.shape[0];
@@ -2062,10 +2062,10 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_cython_estimate
 
   /* "finsim/estimate/native/cythonrisk.pyx":11
  * 
- *     cdef np.ndarray[np.float64_t, ndim=1] rms_rarray = dlogS / np.sqrt(dt)
- *     cdef np.ndarray[np.float64_t, ndim=1] less_return_array = target_return - rms_rarray             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] rms_rarray = dlogS / np.sqrt(dt)
+ *     cdef np.ndarray[double, ndim=1] less_return_array = target_return - rms_rarray             # <<<<<<<<<<<<<<
  *     less_return_array[less_return_array < 0] = 0.
- *     cdef float downside_risk = np.sqrt(np.mean(np.square(less_return_array)))
+ *     cdef double downside_risk = np.sqrt(np.mean(np.square(less_return_array)))
  */
   __pyx_t_1 = PyFloat_FromDouble(__pyx_v_target_return); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 11, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -2076,7 +2076,7 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_cython_estimate
   __pyx_t_9 = ((PyArrayObject *)__pyx_t_5);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_less_return_array.rcbuffer->pybuffer, (PyObject*)__pyx_t_9, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_less_return_array.rcbuffer->pybuffer, (PyObject*)__pyx_t_9, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_less_return_array = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_less_return_array.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 11, __pyx_L1_error)
     } else {__pyx_pybuffernd_less_return_array.diminfo[0].strides = __pyx_pybuffernd_less_return_array.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_less_return_array.diminfo[0].shape = __pyx_pybuffernd_less_return_array.rcbuffer->pybuffer.shape[0];
@@ -2087,10 +2087,10 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_cython_estimate
   __pyx_t_5 = 0;
 
   /* "finsim/estimate/native/cythonrisk.pyx":12
- *     cdef np.ndarray[np.float64_t, ndim=1] rms_rarray = dlogS / np.sqrt(dt)
- *     cdef np.ndarray[np.float64_t, ndim=1] less_return_array = target_return - rms_rarray
+ *     cdef np.ndarray[double, ndim=1] rms_rarray = dlogS / np.sqrt(dt)
+ *     cdef np.ndarray[double, ndim=1] less_return_array = target_return - rms_rarray
  *     less_return_array[less_return_array < 0] = 0.             # <<<<<<<<<<<<<<
- *     cdef float downside_risk = np.sqrt(np.mean(np.square(less_return_array)))
+ *     cdef double downside_risk = np.sqrt(np.mean(np.square(less_return_array)))
  *     return downside_risk
  */
   __pyx_t_5 = PyObject_RichCompare(((PyObject *)__pyx_v_less_return_array), __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 12, __pyx_L1_error)
@@ -2098,9 +2098,9 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_cython_estimate
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
   /* "finsim/estimate/native/cythonrisk.pyx":13
- *     cdef np.ndarray[np.float64_t, ndim=1] less_return_array = target_return - rms_rarray
+ *     cdef np.ndarray[double, ndim=1] less_return_array = target_return - rms_rarray
  *     less_return_array[less_return_array < 0] = 0.
- *     cdef float downside_risk = np.sqrt(np.mean(np.square(less_return_array)))             # <<<<<<<<<<<<<<
+ *     cdef double downside_risk = np.sqrt(np.mean(np.square(less_return_array)))             # <<<<<<<<<<<<<<
  *     return downside_risk
  * 
  */
@@ -2166,13 +2166,13 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_cython_estimate
   if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 13, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_12 = __pyx_PyFloat_AsFloat(__pyx_t_5); if (unlikely((__pyx_t_12 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 13, __pyx_L1_error)
+  __pyx_t_12 = __pyx_PyFloat_AsDouble(__pyx_t_5); if (unlikely((__pyx_t_12 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 13, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_v_downside_risk = __pyx_t_12;
 
   /* "finsim/estimate/native/cythonrisk.pyx":14
  *     less_return_array[less_return_array < 0] = 0.
- *     cdef float downside_risk = np.sqrt(np.mean(np.square(less_return_array)))
+ *     cdef double downside_risk = np.sqrt(np.mean(np.square(less_return_array)))
  *     return downside_risk             # <<<<<<<<<<<<<<
  * 
  * 
@@ -2187,9 +2187,9 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_cython_estimate
   /* "finsim/estimate/native/cythonrisk.pyx":6
  * 
  * 
- * def cython_estimate_downside_risk(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=1] prices, float target_return):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ * def cython_estimate_downside_risk(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices, double target_return):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  */
 
   /* function exit code */
@@ -2235,9 +2235,9 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_cython_estimate
 /* "finsim/estimate/native/cythonrisk.pyx":17
  * 
  * 
- * def cython_estimate_upside_risk(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=1] prices, float target_return):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ * def cython_estimate_upside_risk(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices, double target_return):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  */
 
 /* Python wrapper */
@@ -2246,7 +2246,7 @@ static PyMethodDef __pyx_mdef_6finsim_8estimate_6native_10cythonrisk_3cython_est
 static PyObject *__pyx_pw_6finsim_8estimate_6native_10cythonrisk_3cython_estimate_upside_risk(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyArrayObject *__pyx_v_ts = 0;
   PyArrayObject *__pyx_v_prices = 0;
-  float __pyx_v_target_return;
+  double __pyx_v_target_return;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -2299,7 +2299,7 @@ static PyObject *__pyx_pw_6finsim_8estimate_6native_10cythonrisk_3cython_estimat
     }
     __pyx_v_ts = ((PyArrayObject *)values[0]);
     __pyx_v_prices = ((PyArrayObject *)values[1]);
-    __pyx_v_target_return = __pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v_target_return == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 17, __pyx_L3_error)
+    __pyx_v_target_return = __pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_target_return == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 17, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
@@ -2322,12 +2322,12 @@ static PyObject *__pyx_pw_6finsim_8estimate_6native_10cythonrisk_3cython_estimat
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_2cython_estimate_upside_risk(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ts, PyArrayObject *__pyx_v_prices, float __pyx_v_target_return) {
+static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_2cython_estimate_upside_risk(CYTHON_UNUSED PyObject *__pyx_self, PyArrayObject *__pyx_v_ts, PyArrayObject *__pyx_v_prices, double __pyx_v_target_return) {
   PyArrayObject *__pyx_v_dlogS = 0;
   PyArrayObject *__pyx_v_dt = 0;
   PyArrayObject *__pyx_v_rms_rarray = 0;
   PyArrayObject *__pyx_v_more_return_array = 0;
-  float __pyx_v_upside_risk;
+  double __pyx_v_upside_risk;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_dlogS;
   __Pyx_Buffer __pyx_pybuffer_dlogS;
   __Pyx_LocalBuf_ND __pyx_pybuffernd_dt;
@@ -2353,7 +2353,7 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_2cython_estimat
   PyArrayObject *__pyx_t_9 = NULL;
   PyObject *__pyx_t_10 = NULL;
   PyObject *__pyx_t_11 = NULL;
-  float __pyx_t_12;
+  double __pyx_t_12;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -2384,20 +2384,20 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_2cython_estimat
   __pyx_pybuffernd_prices.rcbuffer = &__pyx_pybuffer_prices;
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_ts.rcbuffer->pybuffer, (PyObject*)__pyx_v_ts, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 17, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_ts.rcbuffer->pybuffer, (PyObject*)__pyx_v_ts, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 17, __pyx_L1_error)
   }
   __pyx_pybuffernd_ts.diminfo[0].strides = __pyx_pybuffernd_ts.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_ts.diminfo[0].shape = __pyx_pybuffernd_ts.rcbuffer->pybuffer.shape[0];
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_prices.rcbuffer->pybuffer, (PyObject*)__pyx_v_prices, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 17, __pyx_L1_error)
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_prices.rcbuffer->pybuffer, (PyObject*)__pyx_v_prices, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) __PYX_ERR(0, 17, __pyx_L1_error)
   }
   __pyx_pybuffernd_prices.diminfo[0].strides = __pyx_pybuffernd_prices.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_prices.diminfo[0].shape = __pyx_pybuffernd_prices.rcbuffer->pybuffer.shape[0];
 
   /* "finsim/estimate/native/cythonrisk.pyx":18
  * 
- * def cython_estimate_upside_risk(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=1] prices, float target_return):
- *     cdef np.ndarray[np.float64_t, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ * def cython_estimate_upside_risk(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices, double target_return):
+ *     cdef np.ndarray[double, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  * 
  */
   __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 18, __pyx_L1_error)
@@ -2433,7 +2433,7 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_2cython_estimat
   __pyx_t_6 = ((PyArrayObject *)__pyx_t_1);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dlogS.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dlogS.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_dlogS = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_dlogS.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 18, __pyx_L1_error)
     } else {__pyx_pybuffernd_dlogS.diminfo[0].strides = __pyx_pybuffernd_dlogS.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_dlogS.diminfo[0].shape = __pyx_pybuffernd_dlogS.rcbuffer->pybuffer.shape[0];
@@ -2444,11 +2444,11 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_2cython_estimat
   __pyx_t_1 = 0;
 
   /* "finsim/estimate/native/cythonrisk.pyx":19
- * def cython_estimate_upside_risk(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=1] prices, float target_return):
- *     cdef np.ndarray[np.float64_t, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]             # <<<<<<<<<<<<<<
+ * def cython_estimate_upside_risk(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices, double target_return):
+ *     cdef np.ndarray[double, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]             # <<<<<<<<<<<<<<
  * 
- *     cdef np.ndarray[np.float64_t, ndim=1] rms_rarray = dlogS / np.sqrt(dt)
+ *     cdef np.ndarray[double, ndim=1] rms_rarray = dlogS / np.sqrt(dt)
  */
   __pyx_t_1 = __Pyx_PyObject_GetItem(((PyObject *)__pyx_v_ts), __pyx_slice_); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 19, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -2462,7 +2462,7 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_2cython_estimat
   __pyx_t_7 = ((PyArrayObject *)__pyx_t_5);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dt.rcbuffer->pybuffer, (PyObject*)__pyx_t_7, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dt.rcbuffer->pybuffer, (PyObject*)__pyx_t_7, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_dt = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_dt.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 19, __pyx_L1_error)
     } else {__pyx_pybuffernd_dt.diminfo[0].strides = __pyx_pybuffernd_dt.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_dt.diminfo[0].shape = __pyx_pybuffernd_dt.rcbuffer->pybuffer.shape[0];
@@ -2473,10 +2473,10 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_2cython_estimat
   __pyx_t_5 = 0;
 
   /* "finsim/estimate/native/cythonrisk.pyx":21
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  * 
- *     cdef np.ndarray[np.float64_t, ndim=1] rms_rarray = dlogS / np.sqrt(dt)             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=1] more_return_array = rms_rarray - target_return
+ *     cdef np.ndarray[double, ndim=1] rms_rarray = dlogS / np.sqrt(dt)             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] more_return_array = rms_rarray - target_return
  *     more_return_array[more_return_array < 0] = 0.
  */
   __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 21, __pyx_L1_error)
@@ -2506,7 +2506,7 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_2cython_estimat
   __pyx_t_8 = ((PyArrayObject *)__pyx_t_1);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_rms_rarray.rcbuffer->pybuffer, (PyObject*)__pyx_t_8, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_rms_rarray.rcbuffer->pybuffer, (PyObject*)__pyx_t_8, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_rms_rarray = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_rms_rarray.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 21, __pyx_L1_error)
     } else {__pyx_pybuffernd_rms_rarray.diminfo[0].strides = __pyx_pybuffernd_rms_rarray.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_rms_rarray.diminfo[0].shape = __pyx_pybuffernd_rms_rarray.rcbuffer->pybuffer.shape[0];
@@ -2518,10 +2518,10 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_2cython_estimat
 
   /* "finsim/estimate/native/cythonrisk.pyx":22
  * 
- *     cdef np.ndarray[np.float64_t, ndim=1] rms_rarray = dlogS / np.sqrt(dt)
- *     cdef np.ndarray[np.float64_t, ndim=1] more_return_array = rms_rarray - target_return             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] rms_rarray = dlogS / np.sqrt(dt)
+ *     cdef np.ndarray[double, ndim=1] more_return_array = rms_rarray - target_return             # <<<<<<<<<<<<<<
  *     more_return_array[more_return_array < 0] = 0.
- *     cdef float upside_risk = np.sqrt(np.mean(np.square(more_return_array)))
+ *     cdef double upside_risk = np.sqrt(np.mean(np.square(more_return_array)))
  */
   __pyx_t_1 = PyFloat_FromDouble(__pyx_v_target_return); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 22, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -2532,7 +2532,7 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_2cython_estimat
   __pyx_t_9 = ((PyArrayObject *)__pyx_t_5);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_more_return_array.rcbuffer->pybuffer, (PyObject*)__pyx_t_9, &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_more_return_array.rcbuffer->pybuffer, (PyObject*)__pyx_t_9, &__Pyx_TypeInfo_double, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_more_return_array = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_more_return_array.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 22, __pyx_L1_error)
     } else {__pyx_pybuffernd_more_return_array.diminfo[0].strides = __pyx_pybuffernd_more_return_array.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_more_return_array.diminfo[0].shape = __pyx_pybuffernd_more_return_array.rcbuffer->pybuffer.shape[0];
@@ -2543,10 +2543,10 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_2cython_estimat
   __pyx_t_5 = 0;
 
   /* "finsim/estimate/native/cythonrisk.pyx":23
- *     cdef np.ndarray[np.float64_t, ndim=1] rms_rarray = dlogS / np.sqrt(dt)
- *     cdef np.ndarray[np.float64_t, ndim=1] more_return_array = rms_rarray - target_return
+ *     cdef np.ndarray[double, ndim=1] rms_rarray = dlogS / np.sqrt(dt)
+ *     cdef np.ndarray[double, ndim=1] more_return_array = rms_rarray - target_return
  *     more_return_array[more_return_array < 0] = 0.             # <<<<<<<<<<<<<<
- *     cdef float upside_risk = np.sqrt(np.mean(np.square(more_return_array)))
+ *     cdef double upside_risk = np.sqrt(np.mean(np.square(more_return_array)))
  *     return upside_risk
  */
   __pyx_t_5 = PyObject_RichCompare(((PyObject *)__pyx_v_more_return_array), __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_5); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 23, __pyx_L1_error)
@@ -2554,9 +2554,9 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_2cython_estimat
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
   /* "finsim/estimate/native/cythonrisk.pyx":24
- *     cdef np.ndarray[np.float64_t, ndim=1] more_return_array = rms_rarray - target_return
+ *     cdef np.ndarray[double, ndim=1] more_return_array = rms_rarray - target_return
  *     more_return_array[more_return_array < 0] = 0.
- *     cdef float upside_risk = np.sqrt(np.mean(np.square(more_return_array)))             # <<<<<<<<<<<<<<
+ *     cdef double upside_risk = np.sqrt(np.mean(np.square(more_return_array)))             # <<<<<<<<<<<<<<
  *     return upside_risk
  */
   __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 24, __pyx_L1_error)
@@ -2621,13 +2621,13 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_2cython_estimat
   if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 24, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_12 = __pyx_PyFloat_AsFloat(__pyx_t_5); if (unlikely((__pyx_t_12 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 24, __pyx_L1_error)
+  __pyx_t_12 = __pyx_PyFloat_AsDouble(__pyx_t_5); if (unlikely((__pyx_t_12 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 24, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_v_upside_risk = __pyx_t_12;
 
   /* "finsim/estimate/native/cythonrisk.pyx":25
  *     more_return_array[more_return_array < 0] = 0.
- *     cdef float upside_risk = np.sqrt(np.mean(np.square(more_return_array)))
+ *     cdef double upside_risk = np.sqrt(np.mean(np.square(more_return_array)))
  *     return upside_risk             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
@@ -2640,9 +2640,9 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_10cythonrisk_2cython_estimat
   /* "finsim/estimate/native/cythonrisk.pyx":17
  * 
  * 
- * def cython_estimate_upside_risk(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=1] prices, float target_return):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ * def cython_estimate_upside_risk(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices, double target_return):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  */
 
   /* function exit code */
@@ -3791,9 +3791,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
 
   /* "finsim/estimate/native/cythonrisk.pyx":7
  * 
- * def cython_estimate_downside_risk(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=1] prices, float target_return):
- *     cdef np.ndarray[np.float64_t, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ * def cython_estimate_downside_risk(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices, double target_return):
+ *     cdef np.ndarray[double, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  * 
  */
   __pyx_slice_ = PySlice_New(__pyx_int_1, Py_None, Py_None); if (unlikely(!__pyx_slice_)) __PYX_ERR(0, 7, __pyx_L1_error)
@@ -3828,9 +3828,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   /* "finsim/estimate/native/cythonrisk.pyx":6
  * 
  * 
- * def cython_estimate_downside_risk(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=1] prices, float target_return):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ * def cython_estimate_downside_risk(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices, double target_return):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  */
   __pyx_tuple__5 = PyTuple_Pack(8, __pyx_n_s_ts, __pyx_n_s_prices, __pyx_n_s_target_return, __pyx_n_s_dlogS, __pyx_n_s_dt, __pyx_n_s_rms_rarray, __pyx_n_s_less_return_array, __pyx_n_s_downside_risk); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 6, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__5);
@@ -3840,9 +3840,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   /* "finsim/estimate/native/cythonrisk.pyx":17
  * 
  * 
- * def cython_estimate_upside_risk(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=1] prices, float target_return):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ * def cython_estimate_upside_risk(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices, double target_return):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  */
   __pyx_tuple__7 = PyTuple_Pack(8, __pyx_n_s_ts, __pyx_n_s_prices, __pyx_n_s_target_return, __pyx_n_s_dlogS, __pyx_n_s_dt, __pyx_n_s_rms_rarray, __pyx_n_s_more_return_array, __pyx_n_s_upside_risk); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 17, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__7);
@@ -4198,9 +4198,9 @@ if (!__Pyx_RefNanny) {
   /* "finsim/estimate/native/cythonrisk.pyx":6
  * 
  * 
- * def cython_estimate_downside_risk(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=1] prices, float target_return):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ * def cython_estimate_downside_risk(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices, double target_return):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  */
   __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_6finsim_8estimate_6native_10cythonrisk_1cython_estimate_downside_risk, NULL, __pyx_n_s_finsim_estimate_native_cythonris_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 6, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -4210,9 +4210,9 @@ if (!__Pyx_RefNanny) {
   /* "finsim/estimate/native/cythonrisk.pyx":17
  * 
  * 
- * def cython_estimate_upside_risk(np.ndarray[np.float64_t, ndim=1] ts, np.ndarray[np.float64_t, ndim=1] prices, float target_return):             # <<<<<<<<<<<<<<
- *     cdef np.ndarray[np.float64_t, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
- *     cdef np.ndarray[np.float64_t, ndim=1] dt = ts[1:] - ts[:-1]
+ * def cython_estimate_upside_risk(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices, double target_return):             # <<<<<<<<<<<<<<
+ *     cdef np.ndarray[double, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
+ *     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
  */
   __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_6finsim_8estimate_6native_10cythonrisk_3cython_estimate_upside_risk, NULL, __pyx_n_s_finsim_estimate_native_cythonris_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 17, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);

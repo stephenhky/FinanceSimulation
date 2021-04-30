@@ -1,0 +1,32 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module f90brownian ! in 
+    interface  ! in :f90brownian
+        module f90brownian ! in :f90brownian:brownian.f90
+            real, private,parameter,optional :: sqrt2=sqrt(2.)
+            function inv_errfcn(x) result (z) ! in :f90brownian:brownian.f90:f90brownian
+                real intent(in) :: x
+                real :: z
+            end function inv_errfcn
+            function normaldistsampling() result (z) ! in :f90brownian:brownian.f90:f90brownian
+                real :: z
+            end function normaldistsampling
+            function initialize_random_seeds() result (k) ! in :f90brownian:brownian.f90:f90brownian
+                integer :: k
+            end function initialize_random_seeds
+            function lognormal_price_simulation(logs0,r,sigma,dt,nbsteps,nbsimulations) result (s) ! in :f90brownian:brownian.f90:f90brownian
+                real intent(in) :: logs0
+                real intent(in) :: r
+                real intent(in) :: sigma
+                real intent(in) :: dt
+                integer intent(in) :: nbsteps
+                integer intent(in) :: nbsimulations
+                real dimension(nbsimulations,nbsteps) :: s
+            end function lognormal_price_simulation
+        end module f90brownian
+    end interface 
+end python module f90brownian
+
+! This file was auto-generated with f2py (version:1.20.2).
+! See http://cens.ioc.ee/projects/f2py2e/
