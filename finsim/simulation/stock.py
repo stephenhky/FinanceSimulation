@@ -21,7 +21,7 @@ class BlackScholesMertonStockPrices(AbstractStochasticValue):
 
         self.logS0 = log(S0)
 
-    def generate_time_series(self, T, dt, nbsimulations=1, lowlevellang='P'):
+    def generate_time_series(self, T, dt, nbsimulations=1, lowlevellang='F'):
         nbtimesteps = int(T // dt) + 1
         if lowlevellang == 'F':
             S = f90brownian.lognormal_price_simulation(
@@ -32,7 +32,7 @@ class BlackScholesMertonStockPrices(AbstractStochasticValue):
                 nbtimesteps,
                 nbsimulations
             )
-            return np.array(S, dtype=np.float)
+            return np.array(S, dtype=np.float_)
 
         z = np.random.normal(size=(nbsimulations, nbtimesteps))
         logS = np.zeros((nbsimulations, nbtimesteps))
@@ -51,8 +51,20 @@ class SquareRootDiffusionProcesses(AbstractStochasticValue):
         self.kappa = kappa
         self.sigma = sigma
 
-    def generate_time_series(self, T, dt, nbsimulations=1):
+    def generate_time_series(self, T, dt, nbsimulations=1, lowlevellang='F'):
         nbtimesteps = int(T // dt) + 1
+        if lowlevellang == 'F':
+            xarray = f90brownian.squareroot_diffusion_simulation(
+                self.x0,
+                self.theta,
+                self.kappa,
+                self.sigma,
+                dt,
+                nbtimesteps,
+                nbsimulations
+            )
+            return np.array(xarray, dtype=np.float_)
+
         z = np.random.normal(size=(nbsimulations, nbtimesteps))
         xarray = np.zeros((nbsimulations, nbtimesteps))
         xarray[:, 0] = self.x0

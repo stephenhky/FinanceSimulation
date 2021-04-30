@@ -24,6 +24,16 @@ python module f90brownian ! in
                 integer intent(in) :: nbsimulations
                 real dimension(nbsimulations,nbsteps) :: s
             end function lognormal_price_simulation
+            function squareroot_diffusion_simulation(x0,theta,kappa,sigma,dt,nbsteps,nbsimulations) result (xarray) ! in :f90brownian:brownian.f90:f90brownian
+                real intent(in) :: x0
+                real intent(in) :: theta
+                real intent(in) :: kappa
+                real intent(in) :: sigma
+                real intent(in) :: dt
+                integer intent(in) :: nbsteps
+                integer intent(in) :: nbsimulations
+                real dimension(nbsimulations,nbsteps) :: xarray
+            end function squareroot_diffusion_simulation
         end module f90brownian
     end interface 
 end python module f90brownian

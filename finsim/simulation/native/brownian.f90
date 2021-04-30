@@ -1,7 +1,7 @@
 module f90brownian
     implicit none
     private
-    public inv_errfcn, normaldistsampling, initialize_random_seeds, lognormal_price_simulation
+    public inv_errfcn, normaldistsampling, initialize_random_seeds, lognormal_price_simulation, squareroot_diffusion_simulation
 
     real, parameter :: sqrt2 = sqrt(2.)
 
@@ -90,9 +90,28 @@ contains
             end do
         end do
 
-
     end function lognormal_price_simulation
 
+
+    function squareroot_diffusion_simulation(x0, theta, kappa, sigma, dt, nbsteps, nbsimulations) result(xarray)
+        real, intent(in) :: x0, theta, kappa, sigma, dt
+        integer, intent(in) :: nbsteps, nbsimulations
+        real, dimension(nbsimulations, nbsteps) :: xarray
+        integer :: i, j
+        real :: sqrtdt, z
+
+        sqrtdt = sqrt(dt)
+
+        do i=1, nbsimulations
+            xarray(i, 1) = x0
+            do j=2, nbsteps
+                z = normaldistsampling()
+                xarray(i, j) = xarray(i, j-1) + kappa*(theta-xarray(i, j-1))*dt
+                xarray(i, j) = xarray(i, j) + sigma*sqrt(xarray(i, j-1))*z*sqrtdt
+            end do
+        end do
+
+    end function squareroot_diffusion_simulation
 
 
 end module f90brownian
