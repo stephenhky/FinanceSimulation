@@ -1,11 +1,45 @@
 module f90brownian
     implicit none
     private
-    public inv_errfcn, normaldistsampling, initialize_random_seeds, lognormal_price_simulation, squareroot_diffusion_simulation
+    public symmatd2eigen, inv_errfcn, normaldistsampling, initialize_random_seeds, lognormal_price_simulation
+    public squareroot_diffusion_simulation, normal2ddistsampling
 
     real, parameter :: sqrt2 = sqrt(2.)
 
 contains
+
+    subroutine symmatd2eigen(symmat, eigenvalues, eigenvectors)
+        real, intent(in), dimension(2, 2) :: symmat
+        real, intent(out), dimension(2) :: eigenvalues
+        real, intent(out), dimension(2, 2) :: eigenvectors
+        real :: a, b, c, norm1, norm2
+
+        a = symmat(1, 1)
+        b = symmat(2, 2)
+        c = symmat(1, 2)
+
+        if (c == 0) then
+            eigenvalues(1) = a
+            eigenvalues(2) = b
+            eigenvectors(1, 1) = 1.
+            eigenvectors(2, 2) = 1.
+            eigenvectors(1, 2) = 0.
+            eigenvectors(2, 1) = 0.
+        else
+            eigenvalues(1) = 0.5*(a+b+sqrt((a+b)*(a+b)-4*(a*b-c*c)))
+            eigenvalues(2) = 0.5*(a+b-sqrt((a+b)*(a+b)-4*(a*b-c*c)))
+
+            norm1 = sqrt(c*c+(eigenvalues(1)-a)*(eigenvalues(1)-a))
+            norm2 = sqrt(c*c+(eigenvalues(2)-a)*(eigenvalues(2)-a))
+            eigenvectors(1, 1) = c / norm1
+            eigenvectors(1, 2) = (eigenvalues(1)-a) / norm1
+            eigenvectors(2, 1) = c / norm2
+            eigenvectors(2, 2) = (eigenvalues(2)-a) / norm2
+        end if
+
+
+    end subroutine symmatd2eigen
+
 
     ! reference: https://people.maths.ox.ac.uk/gilesm/files/gems_erfinv.pdf
     function inv_errfcn(x) result(z)
@@ -56,8 +90,25 @@ contains
     end function normaldistsampling
 
 
-    ! normal distribution: https://en.wikipedia.org/wiki/Normal_distribution
-    function initialize_random_seeds() result(k)
+    function normal2ddistsampling(rho) result(zvec)
+        real, intent(in), dimension(2, 2) :: rho
+        real, dimension(2) :: zvec
+        real :: z1, z2
+        real, dimension(2, 2) :: X
+        real, dimension(2) :: variances
+
+        z1 = normaldistsampling()
+        z2 = normaldistsampling()
+
+        call symmatd2eigen(rho, variances, X)
+
+        zvec(1) = X(1, 1)*z1*sqrt(variances(1)) + X(1, 2)*z2*sqrt(variances(2))
+        zvec(2) = X(2, 1)*z1*sqrt(variances(1)) + X(2, 2)*z2*sqrt(variances(2))
+
+    end function normal2ddistsampling
+
+
+    subroutine initialize_random_seeds()
         integer :: values(1:8), k
         integer, dimension(:), allocatable :: seed
 
@@ -66,9 +117,10 @@ contains
         allocate(seed(1:k))
         seed(:) = values(8)
 
-    end function initialize_random_seeds
+    end subroutine initialize_random_seeds
 
 
+    ! normal distribution: https://en.wikipedia.org/wiki/Normal_distribution
     function lognormal_price_simulation(logS0, r, sigma, dt, nbsteps, nbsimulations) result(S)
         real, intent(in) :: logS0, r, sigma, dt
         integer, intent(in) :: nbsteps, nbsimulations

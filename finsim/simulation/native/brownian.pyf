@@ -5,6 +5,11 @@ python module f90brownian ! in
     interface  ! in :f90brownian
         module f90brownian ! in :f90brownian:brownian.f90
             real, private,parameter,optional :: sqrt2=sqrt(2.)
+            subroutine symmatd2eigen(symmat,eigenvalues,eigenvectors) ! in :f90brownian:brownian.f90:f90brownian
+                real dimension(2,2),intent(in) :: symmat
+                real dimension(2),intent(out) :: eigenvalues
+                real dimension(2,2),intent(out) :: eigenvectors
+            end subroutine symmatd2eigen
             function inv_errfcn(x) result (z) ! in :f90brownian:brownian.f90:f90brownian
                 real intent(in) :: x
                 real :: z
@@ -12,9 +17,12 @@ python module f90brownian ! in
             function normaldistsampling() result (z) ! in :f90brownian:brownian.f90:f90brownian
                 real :: z
             end function normaldistsampling
-            function initialize_random_seeds() result (k) ! in :f90brownian:brownian.f90:f90brownian
-                integer :: k
-            end function initialize_random_seeds
+            function normal2ddistsampling(rho) result (zvec) ! in :f90brownian:brownian.f90:f90brownian
+                real dimension(2,2),intent(in) :: rho
+                real dimension(2) :: zvec
+            end function normal2ddistsampling
+            subroutine initialize_random_seeds ! in :f90brownian:brownian.f90:f90brownian
+            end subroutine initialize_random_seeds
             function lognormal_price_simulation(logs0,r,sigma,dt,nbsteps,nbsimulations) result (s) ! in :f90brownian:brownian.f90:f90brownian
                 real intent(in) :: logs0
                 real intent(in) :: r

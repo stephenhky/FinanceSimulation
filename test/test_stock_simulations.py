@@ -27,8 +27,8 @@ class TestStockSimulations(unittest.TestCase):
         average_sigma = np.mean(rsigma_array[:, 1])
         std_sigma = np.std(rsigma_array[:, 1])
 
-        self.assertAlmostEqual(average_r, r, delta=1.96*std_r)
-        self.assertAlmostEqual(average_sigma, sigma, delta=1.96*std_sigma)
+        self.assertAlmostEqual(average_r, r, delta=2.576*std_r)
+        self.assertAlmostEqual(average_sigma, sigma, delta=2.576*std_sigma)
 
     def test_BlackScholesMertonStocks(self):
         self.backend_test_BlackScholesMertonStocks(100., 0.04, 0.02, 10, 0.1, 10000)
