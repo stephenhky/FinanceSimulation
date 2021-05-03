@@ -5,6 +5,7 @@ from math import exp, sqrt
 import numpy as np
 
 from finsim.simulation.stock import BlackScholesMertonStockPrices, HestonStockPrices, MertonJumpDiffusionStockPrices
+from finsim.estimate.fit import fortranfit
 
 
 def expected_bsm_stock(S0, r, sigma, t):
@@ -15,28 +16,31 @@ def expected_bsm_stock(S0, r, sigma, t):
 
 class TestStockSimulations(unittest.TestCase):
     def backend_test_BlackScholesMertonStocks(self, S, r, sigma, T, dt, nbsimulations):
+        ts = np.linspace(0, T, int(T // dt) + 1)
+
         bsm_simulator = BlackScholesMertonStockPrices(S, r, sigma)
         sarray = bsm_simulator.generate_time_series(T, dt, nbsimulations=nbsimulations)
-        average_s = np.mean(sarray[:, -1])
+        rsigma_array = np.array([fortranfit.f90_fit_blackscholesmerton_model(ts, sarray[i, :])
+                                 for i in range(nbsimulations)])
+        average_r = np.mean(rsigma_array[:, 0])
+        std_r = np.std(rsigma_array[:, 0])
+        average_sigma = np.mean(rsigma_array[:, 1])
+        std_sigma = np.std(rsigma_array[:, 1])
 
-        expected_s, variance_s = expected_bsm_stock(S, r, sigma, T)
-
-        self.assertAlmostEqual(average_s, expected_s, delta=1.96*sqrt(variance_s))
+        self.assertAlmostEqual(average_r, r, delta=2.576*std_r)
+        self.assertAlmostEqual(average_sigma, sigma, delta=2.576*std_sigma)
 
     def test_BlackScholesMertonStocks(self):
-        self.backend_test_BlackScholesMertonStocks(100, 0.04, 0.02, 100, 0.1, 10000)
+        self.backend_test_BlackScholesMertonStocks(100., 0.04, 0.02, 10, 0.1, 10000)
 
-        for S in np.random.lognormal(100, 10, size=3):
-            for r in np.random.lognormal(0.04, 0.01, size=3):
-                for sigma in np.random.lognormal(0.01, 0.0001, size=3):
-                    self.backend_test_BlackScholesMertonStocks(S, r, sigma, 100, 0.1, 10000)
+        for S in np.random.normal(100., 5., size=3):
+            for r in np.random.normal(0.1, 0.01, size=3):
+                for sigma in np.random.uniform(0.001, 0.05, size=3):
+                    self.backend_test_BlackScholesMertonStocks(S, r, sigma, 10, 0.1, 1000)
 
     def test_HestonStocks(self):
         h_simulator = HestonStockPrices(100, 0.01, 0.01, 0.01, 0.1, 0.0001, 0.2)
-        h_stocks = [
-            np.mean(h_simulator.generate_time_series(100, 0.1, nbsimulations=1000)[0], axis=0)
-            for _ in range(100)
-        ]
+        h_stocks = h_simulator.generate_time_series(100, 0.1, nbsimulations=1000)[0]
 
         self.assertAlmostEqual(
             np.mean([stock[100] for stock in h_stocks]),

@@ -13,3 +13,5 @@ include finsim/estimate/native/cythonrisk.pyx
 include finsim/estimate/native/cythonrisk.c
 include finsim/estimate/native/fortranrisk.pyf
 include finsim/estimate/native/fortranrisk.f90
+include finsim/simulation/native/brownian.f90
+include finsim/simulation/native/brownian.pyf

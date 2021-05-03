@@ -1,0 +1,64 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module f90brownian ! in 
+    interface  ! in :f90brownian
+        module f90brownian ! in :f90brownian:brownian.f90
+            real, private,parameter,optional :: sqrt2=sqrt(2.)
+            subroutine symmatd2eigen(symmat,eigenvalues,eigenvectors) ! in :f90brownian:brownian.f90:f90brownian
+                real dimension(2,2),intent(in) :: symmat
+                real dimension(2),intent(out) :: eigenvalues
+                real dimension(2,2),intent(out) :: eigenvectors
+            end subroutine symmatd2eigen
+            function inv_errfcn(x) result (z) ! in :f90brownian:brownian.f90:f90brownian
+                real intent(in) :: x
+                real :: z
+            end function inv_errfcn
+            function normaldistsampling() result (z) ! in :f90brownian:brownian.f90:f90brownian
+                real :: z
+            end function normaldistsampling
+            function normal2ddistsampling(rho) result (zvec) ! in :f90brownian:brownian.f90:f90brownian
+                real dimension(2,2),intent(in) :: rho
+                real dimension(2) :: zvec
+            end function normal2ddistsampling
+            subroutine initialize_random_seeds ! in :f90brownian:brownian.f90:f90brownian
+            end subroutine initialize_random_seeds
+            function lognormal_price_simulation(logs0,r,sigma,dt,nbsteps,nbsimulations) result (s) ! in :f90brownian:brownian.f90:f90brownian
+                real intent(in) :: logs0
+                real intent(in) :: r
+                real intent(in) :: sigma
+                real intent(in) :: dt
+                integer intent(in) :: nbsteps
+                integer intent(in) :: nbsimulations
+                real dimension(nbsimulations,nbsteps) :: s
+            end function lognormal_price_simulation
+            function squareroot_diffusion_simulation(x0,theta,kappa,sigma,dt,nbsteps,nbsimulations) result (xarray) ! in :f90brownian:brownian.f90:f90brownian
+                real intent(in) :: x0
+                real intent(in) :: theta
+                real intent(in) :: kappa
+                real intent(in) :: sigma
+                real intent(in) :: dt
+                integer intent(in) :: nbsteps
+                integer intent(in) :: nbsimulations
+                real dimension(nbsimulations,nbsteps) :: xarray
+            end function squareroot_diffusion_simulation
+            subroutine heston_price_simulation(logs0,r,v0,theta,kappa,sigma_v,rho,dt,nbsteps,nbsimulations,s,v) ! in :f90brownian:brownian.f90:f90brownian
+                real intent(in) :: logs0
+                real intent(in) :: r
+                real intent(in) :: v0
+                real intent(in) :: theta
+                real intent(in) :: kappa
+                real intent(in) :: sigma_v
+                real intent(in) :: rho
+                real intent(in) :: dt
+                integer intent(in) :: nbsteps
+                integer intent(in) :: nbsimulations
+                real dimension(nbsimulations,nbsteps),intent(out),depend(nbsimulations,nbsteps) :: s
+                real dimension(nbsimulations,nbsteps),intent(out),depend(nbsimulations,nbsteps) :: v
+            end subroutine heston_price_simulation
+        end module f90brownian
+    end interface 
+end python module f90brownian
+
+! This file was auto-generated with f2py (version:1.20.2).
+! See http://cens.ioc.ee/projects/f2py2e/

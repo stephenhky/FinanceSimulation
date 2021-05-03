@@ -38,6 +38,11 @@ fortran_ext_modules = [
         'finsim.estimate.native.fortranrisk',
         sources=['finsim/estimate/native/fortranrisk.f90',
                  'finsim/estimate/native/fortranrisk.pyf']
+    ),
+    fortranExtension(
+        'finsim.simulation.native.f90brownian',
+        sources=['finsim/simulation/native/brownian.f90',
+                 'finsim/simulation/native/brownian.pyf']
     )
 ]
 
@@ -59,7 +64,7 @@ def package_description():
 
 setup(
     name='finsim',
-    version="0.6.7",
+    version="0.6.8",
     description="Financial simulation and inference",
     long_description=package_description(),
     long_description_content_type='text/markdown',
