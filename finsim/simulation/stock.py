@@ -88,8 +88,23 @@ class HestonStockPrices(AbstractStochasticValue):
         self.logS0 = log(self.S0)
         self.rho = np.array([[1., self.rho], [self.rho, 1.]])
 
-    def generate_time_series(self, T, dt, nbsimulations=1):
+    def generate_time_series(self, T, dt, nbsimulations=1, lowlevellang='F'):
         nbtimesteps = int(T // dt) + 1
+
+        if lowlevellang == 'F':
+            S, v = f90brownian.heston_price_simulation(
+                self.logS0,
+                self.r,
+                self.v0,
+                self.theta,
+                self.kappa,
+                self.sigma_v,
+                self.rho[0, 1],
+                dt,
+                nbtimesteps,
+                nbsimulations
+            )
+            return np.array(S, dtype=np.float_), np.array(v, dtype=np.float_)
 
         # generate correlated random numbers
         Z = np.random.multivariate_normal((0., 0.), self.rho, size=(nbsimulations, nbtimesteps))

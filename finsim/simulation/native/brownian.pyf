@@ -42,6 +42,20 @@ python module f90brownian ! in
                 integer intent(in) :: nbsimulations
                 real dimension(nbsimulations,nbsteps) :: xarray
             end function squareroot_diffusion_simulation
+            subroutine heston_price_simulation(logs0,r,v0,theta,kappa,sigma_v,rho,dt,nbsteps,nbsimulations,s,v) ! in :f90brownian:brownian.f90:f90brownian
+                real intent(in) :: logs0
+                real intent(in) :: r
+                real intent(in) :: v0
+                real intent(in) :: theta
+                real intent(in) :: kappa
+                real intent(in) :: sigma_v
+                real intent(in) :: rho
+                real intent(in) :: dt
+                integer intent(in) :: nbsteps
+                integer intent(in) :: nbsimulations
+                real dimension(nbsimulations,nbsteps),intent(out),depend(nbsimulations,nbsteps) :: s
+                real dimension(nbsimulations,nbsteps),intent(out),depend(nbsimulations,nbsteps) :: v
+            end subroutine heston_price_simulation
         end module f90brownian
     end interface 
 end python module f90brownian

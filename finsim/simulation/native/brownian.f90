@@ -2,7 +2,7 @@ module f90brownian
     implicit none
     private
     public symmatd2eigen, inv_errfcn, normaldistsampling, initialize_random_seeds, lognormal_price_simulation
-    public squareroot_diffusion_simulation, normal2ddistsampling
+    public squareroot_diffusion_simulation, normal2ddistsampling, heston_price_simulation
 
     real, parameter :: sqrt2 = sqrt(2.)
 
@@ -32,8 +32,8 @@ contains
             norm1 = sqrt(c*c+(eigenvalues(1)-a)*(eigenvalues(1)-a))
             norm2 = sqrt(c*c+(eigenvalues(2)-a)*(eigenvalues(2)-a))
             eigenvectors(1, 1) = c / norm1
-            eigenvectors(1, 2) = (eigenvalues(1)-a) / norm1
-            eigenvectors(2, 1) = c / norm2
+            eigenvectors(2, 1) = (eigenvalues(1)-a) / norm1
+            eigenvectors(1, 2) = c / norm2
             eigenvectors(2, 2) = (eigenvalues(2)-a) / norm2
         end if
 
@@ -164,6 +164,38 @@ contains
         end do
 
     end function squareroot_diffusion_simulation
+
+
+    subroutine heston_price_simulation(logS0, r, v0, theta, kappa, sigma_v, rho, dt, nbsteps, nbsimulations, S, v)
+        real, intent(in) :: logS0, r, v0, theta, kappa, sigma_v, rho, dt
+        integer, intent(in) :: nbsteps, nbsimulations
+        real, intent(out), dimension(nbsimulations, nbsteps) :: S, v
+        real, dimension(nbsimulations, nbsteps) :: logS
+        integer :: i, j
+        real, dimension(2) :: z
+        real, dimension(2, 2) :: rhomat
+        real :: sqrtdt
+
+        sqrtdt = sqrt(dt)
+
+        ! covariance matrix
+        rhomat(1, 1) = 1.
+        rhomat(2, 2) = 1.
+        rhomat(1, 2) = rho
+        rhomat(2, 1) = rho
+
+        do i=1, nbsimulations
+            v(i, 1) = v0
+            logS(i, 1) = logS0
+            do j=2, nbsteps
+                z = normal2ddistsampling(rhomat)
+                v(i, j) = v(i, j-1) + kappa*(theta-v(i, j-1))*dt + sigma_v*sqrt(v(i, j-1))*z(2)*sqrtdt
+                logS(i, j) = logS(i, j-1) + (r-0.5*v(i, j)*v(i, j))*dt + v(i, j)*z(1)*sqrtdt
+                S(i, j) = exp(logS(i, j))
+            end do
+        end do
+
+    end subroutine heston_price_simulation
 
 
 end module f90brownian
