@@ -45,27 +45,27 @@ class TestStockSimulations(unittest.TestCase):
         self.assertAlmostEqual(
             np.mean([stock[100] for stock in h_stocks]),
             110.52,
-            delta=1.96*0.11
+            delta=2.576*0.11
         )
         self.assertAlmostEqual(
             np.mean([stock[250] for stock in h_stocks]),
             128.41,
-            delta=1.96*0.23
+            delta=2.576*0.23
         )
         self.assertAlmostEqual(
             np.mean([stock[500] for stock in h_stocks]),
             164.92,
-            delta=1.96*0.38
+            delta=2.576*0.38
         )
         self.assertAlmostEqual(
             np.mean([stock[750] for stock in h_stocks]),
             211.80,
-            delta=1.96*0.56
+            delta=2.576*0.56
         )
         self.assertAlmostEqual(
             np.mean([stock[999] for stock in h_stocks]),
             271.72,
-            delta=1.96*0.80
+            delta=2.576*0.80
         )
 
     def test_MertonJumpDiffusionStocks(self):
