@@ -40,7 +40,7 @@ class TestStockSimulations(unittest.TestCase):
 
     def test_HestonStocks(self):
         h_simulator = HestonStockPrices(100, 0.01, 0.01, 0.01, 0.1, 0.0001, 0.2)
-        h_stocks = h_simulator.generate_time_series(100, 0.1, nbsimulations=1000)[0]
+        h_stocks = h_simulator.generate_time_series(100, 0.1, nbsimulations=100000)[0]
 
         self.assertAlmostEqual(
             np.mean([stock[100] for stock in h_stocks]),
