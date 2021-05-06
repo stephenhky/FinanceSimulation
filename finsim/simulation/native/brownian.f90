@@ -187,10 +187,11 @@ contains
         do i=1, nbsimulations
             v(i, 1) = v0
             logS(i, 1) = logS0
+            S(i, 1) = exp(logS0)
             do j=2, nbsteps
                 z = normal2ddistsampling(rhomat)
                 v(i, j) = v(i, j-1) + kappa*(theta-v(i, j-1))*dt + sigma_v*sqrt(v(i, j-1))*z(2)*sqrtdt
-                logS(i, j) = logS(i, j-1) + (r-0.5*v(i, j)*v(i, j))*dt + v(i, j)*z(1)*sqrtdt
+                logS(i, j) = logS(i, j-1) + (r-0.5*v(i, j))*dt + sqrt(v(i, j))*z(1)*sqrtdt
                 S(i, j) = exp(logS(i, j))
             end do
         end do

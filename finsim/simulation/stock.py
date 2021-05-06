@@ -124,8 +124,8 @@ class HestonStockPrices(AbstractStochasticValue):
         logS[:, 0] = self.logS0
         for i in range(1, nbtimesteps):
             logS[:, i] = logS[:, i-1] + \
-                         (self.r - 0.5 * v[:, i] * v[:, i]) * dt + \
-                         v[:, i] * z1[:, i] * np.sqrt(dt)
+                         (self.r - 0.5 * v[:, i]) * dt + \
+                         np.sqrt(v[:, i]) * z1[:, i] * np.sqrt(dt)
 
         return np.exp(logS), v
 
