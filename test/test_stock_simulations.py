@@ -22,13 +22,13 @@ class TestStockSimulations(unittest.TestCase):
         sarray = bsm_simulator.generate_time_series(T, dt, nbsimulations=nbsimulations)
         rsigma_array = np.array([fortranfit.f90_fit_blackscholesmerton_model(ts, sarray[i, :])
                                  for i in range(nbsimulations)])
-        average_r = np.mean(rsigma_array[:, 0])
-        std_r = np.std(rsigma_array[:, 0])
-        average_sigma = np.mean(rsigma_array[:, 1])
-        std_sigma = np.std(rsigma_array[:, 1])
+        average_r = np.nanmean(rsigma_array[:, 0])
+        std_r = np.nanstd(rsigma_array[:, 0])
+        average_sigma = np.nanmean(rsigma_array[:, 1])
+        std_sigma = np.nanstd(rsigma_array[:, 1])
 
-        self.assertAlmostEqual(average_r, r, delta=2.576*std_r)
-        self.assertAlmostEqual(average_sigma, sigma, delta=2.576*std_sigma)
+        self.assertAlmostEqual(float(average_r), r, delta=2.576*std_r)
+        self.assertAlmostEqual(float(average_sigma), sigma, delta=2.576*std_sigma)
 
     def test_BlackScholesMertonStocks(self):
         self.backend_test_BlackScholesMertonStocks(100., 0.04, 0.02, 10, 0.1, 10000)
@@ -40,30 +40,30 @@ class TestStockSimulations(unittest.TestCase):
 
     def test_HestonStocks(self):
         h_simulator = HestonStockPrices(100, 0.01, 0.01, 0.01, 0.1, 0.0001, 0.2)
-        h_stocks = h_simulator.generate_time_series(100, 0.1, nbsimulations=1000)[0]
+        h_stocks = h_simulator.generate_time_series(100, 0.1, nbsimulations=100000)[0]
 
         self.assertAlmostEqual(
-            np.mean([stock[100] for stock in h_stocks]),
+            float(np.nanmean(h_stocks[:, 100])),
             110.52,
             delta=2.576*0.11
         )
         self.assertAlmostEqual(
-            np.mean([stock[250] for stock in h_stocks]),
+            float(np.nanmean(h_stocks[:, 250])),
             128.41,
             delta=2.576*0.23
         )
         self.assertAlmostEqual(
-            np.mean([stock[500] for stock in h_stocks]),
+            float(np.nanmean(h_stocks[:, 500])),
             164.92,
             delta=2.576*0.38
         )
         self.assertAlmostEqual(
-            np.mean([stock[750] for stock in h_stocks]),
+            float(np.nanmean(h_stocks[:, 750])),
             211.80,
             delta=2.576*0.56
         )
         self.assertAlmostEqual(
-            np.mean([stock[999] for stock in h_stocks]),
+            float(np.nanmean(h_stocks[:, 999])),
             271.72,
             delta=2.576*0.80
         )
@@ -76,22 +76,22 @@ class TestStockSimulations(unittest.TestCase):
         ]
 
         self.assertAlmostEqual(
-            np.mean([stock[250] for stock in mjd_stocks]),
+            float(np.mean([stock[250] for stock in mjd_stocks])),
             197.97,
             delta=1.96*6.37
         )
         self.assertAlmostEqual(
-            np.mean([stock[500] for stock in mjd_stocks]),
+            float(np.mean([stock[500] for stock in mjd_stocks])),
             393.35,
             delta=1.96*28.15
         )
         self.assertAlmostEqual(
-            np.mean([stock[750] for stock in mjd_stocks]),
+            float(np.mean([stock[750] for stock in mjd_stocks])),
             773.20,
             delta=1.96*67.73
         )
         self.assertAlmostEqual(
-            np.mean([stock[999] for stock in mjd_stocks]),
+            float(np.mean([stock[999] for stock in mjd_stocks])),
             1523.06,
             delta=1.96*169.68
         )
