@@ -6,7 +6,7 @@ cimport numpy as np
 from libc.math cimport log, sqrt
 
 
-cdef cython_fit_BlackScholesMerton_model(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices):
+def cython_fit_BlackScholesMerton_model(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices):
     cdef int nbpts = len(prices)
     cdef int i
     cdef double dlogS, dt
@@ -29,7 +29,7 @@ cdef cython_fit_BlackScholesMerton_model(np.ndarray[double, ndim=1] ts, np.ndarr
     return r, sigma
 
 
-cdef cython_fit_multivariate_BlackScholesMerton_model(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=2] multiprices):
+def cython_fit_multivariate_BlackScholesMerton_model(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=2] multiprices):
     cdef np.ndarray[double, ndim=2] dlogS = np.log(multiprices[:, 1:] / multiprices[:, :-1])
     cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
 
