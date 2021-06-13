@@ -16,7 +16,7 @@ def cython_estimate_downside_risk(np.ndarray[double, ndim=1] ts, np.ndarray[doub
         dt = ts[i+1] - ts[i]
         rms = dlogS / sqrt(dt)
         if rms < target_return:
-        sum_down_sqrms += (target_return-rms) * (target_return-rms)
+            sum_down_sqrms += (target_return-rms) * (target_return-rms)
 
     cdef downside_risk = sqrt(sum_down_sqrms / (nbpts-1))
 
