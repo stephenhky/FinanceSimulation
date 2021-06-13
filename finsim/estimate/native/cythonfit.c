@@ -2020,7 +2020,7 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_cython_fit_BlackS
  *         dlogS = log(prices[i+1]/prices[i])
  *         dt = ts[i+1] - ts[i]             # <<<<<<<<<<<<<<
  * 
- *         sumpr += sumpr + dlogS / dt
+ *         sumpr += dlogS / dt
  */
     __pyx_t_5 = (__pyx_v_i + 1);
     __pyx_t_6 = -1;
@@ -2047,20 +2047,20 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_cython_fit_BlackS
     /* "finsim/estimate/native/cythonfit.pyx":22
  *         dt = ts[i+1] - ts[i]
  * 
- *         sumpr += sumpr + dlogS / dt             # <<<<<<<<<<<<<<
- *         sumnoise += sumnoise + dlogS / sqrt(dt)
+ *         sumpr += dlogS / dt             # <<<<<<<<<<<<<<
+ *         sumnoise += dlogS / sqrt(dt)
  *         sumsqnoise += dlogS * dlogS / dt
  */
     if (unlikely(__pyx_v_dt == 0)) {
       PyErr_SetString(PyExc_ZeroDivisionError, "float division");
       __PYX_ERR(0, 22, __pyx_L1_error)
     }
-    __pyx_v_sumpr = (__pyx_v_sumpr + (__pyx_v_sumpr + (__pyx_v_dlogS / __pyx_v_dt)));
+    __pyx_v_sumpr = (__pyx_v_sumpr + (__pyx_v_dlogS / __pyx_v_dt));
 
     /* "finsim/estimate/native/cythonfit.pyx":23
  * 
- *         sumpr += sumpr + dlogS / dt
- *         sumnoise += sumnoise + dlogS / sqrt(dt)             # <<<<<<<<<<<<<<
+ *         sumpr += dlogS / dt
+ *         sumnoise += dlogS / sqrt(dt)             # <<<<<<<<<<<<<<
  *         sumsqnoise += dlogS * dlogS / dt
  * 
  */
@@ -2069,11 +2069,11 @@ static PyObject *__pyx_pf_6finsim_8estimate_6native_9cythonfit_cython_fit_BlackS
       PyErr_SetString(PyExc_ZeroDivisionError, "float division");
       __PYX_ERR(0, 23, __pyx_L1_error)
     }
-    __pyx_v_sumnoise = (__pyx_v_sumnoise + (__pyx_v_sumnoise + (__pyx_v_dlogS / __pyx_t_8)));
+    __pyx_v_sumnoise = (__pyx_v_sumnoise + (__pyx_v_dlogS / __pyx_t_8));
 
     /* "finsim/estimate/native/cythonfit.pyx":24
- *         sumpr += sumpr + dlogS / dt
- *         sumnoise += sumnoise + dlogS / sqrt(dt)
+ *         sumpr += dlogS / dt
+ *         sumnoise += dlogS / sqrt(dt)
  *         sumsqnoise += dlogS * dlogS / dt             # <<<<<<<<<<<<<<
  * 
  *     cdef double r = sumpr / (nbpts - 1)

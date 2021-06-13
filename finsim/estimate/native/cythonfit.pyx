@@ -19,8 +19,8 @@ def cython_fit_BlackScholesMerton_model(np.ndarray[double, ndim=1] ts, np.ndarra
         dlogS = log(prices[i+1]/prices[i])
         dt = ts[i+1] - ts[i]
 
-        sumpr += sumpr + dlogS / dt
-        sumnoise += sumnoise + dlogS / sqrt(dt)
+        sumpr += dlogS / dt
+        sumnoise += dlogS / sqrt(dt)
         sumsqnoise += dlogS * dlogS / dt
 
     cdef double r = sumpr / (nbpts - 1)
