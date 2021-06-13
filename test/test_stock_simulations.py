@@ -31,7 +31,7 @@ class TestStockSimulations(unittest.TestCase):
         self.assertAlmostEqual(float(average_sigma), sigma, delta=2.576*std_sigma)
 
     def test_BlackScholesMertonStocks(self):
-        self.backend_test_BlackScholesMertonStocks(100., 0.04, 0.02, 10, 0.1, 10000)
+        self.backend_test_BlackScholesMertonStocks(100., 0.04, 0.02, 10, 0.1, 100000)
 
         for S in np.random.normal(100., 5., size=3):
             for r in np.random.normal(0.1, 0.01, size=3):

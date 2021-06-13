@@ -2,24 +2,40 @@
 import numpy as np
 cimport numpy as np
 
+from libc.math cimport log, sqrt
+
 
 def cython_estimate_downside_risk(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices, double target_return):
-    cdef np.ndarray[double, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
-    cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
+    cdef int nbpts = len(prices)
+    cdef double logS, dt, rms, sum_down_sqrms
+    cdef int i
 
-    cdef np.ndarray[double, ndim=1] rms_rarray = dlogS / np.sqrt(dt)
-    cdef np.ndarray[double, ndim=1] less_return_array = target_return - rms_rarray
-    less_return_array[less_return_array < 0] = 0.
-    cdef double downside_risk = np.sqrt(np.mean(np.square(less_return_array)))
+    sum_down_sqrms = 0.
+    for i in range(nbpts-1):
+        dlogS = log(prices[i+1] / prices[i])
+        dt = ts[i+1] - ts[i]
+        rms = dlogS / sqrt(dt)
+        if rms < target_return:
+            sum_down_sqrms += (target_return-rms) * (target_return-rms)
+
+    cdef downside_risk = sqrt(sum_down_sqrms / (nbpts-1))
+
     return downside_risk
 
 
 def cython_estimate_upside_risk(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices, double target_return):
-    cdef np.ndarray[double, ndim=1] dlogS = np.log(prices[1:] / prices[:-1])
-    cdef np.ndarray[double, ndim=1] dt = ts[1:] - ts[:-1]
+    cdef int nbpts = len(prices)
+    cdef double logS, dt, rms, sum_up_sqrms
+    cdef int i
 
-    cdef np.ndarray[double, ndim=1] rms_rarray = dlogS / np.sqrt(dt)
-    cdef np.ndarray[double, ndim=1] more_return_array = rms_rarray - target_return
-    more_return_array[more_return_array < 0] = 0.
-    cdef double upside_risk = np.sqrt(np.mean(np.square(more_return_array)))
+    sum_up_sqrms = 0.
+    for i in range(nbpts-1):
+        dlogS = log(prices[i+1] / prices[i])
+        dt = ts[i+1] - ts[i]
+        rms = dlogS / sqrt(dt)
+        if rms > target_return:
+            sum_up_sqrms += (rms-target_return) * (rms-target_return)
+
+    cdef upside_risk = sqrt(sum_up_sqrms / (nbpts-1))
+
     return upside_risk
