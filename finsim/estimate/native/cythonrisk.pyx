@@ -5,7 +5,7 @@ cimport numpy as np
 from libc.math cimport log, sqrt
 
 
-cdef double cython_estimate_downside_risk(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices, double target_return):
+def cython_estimate_downside_risk(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices, double target_return):
     cdef int nbpts = len(prices)
     cdef double logS, dt, rms, sum_down_sqrms
     cdef int i
@@ -23,7 +23,7 @@ cdef double cython_estimate_downside_risk(np.ndarray[double, ndim=1] ts, np.ndar
     return downside_risk
 
 
-cdef double cython_estimate_upside_risk(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices, double target_return):
+def cython_estimate_upside_risk(np.ndarray[double, ndim=1] ts, np.ndarray[double, ndim=1] prices, double target_return):
     cdef int nbpts = len(prices)
     cdef double logS, dt, rms, sum_up_sqrms
     cdef int i

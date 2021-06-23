@@ -3,7 +3,7 @@ import numpy as np
 from scipy import stats
 
 from .native.pyrisk import python_estimate_downside_risk, python_estimate_upside_risk
-from .native.cythonrisk import cython_estimate_downside_risk, cython_estimate_upside_risk
+from .native import cythonrisk
 from .native.fortranrisk import fortranrisk
 from .constants import dividing_factors_dict
 
@@ -15,7 +15,7 @@ def estimate_downside_risk(timestamps, prices, target_return, unit='year', lowle
     ts = np.array(ts, dtype=np.float64) / dividing_factor
 
     if lowlevellang == 'C':
-        return cython_estimate_downside_risk(ts, prices, target_return)
+        return cythonrisk.cython_estimate_downside_risk(ts, prices, target_return)
     elif lowlevellang == 'P':
         return python_estimate_downside_risk(ts, prices, target_return)
     elif lowlevellang == 'F':
@@ -33,7 +33,7 @@ def estimate_upside_risk(timestamps, prices, target_return, unit='year', lowleve
     ts = np.array(ts, dtype=np.float64) / dividing_factor
 
     if lowlevellang == 'C':
-        return cython_estimate_upside_risk(ts, prices, target_return)
+        return cythonrisk.cython_estimate_upside_risk(ts, prices, target_return)
     elif lowlevellang == 'N':
         return python_estimate_upside_risk(ts, prices, target_return)
     elif lowlevellang == 'F':
