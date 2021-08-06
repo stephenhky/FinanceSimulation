@@ -22,14 +22,14 @@ class Portfolio:
         return portfolio_value
 
     def get_portfolio_values_overtime(self, startdate, enddate, cacheddir=None, progressbar=False):
-        logging.info('Reading financial data...')
+        logging.debug('Reading financial data...')
         iterator = tqdm(self.symbols_nbshares.keys()) if progressbar else self.symbols_nbshares.keys()
         stocks_data_dfs = [
             get_yahoofinance_data(sym, startdate, enddate, cacheddir=cacheddir)
             for sym in iterator
         ]
 
-        logging.info('Estimating...')
+        logging.debug('Estimating...')
         max_timearray_ref = 0
         maxlen = max(len(stocks_data_dfs[i]) for i in range(len(stocks_data_dfs)))
         minlen = min(len(stocks_data_dfs[i]) for i in range(len(stocks_data_dfs)))
