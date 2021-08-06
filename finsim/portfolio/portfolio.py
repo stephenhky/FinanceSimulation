@@ -21,11 +21,12 @@ class Portfolio:
         ])
         return portfolio_value
 
-    def get_portfolio_values_overtime(self, startdate, enddate, cacheddir=None):
+    def get_portfolio_values_overtime(self, startdate, enddate, cacheddir=None, progressbar=False):
         logging.info('Reading financial data...')
+        iterator = tqdm(self.symbols_nbshares.keys()) if progressbar else self.symbols_nbshares.keys()
         stocks_data_dfs = [
             get_yahoofinance_data(sym, startdate, enddate, cacheddir=cacheddir)
-            for sym in tqdm(self.symbols_nbshares.keys())
+            for sym in iterator
         ]
 
         logging.info('Estimating...')
