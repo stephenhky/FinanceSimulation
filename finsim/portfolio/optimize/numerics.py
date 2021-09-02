@@ -54,7 +54,16 @@ def optimized_portfolio_mpt_entropy_costfunction(r, cov, rf, lamb0, lamb1, V=10.
     )
 
 
-def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=False, epsilon=1e-10, progressbar=True, cacheddir=None):
+def get_BlackScholesMerton_stocks_estimation(
+        symbols,
+        startdate,
+        enddate,
+        lazy=False,
+        epsilon=1e-10,
+        progressbar=True,
+        cacheddir=None,
+        include_dividends=False
+):
     logging.info('Reading financial data...')
     symreadingprogress = tqdm(symbols) if progressbar else symbols
     stocks_data_dfs = [
