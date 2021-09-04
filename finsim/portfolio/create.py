@@ -14,14 +14,16 @@ def get_optimized_portfolio_on_sharpe_ratio(
         estimating_enddate,
         minweight=0.,
         lazy=False,
-        cacheddir=None
+        cacheddir=None,
+        include_dividends=False
 ):
     r, cov = get_BlackScholesMerton_stocks_estimation(
         symbols,
         estimating_startdate,
         estimating_enddate,
         lazy=lazy,
-        cacheddir=cacheddir
+        cacheddir=cacheddir,
+        include_dividends=include_dividends
     )
     optimized_weighting_policy = OptimizedWeightingPolicyUsingMPTSharpeRatio(rf, r, cov, symbols, minweight=minweight)
     optimized_portfolio = OptimizedPortfolio(optimized_weighting_policy, totalworth, presetdate, cacheddir=cacheddir)
@@ -38,14 +40,16 @@ def get_optimized_portfolio_on_mpt_costfunction(
         lamb,
         V0=10.,
         lazy=False,
-        cacheddir=None
+        cacheddir=None,
+        include_dividends=False
 ):
     r, cov = get_BlackScholesMerton_stocks_estimation(
         symbols,
         estimating_startdate,
         estimating_enddate,
         lazy=lazy,
-        cacheddir=cacheddir
+        cacheddir=cacheddir,
+        include_dividends=include_dividends
     )
     optimized_weighting_policy = OptimizedWeightingPolicyUsingMPTCostFunction(rf, r, cov, symbols, lamb, V0=V0)
     optimized_portfolio = OptimizedPortfolio(optimized_weighting_policy, totalworth, presetdate, cacheddir=cacheddir)
@@ -63,14 +67,16 @@ def get_optimized_portfolio_on_mpt_entropy_costfunction(
         lamb1,
         V=10.,
         lazy=False,
-        cacheddir=None
+        cacheddir=None,
+        include_dividends=False
 ):
     r, cov = get_BlackScholesMerton_stocks_estimation(
         symbols,
         estimating_startdate,
         estimating_enddate,
         lazy=lazy,
-        cacheddir=cacheddir
+        cacheddir=cacheddir,
+        include_dividends=include_dividends
     )
     optimized_weighting_policy = OptimizedWeightingPolicyUsingMPTEntropyCostFunction(rf, r, cov, symbols, lamb0, lamb1, V=V)
     optimized_portfolio = OptimizedPortfolio(optimized_weighting_policy, totalworth, presetdate, cacheddir=cacheddir)
