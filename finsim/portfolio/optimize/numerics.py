@@ -1,6 +1,8 @@
+
 import logging
 from functools import partial
 from itertools import product
+from datetime import datetime
 
 import numpy as np
 from scipy.optimize import LinearConstraint, minimize
@@ -8,6 +10,7 @@ from tqdm import tqdm
 
 from .metrics import sharpe_ratio, mpt_costfunction, mpt_entropy_costfunction
 from ...data import get_yahoofinance_data
+from ...data.preader import get_dividends_df
 from ...estimate.fit import fit_multivariate_BlackScholesMerton_model, fit_BlackScholesMerton_model
 
 
@@ -54,13 +57,38 @@ def optimized_portfolio_mpt_entropy_costfunction(r, cov, rf, lamb0, lamb1, V=10.
     )
 
 
-def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=False, epsilon=1e-10, progressbar=True, cacheddir=None):
+def get_BlackScholesMerton_stocks_estimation(
+        symbols,
+        startdate,
+        enddate,
+        lazy=False,
+        epsilon=1e-10,
+        progressbar=True,
+        cacheddir=None,
+        include_dividends=False
+):
     logging.info('Reading financial data...')
     symreadingprogress = tqdm(symbols) if progressbar else symbols
     stocks_data_dfs = [
         get_yahoofinance_data(sym, startdate, enddate, cacheddir=cacheddir)
         for sym in symreadingprogress
     ]
+
+    if include_dividends:
+        for i, sym in enumerate(symbols):
+            stock_df = stocks_data_dfs[i]
+            dividends_df = get_dividends_df(sym)
+            dividends_df = dividends_df.rename(columns={'date': 'TimeStamp'})
+            dividends_df['Cash'] = np.cumsum(dividends_df['Dividends'].ravel())
+            stock_df['TimeStamp'] = stock_df['TimeStamp'].map(lambda ts: datetime.strftime(ts, '%Y-%m-%d'))
+            stock_df = stock_df.merge(dividends_df, how='left').ffill().fillna(0)
+            stock_df['EffVal'] = stock_df['Close'] + stock_df['Cash']
+            stocks_data_dfs[i] = stock_df
+    else:
+        for i in range(len(symbols)):
+            stock_df = stocks_data_dfs[i]
+            stock_df['EffVal'] = stock_df['Close']
+            stocks_data_dfs[i] = stock_df
 
     logging.info('Estimating...')
     max_timearray_ref = 0
@@ -71,7 +99,7 @@ def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=F
         return fit_multivariate_BlackScholesMerton_model(
             np.array(stocks_data_dfs[max_timearray_ref]['TimeStamp']),
             np.array([
-                np.array(stocks_data_dfs[i]['Close'])
+                np.array(stocks_data_dfs[i]['EffVal'])
                 for i in range(len(stocks_data_dfs))
             ])
         )
@@ -88,7 +116,7 @@ def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=F
             logging.warning('Estimation starting from {}'.format(
                 stocks_data_dfs[max_timearray_ref]['TimeStamp'][-minlen].date().strftime('%Y-%m-%d')))
             multiprices = np.array([
-                np.array(stocks_data_dfs[i]['Close'][-minlen:])
+                np.array(stocks_data_dfs[i]['EffVal'][-minlen:])
                 for i in range(len(stocks_data_dfs))
             ])
             return fit_multivariate_BlackScholesMerton_model(
@@ -107,7 +135,7 @@ def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=F
                 df = stocks_data_dfs[i]
                 r, sigma = fit_BlackScholesMerton_model(
                     np.array(df['TimeStamp']),
-                    np.array(df['Close'])
+                    np.array(df['EffVal'])
                 )
                 rarray[i] = r
                 covmat[i, i] = sigma*sigma
@@ -133,7 +161,7 @@ def get_BlackScholesMerton_stocks_estimation(symbols, startdate, enddate, lazy=F
                     raise e
 
                 ts = df_i['TimeStamp'][-minlen:]
-                multiprices = np.array([np.array(df_i['Close'][-minlen:]), np.array(df_j['Close'][-minlen:])])
+                multiprices = np.array([np.array(df_i['EffVal'][-minlen:]), np.array(df_j['EffVal'][-minlen:])])
 
                 r, cov = fit_multivariate_BlackScholesMerton_model(ts, multiprices)
                 covmat[i, j] = cov[0, 1]
