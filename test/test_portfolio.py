@@ -21,15 +21,15 @@ class TestPortfolio(unittest.TestCase):
 
         summary = optimized_portfolio.summary
         
-        self.assertAlmostEqual(summary['yield'], 0.2837451882660389, places=4)
-        self.assertAlmostEqual(summary['volatility'], 0.24625264201343075, places=4)
-        self.assertAlmostEqual(summary['sharpe_ratio'], 1.1023037433624268, places=4)
+        self.assertAlmostEqual(summary['yield'], 0.2903728589244926, places=4)
+        self.assertAlmostEqual(summary['volatility'], 0.24308772071797197, places=4)
+        self.assertAlmostEqual(summary['sharpe_ratio'], 1.1439198101348016, places=4)
         np.testing.assert_array_almost_equal(
             summary['correlation'],
-            np.array([[1., 0.38132613, 0.28049998, 0.42612949],
-                      [0.38132613, 1., 0.19692159, 0.37066551],
-                      [0.28049998, 0.19692159, 1., 0.34781397],
-                      [0.42612949, 0.37066551, 0.34781397, 1.]]
+            np.array([[1.        , 0.38132613, 0.28049998, 0.42612463],
+                      [0.38132613, 1.        , 0.19692159, 0.37066065],
+                      [0.28049998, 0.19692159, 1.        , 0.34782019],
+                      [0.42612463, 0.37066065, 0.34782019, 1.        ]]
                      ),
             decimal=4
         )
@@ -50,15 +50,15 @@ class TestPortfolio(unittest.TestCase):
 
         summary = optimized_portfolio.summary
 
-        self.assertAlmostEqual(summary['yield'], 0.2837451882660389, places=4)
-        self.assertAlmostEqual(summary['volatility'], 0.24625264201343075, places=4)
-        self.assertAlmostEqual(summary['mpt_costfunction'], 2.1005125045776367, places=4)
+        self.assertAlmostEqual(summary['yield'], 0.35431088520625686, places=4)
+        self.assertAlmostEqual(summary['volatility'], 0.3219851423074504, places=4)
+        self.assertAlmostEqual(summary['mpt_costfunction'], 3.0247366927288235, places=4)
         np.testing.assert_array_almost_equal(
             summary['correlation'],
-            np.array([[1.        , 0.38132613, 0.28049998, 0.42612949],
-                       [0.38132613, 1.        , 0.19692159, 0.37066551],
-                       [0.28049998, 0.19692159, 1.        , 0.34781397],
-                       [0.42612949, 0.37066551, 0.34781397, 1.        ]]
+            np.array([[1.        , 0.38132613, 0.28049998, 0.42612463],
+                      [0.38132613, 1.        , 0.19692159, 0.37066065],
+                      [0.28049998, 0.19692159, 1.        , 0.34782019],
+                      [0.42612463, 0.37066065, 0.34782019, 1.        ]]
                      ),
             decimal=4
         )
