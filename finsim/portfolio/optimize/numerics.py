@@ -30,7 +30,7 @@ def optimized_portfolio_on_sharperatio(r, cov, rf, minweight=0.):
         {'type': 'ineq', 'fun': partial(getarrayelementminusminvalue, minvalue=minweight, index=i)}
         for i in range(nbstocks)
     ] + [
-        {'type': 'eq', 'fun': partial(checksumarray, sum=1.)}
+        {'type': 'eq', 'fun': partial(checksumarray, total=1.)}
     ]
     return minimize(
         lambda weights: -func(weights),
