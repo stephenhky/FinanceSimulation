@@ -5,7 +5,8 @@ from itertools import product
 from datetime import datetime
 
 import numpy as np
-from scipy.optimize import LinearConstraint, minimize
+from scipy.optimize import minimize
+import pandas as pd
 from tqdm import tqdm
 
 from .metrics import sharpe_ratio, mpt_costfunction, mpt_entropy_costfunction
@@ -106,8 +107,21 @@ def get_BlackScholesMerton_stocks_estimation(
             stock_df['EffVal'] = stock_df['Close'] * 1.
             stocks_data_dfs[i] = stock_df
 
-    # TODO: unify the timestamps columns
+    # unify the timestamps columns
+    logging.info('Unifying timestamps....')
+    timestampset = set()
+    for stock_df in stocks_data_dfs:
+        timestampset = timestampset.union(stock_df['TimeStamp'])
+    alltimestamps = sorted(list(timestampset))
+    timedf = pd.DataFrame({'AllTime': alltimestamps})
 
+    # wrangle the stock dataframes
+    for i, stock_df in enumerate(stocks_data_dfs):
+        stock_df = pd.merge(stock_df, timedf, how='right', left_on='TimeStamp', right_on='AllTime').ffill()
+        stock_df = stock_df.loc[ ~np.isnan(stock_df['TimeStamp']), stock_df.columns[:-1]]
+        stocks_data_dfs[i] = stock_df
+
+    # calculating length
     logging.info('Estimating...')
     max_timearray_ref = 0
     maxlen = max(len(stocks_data_dfs[i]) for i in range(len(stocks_data_dfs)))
@@ -115,12 +129,6 @@ def get_BlackScholesMerton_stocks_estimation(
     absent_stocks = {sym for sym, df in zip(symbols, stocks_data_dfs) if len(df) == 0}
     logging.debug('maxlen = {}; minlen = {}; absent_stocks: {}'.format(maxlen, minlen, ', '.join(absent_stocks)))
 
-
-    # TODO: rewrite this whole part
-
-
-
-    ############
     if maxlen == minlen:
         return fit_multivariate_BlackScholesMerton_model(
             np.array(stocks_data_dfs[max_timearray_ref]['TimeStamp']),
@@ -129,6 +137,8 @@ def get_BlackScholesMerton_stocks_estimation(
                 for i in range(len(stocks_data_dfs))
             ])
         )
+
+    # TODO: rewrite this whole part
     if maxlen != minlen:
         logging.warning('Not all symbols have data all the way back to {}'.format(startdate))
         max_timearray_ref = [i for i in range(len(stocks_data_dfs)) if maxlen == len(stocks_data_dfs[i])][0]
