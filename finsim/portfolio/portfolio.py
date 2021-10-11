@@ -29,6 +29,7 @@ class Portfolio:
             for sym in iterator
         ]
 
+        # TODO: fix this
         logging.debug('Estimating...')
         max_timearray_ref = 0
         maxlen = max(len(stocks_data_dfs[i]) for i in range(len(stocks_data_dfs)))
