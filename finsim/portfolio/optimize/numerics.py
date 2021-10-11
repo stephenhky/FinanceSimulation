@@ -5,7 +5,8 @@ from itertools import product
 from datetime import datetime
 
 import numpy as np
-from scipy.optimize import LinearConstraint, minimize
+from scipy.optimize import minimize
+import pandas as pd
 from tqdm import tqdm
 
 from .metrics import sharpe_ratio, mpt_costfunction, mpt_entropy_costfunction
@@ -106,11 +107,29 @@ def get_BlackScholesMerton_stocks_estimation(
             stock_df['EffVal'] = stock_df['Close'] * 1.
             stocks_data_dfs[i] = stock_df
 
+    # unify the timestamps columns
+    logging.info('Unifying timestamps....')
+    timestampset = set()
+    for stock_df in stocks_data_dfs:
+        timestampset = timestampset.union(stock_df['TimeStamp'])
+    alltimestamps = sorted(list(timestampset))
+    timedf = pd.DataFrame({'AllTime': alltimestamps})
+
+    # wrangle the stock dataframes
+    for i, stock_df in enumerate(stocks_data_dfs):
+        stock_df = pd.merge(stock_df, timedf, how='right', left_on='TimeStamp', right_on='AllTime').ffill()
+        stock_df = stock_df.loc[ ~np.isnan(stock_df['TimeStamp']), stock_df.columns[:-1]]
+        stocks_data_dfs[i] = stock_df
+
+    # calculating length
     logging.info('Estimating...')
     max_timearray_ref = 0
     maxlen = max(len(stocks_data_dfs[i]) for i in range(len(stocks_data_dfs)))
     minlen = min(len(stocks_data_dfs[i]) for i in range(len(stocks_data_dfs)) if len(stocks_data_dfs) > 0)   # exclude those stocks that do not exist
     absent_stocks = {sym for sym, df in zip(symbols, stocks_data_dfs) if len(df) == 0}
+    logging.debug('maxlen = {}; minlen = {}; absent_stocks: {}'.format(maxlen, minlen, ', '.join(absent_stocks)))
+
+    # same length, directly compare
     if maxlen == minlen:
         return fit_multivariate_BlackScholesMerton_model(
             np.array(stocks_data_dfs[max_timearray_ref]['TimeStamp']),
@@ -119,67 +138,27 @@ def get_BlackScholesMerton_stocks_estimation(
                 for i in range(len(stocks_data_dfs))
             ])
         )
-    if maxlen != minlen:
-        logging.warning('Not all symbols have data all the way back to {}'.format(startdate))
-        max_timearray_ref = [i for i in range(len(stocks_data_dfs)) if maxlen == len(stocks_data_dfs[i])][0]
-        logging.warning('Symbols not having whole range of data:')
-        for i, symbol in enumerate(symbols):
-            if len(stocks_data_dfs[i]) == 0:
-                logging.warning('{} has no data between {} and {}'.format(symbol, startdate, enddate))
-            elif len(stocks_data_dfs[i]) != maxlen:
-                logging.warning('{}: starting from {}'.format(symbol, stocks_data_dfs[i]['TimeStamp'][0].date().strftime('%Y-%m-%d')))
-        if lazy:
-            logging.warning('Estimation starting from {}'.format(
-                stocks_data_dfs[max_timearray_ref]['TimeStamp'][-minlen].date().strftime('%Y-%m-%d')))
-            multiprices = np.array([
-                np.array(stocks_data_dfs[i]['EffVal'][-minlen:])
-                for i in range(len(stocks_data_dfs))
-            ])
-            return fit_multivariate_BlackScholesMerton_model(
-                np.array(stocks_data_dfs[max_timearray_ref]['TimeStamp'][-minlen:]),
-                multiprices
+    else:    # maxlen != minlen:
+        rarray = np.zeros(len(symbols))
+        covmat = np.zeros((len(symbols), len(symbols)))
+
+        for i, stock_df in enumerate(stocks_data_dfs):
+            r, sigma = fit_BlackScholesMerton_model(stock_df['TimeStamp'], stock_df['Close'])
+            rarray[i] = r
+            covmat[i, i] = sigma*sigma
+
+        for i, j in product(range(len(symbols)), range(len(symbols))):
+            stock_df_i = stocks_data_dfs[i]
+            stock_df_j = stocks_data_dfs[j]
+            smallerlen = min(len(stock_df_i), len(stock_df_j))
+            _, cov = fit_multivariate_BlackScholesMerton_model(
+                stock_df_i.loc[(len(stock_df_i)-smallerlen):, 'TimeStamp'],
+                np.array([
+                    stock_df_i.loc[(len(stock_df_i)-smallerlen):, 'Close'],
+                    stock_df_j.loc[(len(stock_df_j)-smallerlen):, 'Close']
+                ])
             )
-        else:
-            logging.warning('Estimating with various time lengths...')
-            rarray = np.zeros(len(symbols))
-            covmat = np.zeros((len(symbols), len(symbols)))
-            for i in range(len(symbols)):
-                if symbols[i] in absent_stocks:
-                    rarray[i] = 0.
-                    covmat[i, i] = epsilon   # infinitesimal value
-                    continue
-                df = stocks_data_dfs[i]
-                r, sigma = fit_BlackScholesMerton_model(
-                    np.array(df['TimeStamp']),
-                    np.array(df['EffVal'])
-                )
-                rarray[i] = r
-                covmat[i, i] = sigma*sigma
-            for i, j in product(range(len(symbols)), range(len(symbols))):
-                if symbols[i] in absent_stocks or symbols[j] in absent_stocks:
-                    covmat[i, j] = 0.
-                    covmat[j, i] = 0.
-                    continue
-                df_i = stocks_data_dfs[i]
-                df_j = stocks_data_dfs[j]
-                minlen = min(len(df_i), len(df_j))
-                try:
-                    assert df_i['TimeStamp'][-minlen] == df_j['TimeStamp'][-minlen]
-                except AssertionError as e:
-                    logging.warning('{}: {}'.format(symbols[i], df_i['TimeStamp'][-minlen]))
-                    logging.warning('{}: {}'.format(symbols[j], df_j['TimeStamp'][-minlen]))
-                    raise e
-                try:
-                    assert df_i['TimeStamp'][-1] == df_j['TimeStamp'][-1]
-                except AssertionError as e:
-                    logging.warning('{}: {}'.format(symbols[i], df_i['TimeStamp'][-1]))
-                    logging.warning('{}: {}'.format(symbols[j], df_j['TimeStamp'][-1]))
-                    raise e
+            covmat[i, j] = cov[0, 1]
+            covmat[j, i] = cov[1, 0]
 
-                ts = df_i['TimeStamp'][-minlen:]
-                multiprices = np.array([np.array(df_i['EffVal'][-minlen:]), np.array(df_j['EffVal'][-minlen:])])
-
-                r, cov = fit_multivariate_BlackScholesMerton_model(ts, multiprices)
-                covmat[i, j] = cov[0, 1]
-                covmat[j, i] = cov[1, 0]
-            return rarray, covmat
+        return rarray, covmat
