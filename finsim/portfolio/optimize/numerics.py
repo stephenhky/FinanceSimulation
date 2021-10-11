@@ -100,6 +100,7 @@ def get_BlackScholesMerton_stocks_estimation(
             stock_df['TimeStamp'] = stock_df['TimeStamp'].map(lambda ts: datetime.strftime(ts, '%Y-%m-%d'))
             stock_df = stock_df.merge(dividends_df, how='left').ffill().fillna(0)
             stock_df['EffVal'] = stock_df['Close'] + stock_df['Cash']
+            stock_df['TimeStamp'] = stock_df['TimeStamp'].map(lambda ts: datetime.strptime(ts, '%Y-%m-%d'))
             stocks_data_dfs[i] = stock_df
     else:
         for i in range(len(symbols)):
@@ -118,7 +119,7 @@ def get_BlackScholesMerton_stocks_estimation(
     # wrangle the stock dataframes
     for i, stock_df in enumerate(stocks_data_dfs):
         stock_df = pd.merge(stock_df, timedf, how='right', left_on='TimeStamp', right_on='AllTime').ffill()
-        stock_df = stock_df.loc[ ~np.isnan(stock_df['TimeStamp']), stock_df.columns[:-1]]
+        stock_df = stock_df.loc[~np.isnan(stock_df['TimeStamp']), stock_df.columns[:-1]]
         stocks_data_dfs[i] = stock_df
 
     # calculating length
