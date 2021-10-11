@@ -152,7 +152,7 @@ def get_BlackScholesMerton_stocks_estimation(
             stock_df_j = stocks_data_dfs[j]
             smallerlen = min(len(stock_df_i), len(stock_df_j))
             _, cov = fit_multivariate_BlackScholesMerton_model(
-                stock_df_i[-smallerlen:, 'TimeStamp'],
+                stock_df_i[(len(stock_df_i)-smallerlen):, 'TimeStamp'],
                 np.array([
                     stock_df_i.loc[(len(stock_df_i)-smallerlen):, 'Close'],
                     stock_df_j.loc[(len(stock_df_j)-smallerlen):, 'Close']
