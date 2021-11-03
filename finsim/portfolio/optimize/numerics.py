@@ -152,11 +152,23 @@ def get_BlackScholesMerton_stocks_estimation(
             stock_df_i = stocks_data_dfs[i]
             stock_df_j = stocks_data_dfs[j]
             smallerlen = min(len(stock_df_i), len(stock_df_j))
+            print('{}, {}'.format(symbols[i], symbols[j]))
+            print('{}, {}'.format(len(stock_df_i), len(stock_df_j)))
+            print(smallerlen)
+            print('{}, {}'.format(
+                len(stock_df_i.loc[(len(stock_df_i)-smallerlen):, 'Close'].ravel()),
+                len(stock_df_j.loc[(len(stock_df_j)-smallerlen):, 'Close'].ravel())
+            ))
+            print(np.array([
+                    stock_df_i.loc[(len(stock_df_i)-smallerlen):, 'Close'].ravel(),
+                    stock_df_j.loc[(len(stock_df_j)-smallerlen):, 'Close'].ravel()
+                ])
+            )
             _, cov = fit_multivariate_BlackScholesMerton_model(
-                stock_df_i.loc[(len(stock_df_i)-smallerlen):, 'TimeStamp'],
+                stock_df_i.loc[(len(stock_df_i)-smallerlen):, 'TimeStamp'].ravel(),
                 np.array([
-                    stock_df_i.loc[(len(stock_df_i)-smallerlen):, 'Close'],
-                    stock_df_j.loc[(len(stock_df_j)-smallerlen):, 'Close']
+                    stock_df_i.loc[(len(stock_df_i)-smallerlen):, 'Close'].ravel(),
+                    stock_df_j.loc[(len(stock_df_j)-smallerlen):, 'Close'].ravel()
                 ])
             )
             covmat[i, j] = cov[0, 1]
