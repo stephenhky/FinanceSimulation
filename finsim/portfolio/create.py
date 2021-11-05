@@ -21,7 +21,6 @@ def get_optimized_portfolio_on_sharpe_ratio(
         symbols,
         estimating_startdate,
         estimating_enddate,
-        lazy=lazy,
         cacheddir=cacheddir,
         include_dividends=include_dividends
     )
@@ -39,7 +38,6 @@ def get_optimized_portfolio_on_mpt_costfunction(
         estimating_enddate,
         lamb,
         V0=10.,
-        lazy=False,
         cacheddir=None,
         include_dividends=False
 ):
@@ -47,7 +45,6 @@ def get_optimized_portfolio_on_mpt_costfunction(
         symbols,
         estimating_startdate,
         estimating_enddate,
-        lazy=lazy,
         cacheddir=cacheddir,
         include_dividends=include_dividends
     )
@@ -66,7 +63,6 @@ def get_optimized_portfolio_on_mpt_entropy_costfunction(
         lamb0,
         lamb1,
         V=10.,
-        lazy=False,
         cacheddir=None,
         include_dividends=False
 ):
@@ -74,7 +70,6 @@ def get_optimized_portfolio_on_mpt_entropy_costfunction(
         symbols,
         estimating_startdate,
         estimating_enddate,
-        lazy=lazy,
         cacheddir=cacheddir,
         include_dividends=include_dividends
     )

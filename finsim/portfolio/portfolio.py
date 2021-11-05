@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 
 from ..data.preader import get_yahoofinance_data, get_symbol_closing_price
+from .helper import align_timestamps_stock_dataframes
 
 
 class Portfolio:
@@ -30,20 +31,9 @@ class Portfolio:
             for sym in iterator
         ]
 
-        # TODO: fix this
         # unify the timestamps columns
         logging.info('Unifying timestamps....')
-        timestampset = set()
-        for stock_df in stocks_data_dfs:
-            timestampset = timestampset.union(stock_df['TimeStamp'])
-        alltimestamps = sorted(list(timestampset))
-        timedf = pd.DataFrame({'AllTime': alltimestamps})
-
-        # wrangle the stock dataframes
-        for i, stock_df in enumerate(stocks_data_dfs):
-            stock_df = pd.merge(stock_df, timedf, how='right', left_on='TimeStamp', right_on='AllTime').ffill()
-            stock_df = stock_df.loc[~np.isnan(stock_df['TimeStamp']), stock_df.columns[:-1]]
-            stocks_data_dfs[i] = stock_df
+        stocks_data_dfs = align_timestamps_stock_dataframes(stocks_data_dfs)
 
         logging.debug('Estimating...')
         max_timearray_ref = 0
@@ -64,7 +54,9 @@ class Portfolio:
                         logging.warning('{}: starting from {}'.format(symbol, stocks_data_dfs[i].loc[0, 'TimeStamp'].date().strftime('%Y-%m-%d')))
                         predf = pd.DataFrame(stocks_data_dfs[max_timearray_ref].loc[:(maxlen - thisdflen), 'TimeStamp'])
                     predf[stocks_data_dfs[max_timearray_ref].columns[1:]] = 0
-                    stocks_data_dfs[i] = predf.append(stocks_data_dfs[i])
+                    predf = predf.append(stocks_data_dfs[i]).reset_index()
+                    del predf['index']
+                    stocks_data_dfs[i] = predf
 
         df = pd.DataFrame(stocks_data_dfs[max_timearray_ref]['TimeStamp'].copy())
         df['value'] = sum([
