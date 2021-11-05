@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 
-def align_timestamps_stock_dataframes(stocks_data_dfs):
+def align_timestamps_stock_dataframes(stocks_data_dfs, timestamps_as_index=False):
     # unify the timestamps columns
     timestampset = set()
     for stock_df in stocks_data_dfs:
@@ -18,6 +18,8 @@ def align_timestamps_stock_dataframes(stocks_data_dfs):
         stock_df['TimeStamp'] = timedf.loc[(len(timedf)-len(stock_df)):, 'AllTime'].ravel()
         stock_df = stock_df.reset_index()
         stock_df = stock_df.drop(['index'], axis=1)
+        if timestamps_as_index:
+            stock_df.index = stock_df['TimeStamp']
         stocks_data_dfs[i] = stock_df
 
     return stocks_data_dfs

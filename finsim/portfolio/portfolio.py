@@ -54,7 +54,9 @@ class Portfolio:
                         logging.warning('{}: starting from {}'.format(symbol, stocks_data_dfs[i].loc[0, 'TimeStamp'].date().strftime('%Y-%m-%d')))
                         predf = pd.DataFrame(stocks_data_dfs[max_timearray_ref].loc[:(maxlen - thisdflen), 'TimeStamp'])
                     predf[stocks_data_dfs[max_timearray_ref].columns[1:]] = 0
-                    stocks_data_dfs[i] = predf.append(stocks_data_dfs[i])
+                    predf = predf.append(stocks_data_dfs[i]).reset_index()
+                    del predf['index']
+                    stocks_data_dfs[i] = predf
 
         df = pd.DataFrame(stocks_data_dfs[max_timearray_ref]['TimeStamp'].copy())
         df['value'] = sum([
