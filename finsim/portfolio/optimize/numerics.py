@@ -6,10 +6,10 @@ from datetime import datetime
 
 import numpy as np
 from scipy.optimize import minimize
-import pandas as pd
 from tqdm import tqdm
 
 from .metrics import sharpe_ratio, mpt_costfunction, mpt_entropy_costfunction
+from ..helper import align_timestamps_stock_dataframes
 from ...data import get_yahoofinance_data
 from ...data.preader import get_dividends_df
 from ...estimate.fit import fit_multivariate_BlackScholesMerton_model, fit_BlackScholesMerton_model
@@ -78,8 +78,6 @@ def get_BlackScholesMerton_stocks_estimation(
         symbols,
         startdate,
         enddate,
-        lazy=False,
-        epsilon=1e-10,
         progressbar=True,
         cacheddir=None,
         include_dividends=False
@@ -110,17 +108,7 @@ def get_BlackScholesMerton_stocks_estimation(
 
     # unify the timestamps columns
     logging.info('Unifying timestamps....')
-    timestampset = set()
-    for stock_df in stocks_data_dfs:
-        timestampset = timestampset.union(stock_df['TimeStamp'])
-    alltimestamps = sorted(list(timestampset))
-    timedf = pd.DataFrame({'AllTime': alltimestamps})
-
-    # wrangle the stock dataframes
-    for i, stock_df in enumerate(stocks_data_dfs):
-        stock_df = pd.merge(stock_df, timedf, how='right', left_on='TimeStamp', right_on='AllTime').ffill()
-        stock_df = stock_df.loc[~np.isnan(stock_df['TimeStamp']), stock_df.columns[:-1]]
-        stocks_data_dfs[i] = stock_df
+    stocks_data_dfs = align_timestamps_stock_dataframes(stocks_data_dfs)
 
     # calculating length
     logging.info('Estimating...')
@@ -152,18 +140,6 @@ def get_BlackScholesMerton_stocks_estimation(
             stock_df_i = stocks_data_dfs[i]
             stock_df_j = stocks_data_dfs[j]
             smallerlen = min(len(stock_df_i), len(stock_df_j))
-            print('{}, {}'.format(symbols[i], symbols[j]))
-            print('{}, {}'.format(len(stock_df_i), len(stock_df_j)))
-            print(smallerlen)
-            print('{}, {}'.format(
-                len(stock_df_i.loc[(len(stock_df_i)-smallerlen):, 'Close'].ravel()),
-                len(stock_df_j.loc[(len(stock_df_j)-smallerlen):, 'Close'].ravel())
-            ))
-            print(np.array([
-                    stock_df_i.loc[(len(stock_df_i)-smallerlen):, 'Close'].ravel(),
-                    stock_df_j.loc[(len(stock_df_j)-smallerlen):, 'Close'].ravel()
-                ])
-            )
             _, cov = fit_multivariate_BlackScholesMerton_model(
                 stock_df_i.loc[(len(stock_df_i)-smallerlen):, 'TimeStamp'].ravel(),
                 np.array([
