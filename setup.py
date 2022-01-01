@@ -20,7 +20,7 @@ except ImportError:
     ]
 
 import numpy as np
-from numpy.distutils.core import setup
+# from numpy.distutils.core import setup
 # from numpy.distutils.core import Extension as fortranExtension
 
 # fortran_ext_modules = [
