@@ -33,9 +33,6 @@ class TestParameterFitting(unittest.TestCase):
     def test_fit_Cython(self):
         self.fit_differentbackend('C')
 
-    def test_fit_fortran(self):
-        self.fit_differentbackend('F')
-
     def test_fit_python(self):
         self.fit_differentbackend('P')
 

@@ -9,7 +9,7 @@ def sharpe_ratio(weights, r, cov, rf, lowlevellang='C'):
     elif lowlevellang == 'P':
         return python_sharpe_ratio(weights, r, cov, rf)
     else:
-        raise ValueError('Unknown low-level language: {}. (Should be "P" (Python), "C" (Cython), or "F" (Fortran).)'.format(lowlevellang))
+        raise ValueError('Unknown low-level language: {}. (Should be "P" (Python), or "C" (Cython).)'.format(lowlevellang))
 
 
 def mpt_costfunction(weights, r, cov, rf, lamb, V0=10., lowlevellang='C'):
@@ -18,7 +18,7 @@ def mpt_costfunction(weights, r, cov, rf, lamb, V0=10., lowlevellang='C'):
     elif lowlevellang == 'P':
         return python_mpt_costfunction(weights, r, cov, rf, lamb, V0=V0)
     else:
-        raise ValueError('Unknown low-level language: {}. (Should be "P" (Python), "C" (Cython), or "F" (Fortran).)'.format(lowlevellang))
+        raise ValueError('Unknown low-level language: {}. (Should be "P" (Python), or "C" (Cython).)'.format(lowlevellang))
 
 
 def mpt_entropy_costfunction(weights, r, cov, rf, lamb0, lamb1, V=10., lowlevellang='C'):
@@ -27,5 +27,5 @@ def mpt_entropy_costfunction(weights, r, cov, rf, lamb0, lamb1, V=10., lowlevell
     elif lowlevellang == 'P':
         return python_mpt_entropy_costfunction(weights, r, cov, rf, lamb0, lamb1, V=V)
     else:
-        raise ValueError('Unknown low-level language: {}. (Should be "P" (Python), "C" (Cython), or "F" (Fortran).)'.format(lowlevellang))
+        raise ValueError('Unknown low-level language: {}. (Should be "P" (Python), or "C" (Cython).)'.format(lowlevellang))
 

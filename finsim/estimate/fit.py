@@ -8,7 +8,7 @@ from .native.cythonfit import cython_fit_BlackScholesMerton_model, cython_fit_mu
 
 # Note: always round-off to seconds first, but flexible about the unit to be used.
 
-def fit_BlackScholesMerton_model(timestamps, prices, unit='year', lowlevellang='F'):
+def fit_BlackScholesMerton_model(timestamps, prices, unit='year', lowlevellang='C'):
     dividing_factor = dividing_factors_dict[unit]
 
     ts = np.array(timestamps, dtype='datetime64[s]')
