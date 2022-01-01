@@ -21,7 +21,7 @@ class TestPortfolio(unittest.TestCase):
 
         summary = optimized_portfolio.summary
         
-        self.assertAlmostEqual(summary['yield'], 0.2903728589244926, places=4)
+        self.assertAlmostEqual(summary['yield'], 0.29045518023697553, places=4)
         self.assertAlmostEqual(summary['volatility'], 0.24308772071797197, places=4)
         self.assertAlmostEqual(summary['sharpe_ratio'], 1.1439198101348016, places=4)
         np.testing.assert_array_almost_equal(
@@ -50,7 +50,7 @@ class TestPortfolio(unittest.TestCase):
 
         summary = optimized_portfolio.summary
 
-        self.assertAlmostEqual(summary['yield'], 0.35431088520625686, places=4)
+        self.assertAlmostEqual(summary['yield'], 0.35447167476077407, places=4)
         self.assertAlmostEqual(summary['volatility'], 0.3219851423074504, places=4)
         self.assertAlmostEqual(summary['mpt_costfunction'], 3.0247366927288235, places=4)
         np.testing.assert_array_almost_equal(
