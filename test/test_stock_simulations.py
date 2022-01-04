@@ -25,7 +25,7 @@ class TestStockSimulations(unittest.TestCase):
 
         bsm_simulator = BlackScholesMertonStockPrices(S, r, sigma)
         sarray = bsm_simulator.generate_time_series(T, dt, nbsimulations=nbsimulations)
-        rsigma_array = np.array([fit_BlackScholesMerton_model(ts, sarray[i, :], unit='days')
+        rsigma_array = np.array([fit_BlackScholesMerton_model(ts, sarray[i, :], unit='day')
                                  for i in range(nbsimulations)])
         average_r = np.nanmean(rsigma_array[:, 0])
         std_r = np.nanstd(rsigma_array[:, 0])
