@@ -1,6 +1,6 @@
 
 import unittest
-from math import exp
+from math import exp, sqrt
 from datetime import datetime, timedelta
 
 import numpy as np
@@ -23,7 +23,7 @@ class TestStockSimulations(unittest.TestCase):
             for i in range(len(numerical_ts))
         ], dtype='datetime64[s]')
 
-        bsm_simulator = BlackScholesMertonStockPrices(S, r, sigma)
+        bsm_simulator = BlackScholesMertonStockPrices(S, r/3600/24, sigma/sqrt(3600*24))
         sarray = bsm_simulator.generate_time_series(T, dt, nbsimulations=nbsimulations)
         rsigma_array = np.array([fit_BlackScholesMerton_model(ts, sarray[i, :])
                                  for i in range(nbsimulations)])
