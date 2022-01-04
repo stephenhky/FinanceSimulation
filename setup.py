@@ -20,31 +20,6 @@ except ImportError:
     ]
 
 import numpy as np
-# from numpy.distutils.core import setup
-# from numpy.distutils.core import Extension as fortranExtension
-
-# fortran_ext_modules = [
-#     fortranExtension(
-#         'finsim.portfolio.optimize.native.fortranmetrics',
-#         sources=['finsim/portfolio/optimize/native/fortranmetrics.f90',
-#                  'finsim/portfolio/optimize/native/fortranmetrics.pyf']
-#     ),
-#     fortranExtension(
-#         'finsim.estimate.native.fortranfit',
-#         sources=['finsim/estimate/native/fortranfit.f90',
-#                  'finsim/estimate/native/fortranfit.pyf']
-#     ),
-#     fortranExtension(
-#         'finsim.estimate.native.fortranrisk',
-#         sources=['finsim/estimate/native/fortranrisk.f90',
-#                  'finsim/estimate/native/fortranrisk.pyf']
-#     ),
-#     fortranExtension(
-#         'finsim.simulation.native.f90brownian',
-#         sources=['finsim/simulation/native/brownian.f90',
-#                  'finsim/simulation/native/brownian.pyf']
-#     )
-# ]
 
 
 def readme():
