@@ -20,31 +20,6 @@ except ImportError:
     ]
 
 import numpy as np
-from numpy.distutils.core import setup
-from numpy.distutils.core import Extension as fortranExtension
-
-fortran_ext_modules = [
-    fortranExtension(
-        'finsim.portfolio.optimize.native.fortranmetrics',
-        sources=['finsim/portfolio/optimize/native/fortranmetrics.f90',
-                 'finsim/portfolio/optimize/native/fortranmetrics.pyf']
-    ),
-    fortranExtension(
-        'finsim.estimate.native.fortranfit',
-        sources=['finsim/estimate/native/fortranfit.f90',
-                 'finsim/estimate/native/fortranfit.pyf']
-    ),
-    fortranExtension(
-        'finsim.estimate.native.fortranrisk',
-        sources=['finsim/estimate/native/fortranrisk.f90',
-                 'finsim/estimate/native/fortranrisk.pyf']
-    ),
-    fortranExtension(
-        'finsim.simulation.native.f90brownian',
-        sources=['finsim/simulation/native/brownian.f90',
-                 'finsim/simulation/native/brownian.pyf']
-    )
-]
 
 
 def readme():
@@ -64,7 +39,7 @@ def package_description():
 
 setup(
     name='finsim',
-    version="0.7.6",
+    version="0.8.0a1",
     description="Financial simulation and inference",
     long_description=package_description(),
     long_description_content_type='text/markdown',
@@ -75,9 +50,9 @@ setup(
       "Programming Language :: Python :: 3.7",
       "Programming Language :: Python :: 3.8",
       "Programming Language :: Python :: 3.9",
+      "Programming Language :: Python :: 3.10",
       "Programming Language :: Cython",
       "Programming Language :: C",
-      "Programming Language :: Fortran",
       "Intended Audience :: Science/Research",
       "Intended Audience :: Developers",
       "Intended Audience :: Financial and Insurance Industry"
@@ -105,7 +80,7 @@ setup(
     ],
     # scripts=[],
     include_package_data=True,
-    ext_modules=fortran_ext_modules+ext_modules,
+    ext_modules=ext_modules,
     test_suite="test",
     zip_safe=False
 )

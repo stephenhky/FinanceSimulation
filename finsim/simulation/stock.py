@@ -4,8 +4,6 @@ from math import log, exp
 
 import numpy as np
 
-from .native.f90brownian import f90brownian
-
 
 class AbstractStochasticValue(ABC):
     @abstractmethod
@@ -21,19 +19,8 @@ class BlackScholesMertonStockPrices(AbstractStochasticValue):
 
         self.logS0 = log(S0)
 
-    def generate_time_series(self, T, dt, nbsimulations=1, lowlevellang='F'):
+    def generate_time_series(self, T, dt, nbsimulations=1):
         nbtimesteps = int(T // dt) + 1
-        if lowlevellang == 'F':
-            S = f90brownian.lognormal_price_simulation(
-                self.logS0,
-                self.r,
-                self.sigma,
-                dt,
-                nbtimesteps,
-                nbsimulations
-            )
-            return np.array(S, dtype=np.float_)
-
         z = np.random.normal(size=(nbsimulations, nbtimesteps))
         logS = np.zeros((nbsimulations, nbtimesteps))
         logS[:, 0] = self.logS0
@@ -51,20 +38,8 @@ class SquareRootDiffusionProcesses(AbstractStochasticValue):
         self.kappa = kappa
         self.sigma = sigma
 
-    def generate_time_series(self, T, dt, nbsimulations=1, lowlevellang='F'):
+    def generate_time_series(self, T, dt, nbsimulations=1):
         nbtimesteps = int(T // dt) + 1
-        if lowlevellang == 'F':
-            xarray = f90brownian.squareroot_diffusion_simulation(
-                self.x0,
-                self.theta,
-                self.kappa,
-                self.sigma,
-                dt,
-                nbtimesteps,
-                nbsimulations
-            )
-            return np.array(xarray, dtype=np.float_)
-
         z = np.random.normal(size=(nbsimulations, nbtimesteps))
         xarray = np.zeros((nbsimulations, nbtimesteps))
         xarray[:, 0] = self.x0
@@ -88,23 +63,8 @@ class HestonStockPrices(AbstractStochasticValue):
         self.logS0 = log(self.S0)
         self.rho = np.array([[1., self.rho], [self.rho, 1.]])
 
-    def generate_time_series(self, T, dt, nbsimulations=1, lowlevellang='F'):
+    def generate_time_series(self, T, dt, nbsimulations=1):
         nbtimesteps = int(T // dt) + 1
-
-        if lowlevellang == 'F':
-            S, v = f90brownian.heston_price_simulation(
-                self.logS0,
-                self.r,
-                self.v0,
-                self.theta,
-                self.kappa,
-                self.sigma_v,
-                self.rho[0, 1],
-                dt,
-                nbtimesteps,
-                nbsimulations
-            )
-            return np.array(S, dtype=np.float_), np.array(v, dtype=np.float_)
 
         # generate correlated random numbers
         Z = np.random.multivariate_normal((0., 0.), self.rho, size=(nbsimulations, nbtimesteps))

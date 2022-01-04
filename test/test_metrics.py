@@ -24,11 +24,6 @@ class TestMetrics(unittest.TestCase):
             expected_sharpe_ratio,
             delta=1e-6
         )
-        self.assertAlmostEqual(
-            metrics.sharpe_ratio(weights, r, cov, rf, lowlevellang='F'),
-            expected_sharpe_ratio,
-            delta=1e-6
-        )
 
     def test_costfunction(self):
         weights = np.array([0.05, 0.3, 0.5, 0.2])
@@ -47,11 +42,6 @@ class TestMetrics(unittest.TestCase):
             lamb01cost,
             delta=1e-6
         )
-        self.assertAlmostEqual(
-            metrics.mpt_costfunction(weights, r, cov, rf, 0.1, V0=10, lowlevellang='F'),
-            lamb01cost,
-            delta=1e-6
-        )
 
         lamb02cost = 0.059750000000000004
         self.assertAlmostEqual(
@@ -61,11 +51,6 @@ class TestMetrics(unittest.TestCase):
         )
         self.assertAlmostEqual(
             metrics.mpt_costfunction(weights, r, cov, rf, 0.2, V0=10, lowlevellang='P'),
-            lamb02cost,
-            delta=1e-6
-        )
-        self.assertAlmostEqual(
-            metrics.mpt_costfunction(weights, r, cov, rf, 0.2, V0=10, lowlevellang='F'),
             lamb02cost,
             delta=1e-6
         )
@@ -87,11 +72,6 @@ class TestMetrics(unittest.TestCase):
             case1cost,
             delta=1e-6
         )
-        self.assertAlmostEqual(
-            metrics.mpt_entropy_costfunction(weights, r, cov, rf, 0.1, 0.01, V=10, lowlevellang='F'),
-            case1cost,
-            delta=1e-6
-        )
 
         case2cost = 0.11979329148131437
         self.assertAlmostEqual(
@@ -101,11 +81,6 @@ class TestMetrics(unittest.TestCase):
         )
         self.assertAlmostEqual(
             metrics.mpt_entropy_costfunction(weights, r, cov, rf, 0.1, 0.1, V=10, lowlevellang='P'),
-            case2cost,
-            delta=1e-6
-        )
-        self.assertAlmostEqual(
-            metrics.mpt_entropy_costfunction(weights, r, cov, rf, 0.1, 0.1, V=10, lowlevellang='F'),
             case2cost,
             delta=1e-6
         )

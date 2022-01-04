@@ -103,7 +103,7 @@ def get_BlackScholesMerton_stocks_estimation(
     else:
         for i in range(len(symbols)):
             stock_df = stocks_data_dfs[i]
-            stock_df['EffVal'] = stock_df['Close'] * 1.
+            stock_df.loc[:, 'EffVal'] = stock_df['Close'] * 1.
             stocks_data_dfs[i] = stock_df
 
     # unify the timestamps columns
@@ -132,7 +132,7 @@ def get_BlackScholesMerton_stocks_estimation(
         covmat = np.zeros((len(symbols), len(symbols)))
 
         for i, stock_df in enumerate(stocks_data_dfs):
-            r, sigma = fit_BlackScholesMerton_model(stock_df['TimeStamp'], stock_df['Close'])
+            r, sigma = fit_BlackScholesMerton_model(stock_df['TimeStamp'].ravel(), stock_df['Close'].ravel())
             rarray[i] = r
             covmat[i, i] = sigma*sigma
 
