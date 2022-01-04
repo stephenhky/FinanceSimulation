@@ -52,7 +52,7 @@ class TestPortfolio(unittest.TestCase):
 
         self.assertAlmostEqual(summary['yield'], 0.354, places=3)
         self.assertAlmostEqual(summary['volatility'], 0.322, places=3)
-        self.assertAlmostEqual(summary['mpt_costfunction'], 3.025, places=3)
+        self.assertAlmostEqual(summary['mpt_costfunction'], 3.026, places=3)
         np.testing.assert_array_almost_equal(
             summary['correlation'],
             np.array([[1.        , 0.38132613, 0.28049998, 0.42612463],
