@@ -103,7 +103,7 @@ def get_BlackScholesMerton_stocks_estimation(
     else:
         for i in range(len(symbols)):
             stock_df = stocks_data_dfs[i]
-            stock_df['EffVal'] = stock_df['Close'] * 1.
+            stock_df.loc[:, 'EffVal'] = stock_df['Close'] * 1.
             stocks_data_dfs[i] = stock_df
 
     # unify the timestamps columns

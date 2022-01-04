@@ -1,6 +1,7 @@
 
 import unittest
 from math import exp
+from datetime import datetime, timedelta
 
 import numpy as np
 
@@ -16,7 +17,11 @@ def expected_bsm_stock(S0, r, sigma, t):
 
 class TestStockSimulations(unittest.TestCase):
     def backend_test_BlackScholesMertonStocks(self, S, r, sigma, T, dt, nbsimulations):
-        ts = np.linspace(0, T, int(T // dt) + 1)
+        numerical_ts = np.linspace(0, T, int(T // dt) + 1)
+        ts = np.array([
+            datetime(2020, 1, 1, 0, 0, 0) + timedelta(days=numerical_ts[i])
+            for i in range(len(numerical_ts))
+        ], dtype='datetime64[s]')
 
         bsm_simulator = BlackScholesMertonStockPrices(S, r, sigma)
         sarray = bsm_simulator.generate_time_series(T, dt, nbsimulations=nbsimulations)
