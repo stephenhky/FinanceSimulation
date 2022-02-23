@@ -74,6 +74,22 @@ def optimized_portfolio_mpt_entropy_costfunction(r, cov, rf, lamb0, lamb1, V=10.
     )
 
 
+def intermediate_wrangle_stock_df_without_dividends(stock_df):
+    stock_df.loc[:, 'EffVal'] = stock_df['Close'] * 1.
+    return stock_df
+
+
+def intermediate_wrangle_stock_df_with_dividends(stock_df, sym):
+    dividends_df = get_dividends_df(sym)
+    dividends_df = dividends_df.rename(columns={'date': 'TimeStamp'})
+    dividends_df['Cash'] = np.cumsum(dividends_df['Dividends'].ravel())
+    stock_df['TimeStamp'] = stock_df['TimeStamp'].map(lambda ts: datetime.strftime(ts, '%Y-%m-%d'))
+    stock_df = stock_df.merge(dividends_df, how='left').ffill().fillna(0)
+    stock_df['EffVal'] = stock_df['Close'] + stock_df['Cash']
+    stock_df['TimeStamp'] = stock_df['TimeStamp'].map(lambda ts: datetime.strptime(ts, '%Y-%m-%d'))
+    return stock_df
+
+
 def get_BlackScholesMerton_stocks_estimation(
         symbols,
         startdate,
@@ -90,21 +106,11 @@ def get_BlackScholesMerton_stocks_estimation(
     ]
 
     if include_dividends:
-        for i, sym in enumerate(symbols):
-            stock_df = stocks_data_dfs[i]
-            dividends_df = get_dividends_df(sym)
-            dividends_df = dividends_df.rename(columns={'date': 'TimeStamp'})
-            dividends_df['Cash'] = np.cumsum(dividends_df['Dividends'].ravel())
-            stock_df['TimeStamp'] = stock_df['TimeStamp'].map(lambda ts: datetime.strftime(ts, '%Y-%m-%d'))
-            stock_df = stock_df.merge(dividends_df, how='left').ffill().fillna(0)
-            stock_df['EffVal'] = stock_df['Close'] + stock_df['Cash']
-            stock_df['TimeStamp'] = stock_df['TimeStamp'].map(lambda ts: datetime.strptime(ts, '%Y-%m-%d'))
-            stocks_data_dfs[i] = stock_df
+        for i, symbol in enumerate(symbols):
+            stocks_data_dfs[i] = intermediate_wrangle_stock_df_with_dividends(stocks_data_dfs[i], symbol)
     else:
         for i in range(len(symbols)):
-            stock_df = stocks_data_dfs[i]
-            stock_df.loc[:, 'EffVal'] = stock_df['Close'] * 1.
-            stocks_data_dfs[i] = stock_df
+            stocks_data_dfs[i] = intermediate_wrangle_stock_df_without_dividends(stocks_data_dfs[i])
 
     # unify the timestamps columns
     logging.info('Unifying timestamps....')
