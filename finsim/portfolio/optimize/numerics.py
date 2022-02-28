@@ -82,11 +82,11 @@ def intermediate_wrangle_stock_df_without_dividends(stock_df):
 def intermediate_wrangle_stock_df_with_dividends(stock_df, sym):
     dividends_df = get_dividends_df(sym)
     dividends_df = dividends_df.rename(columns={'date': 'TimeStamp'})
-    dividends_df['Cash'] = np.cumsum(dividends_df['Dividends'].ravel())
-    stock_df['TimeStamp'] = stock_df['TimeStamp'].map(lambda ts: datetime.strftime(ts, '%Y-%m-%d'))
+    dividends_df.loc[:, 'Cash'] = np.cumsum(dividends_df['Dividends'].ravel())
+    stock_df.loc[:, 'TimeStamp'] = stock_df['TimeStamp'].map(lambda ts: datetime.strftime(ts, '%Y-%m-%d'))
     stock_df = stock_df.merge(dividends_df, how='left').ffill().fillna(0)
-    stock_df['EffVal'] = stock_df['Close'] + stock_df['Cash']
-    stock_df['TimeStamp'] = stock_df['TimeStamp'].map(lambda ts: datetime.strptime(ts, '%Y-%m-%d'))
+    stock_df.loc[:, 'EffVal'] = stock_df['Close'] + stock_df['Cash']
+    stock_df.loc[:, 'TimeStamp'] = stock_df['TimeStamp'].map(lambda ts: datetime.strptime(ts, '%Y-%m-%d'))
     return stock_df
 
 
@@ -127,9 +127,9 @@ def get_BlackScholesMerton_stocks_estimation(
     # same length, directly compare
     if maxlen == minlen:
         return fit_multivariate_BlackScholesMerton_model(
-            np.array(stocks_data_dfs[max_timearray_ref]['TimeStamp']),
+            stocks_data_dfs[max_timearray_ref]['TimeStamp'].ravel(),
             np.array([
-                np.array(stocks_data_dfs[i]['EffVal'])
+                stocks_data_dfs[i]['EffVal'].ravel()
                 for i in range(len(stocks_data_dfs))
             ])
         )
