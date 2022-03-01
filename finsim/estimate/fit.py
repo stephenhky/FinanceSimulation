@@ -1,5 +1,6 @@
 
 import numpy as np
+from itertools import product
 
 from .constants import dividing_factors_dict
 from .native.pyfit import python_fit_BlackScholesMerton_model, python_fit_multivariate_BlackScholesMerton_model
