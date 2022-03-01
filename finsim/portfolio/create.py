@@ -1,5 +1,6 @@
 
 from datetime import datetime, timedelta
+import warnings
 
 import numpy as np
 import pandas as pd
@@ -22,6 +23,8 @@ def get_optimized_portfolio_on_sharpe_ratio(
         cacheddir=None,
         include_dividends=False
 ):
+    if lazy:
+        warnings.warn('Setting lazy=True is meaningless! Parameter deprecated!')
     r, cov = get_BlackScholesMerton_stocks_estimation(
         symbols,
         estimating_startdate,
