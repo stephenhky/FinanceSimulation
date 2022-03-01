@@ -36,6 +36,6 @@ def cython_fit_multivariate_BlackScholesMerton_model(np.ndarray[double, ndim=1] 
     cdef np.ndarray[double, ndim=1] r = np.zeros(multiprices.shape[0])
     for i in range(multiprices.shape[0]):
         r[i] = np.mean((dlogS / dt)[i, :])
-    cdef np.ndarray[double, ndim=2] cov = np.cov(dlogS / np.sqrt(dt))
+    cdef np.ndarray[double, ndim=2] cov = np.cov(dlogS / np.sqrt(dt), bias=True)
 
     return r, cov

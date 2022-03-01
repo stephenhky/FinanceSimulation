@@ -18,8 +18,7 @@ def python_fit_multivariate_BlackScholesMerton_model(ts, multiprices):
 
     r = np.zeros(multiprices.shape[0])
     for i in range(multiprices.shape[0]):
-        r[i] = np.mean((dlogS / dt)[i, :])
-    # r = np.mean((dlogS / dt), axis=1)
-    cov = np.cov(dlogS / np.sqrt(dt))
+        r[i] = np.mean((dlogS[i, :] / dt))
+    cov = np.cov(dlogS / np.sqrt(dt), bias=True)
 
     return r, cov
