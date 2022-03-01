@@ -35,7 +35,7 @@ def optimized_portfolio_on_sharperatio(r, cov, rf, minweight=0.):
         {'type': 'eq', 'fun': partial(checksumarray, total=1.)}
     ] + [
         {'type': 'ineq', 'fun': lambda weights: weights[i]}
-        for i in range(len(r)+1)
+        for i in range(len(r))
     ]
     return minimize(
         lambda weights: -func(weights),
@@ -54,7 +54,7 @@ def optimized_portfolio_mpt_costfunction(r, cov, rf, lamb, V0=10.):
         {'type': 'ineq', 'fun': partial(checksumarray, total=V0)}
     ] + [
         {'type': 'ineq', 'fun': lambda weights: weights[i]}
-        for i in range(len(r)+1)
+        for i in range(len(r))
     ]
     initialguess = np.repeat(V0 / (nbstocks+1), nbstocks+1)
     return minimize(
@@ -74,7 +74,7 @@ def optimized_portfolio_mpt_entropy_costfunction(r, cov, rf, lamb0, lamb1, V=10.
         {'type': 'ineq', 'fun': partial(checksumarray, total=V)}
     ] + [
         {'type': 'ineq', 'fun': lambda weights: weights[i]}
-        for i in range(len(r)+1)
+        for i in range(len(r))
     ]
     initialguess = np.repeat(V / (nbstocks + 1), nbstocks + 1)
     return minimize(
