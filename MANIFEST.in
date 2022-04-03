@@ -3,15 +3,7 @@ include requirements.txt
 include LICENSE
 include finsim/portfolio/optimize/native/cythonmetrics.pyx
 include finsim/portfolio/optimize/native/cythonmetrics.c
-include finsim/portfolio/optimize/native/fortranmetrics.f90
-include finsim/portfolio/optimize/native/fortranmetrics.pyf
 include finsim/estimate/native/cythonfit.pyx
 include finsim/estimate/native/cythonfit.c
-include finsim/estimate/native/fortranfit.pyf
-include finsim/estimate/native/fortranfit.f90
 include finsim/estimate/native/cythonrisk.pyx
 include finsim/estimate/native/cythonrisk.c
-include finsim/estimate/native/fortranrisk.pyf
-include finsim/estimate/native/fortranrisk.f90
-include finsim/simulation/native/brownian.f90
-include finsim/simulation/native/brownian.pyf

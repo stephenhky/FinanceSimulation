@@ -18,12 +18,12 @@ def cython_mpt_costfunction(np.ndarray[double, ndim=1] weights, np.ndarray[doubl
     return cost
 
 
-def cython_mpt_entropy_costfunction(np.ndarray[double, ndim=1] weights, np.ndarray[double, ndim=1] r, np.ndarray[double, ndim=2] cov, double rf, double lamb0, double lamb1, double V):
+def cython_mpt_entropy_costfunction(np.ndarray[double, ndim=1] weights, np.ndarray[double, ndim=1] r, np.ndarray[double, ndim=2] cov, double rf, double lamb0, double lamb1, double V, double epsilon=1e-10):
     cdef np.ndarray[double, ndim=2] weightmat = np.expand_dims(weights[:-1], axis=0)
     cdef double c0 = lamb0 * V
     cdef double c1 = lamb1 * V
     cdef double yield_val = weights[-1]*rf + np.dot(weights[:-1], r)
     cdef double cov_val = - 0.5 * c0 / V * (weightmat @ cov @ weightmat.T)[0, 0]
     cdef double sumweights = np.sum(weights[:-1])
-    cdef double entropy_val = - 0.5 * c1 / V * np.sum(weights[:-1] * (np.log(weights[:-1]) - np.log(sumweights))) / sumweights
+    cdef double entropy_val = - 0.5 * c1 / V * np.sum(weights[:-1] * (np.log(weights[:-1]+epsilon) - np.log(sumweights+epsilon))) / sumweights
     return yield_val + cov_val + entropy_val
