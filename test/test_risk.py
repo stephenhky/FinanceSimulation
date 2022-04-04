@@ -15,7 +15,7 @@ class TestRisk(unittest.TestCase):
             0.0
         )
         self.assertAlmostEqual(
-            risk.cythonrisk.cython_estimate_downside_risk(ts, S, 0.0),
+            risk.cython_estimate_downside_risk(ts, S, 0.0),
             0.0
         )
 
@@ -30,7 +30,7 @@ class TestRisk(unittest.TestCase):
             expected_downside_risk
         )
         self.assertAlmostEqual(
-            risk.cythonrisk.cython_estimate_downside_risk(ts, S_array, 0.0),
+            risk.cython_estimate_downside_risk(ts, S_array, 0.0),
             expected_downside_risk
         )
 
@@ -43,7 +43,7 @@ class TestRisk(unittest.TestCase):
             0.0
         )
         self.assertAlmostEqual(
-            risk.cythonrisk.cython_estimate_upside_risk(ts, S, 0.0),
+            risk.cython_estimate_upside_risk(ts, S, 0.0),
             0.0
         )
 
@@ -58,7 +58,7 @@ class TestRisk(unittest.TestCase):
             expected_upside_risk
         )
         self.assertAlmostEqual(
-            risk.cythonrisk.cython_estimate_upside_risk(ts, S_array, 0.0),
+            risk.cython_estimate_upside_risk(ts, S_array, 0.0),
             expected_upside_risk
         )
 
