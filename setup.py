@@ -1,25 +1,11 @@
 
-# Reference: https://stackoverflow.com/questions/7932028/setup-py-for-packages-that-depend-on-both-cython-and-f2py
-
 from setuptools import setup
-
-try:
-    from Cython.Build import cythonize
-    ext_modules = cythonize(['finsim/portfolio/optimize/native/cythonmetrics.pyx',
-                             'finsim/estimate/native/cythonfit.pyx',
-                             'finsim/estimate/native/cythonrisk.pyx'])
-except ImportError:
-    from setuptools import Extension
-    ext_modules = [
-        Extension('finsim.portfolio.optimize.native.cynthonmetrics',
-                  sources=['finsim/portfolio/optimize/native/cythonmetrics.c']),
-        Extension('finsim.estimate.native.cythonfit',
-                  sources=['finsim/estimate/native/cythonfit.c']),
-        Extension('finsim.estimate.native.cythonrisk',
-                  sources=['finsim/estimate/native/cythonrisk.c'])
-    ]
-
 import numpy as np
+
+from Cython.Build import cythonize
+ext_modules = cythonize(['finsim/portfolio/optimize/native/cythonmetrics.pyx',
+                         'finsim/estimate/native/cythonfit.pyx',
+                         'finsim/estimate/native/cythonrisk.pyx'])
 
 
 def readme():

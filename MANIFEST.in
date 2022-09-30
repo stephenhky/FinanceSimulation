@@ -1,6 +1,7 @@
 include README.md
 include requirements.txt
 include LICENSE
+include pyproject.toml
 include finsim/portfolio/optimize/native/cythonmetrics.pyx
 include finsim/portfolio/optimize/native/cythonmetrics.c
 include finsim/estimate/native/cythonfit.pyx
