@@ -107,7 +107,7 @@ class OptimizedWeightingPolicyUsingMPTSharpeRatio(OptimizedWeightingPolicy):
         self.optimized_weights = self.optimized_sol.x
         self.optimized_sharpe_ratio = -self.optimized_sol.fun
         self.optimized_portfolio_yield = np.sum(self.optimized_weights * self.r)
-        sqweights = np.matmul(
+        sqweights = np.dot(
             np.expand_dims(self.optimized_weights, axis=1),
             np.expand_dims(self.optimized_weights, axis=0)
         )
@@ -158,7 +158,7 @@ class OptimizedWeightingPolicyUsingMPTCostFunction(OptimizedWeightingPolicy):
         self.optimized_weights = self.optimized_unnormalized_weights[:-1] / np.sum(self.optimized_unnormalized_weights[:-1])
         self.optimized_costfunction = -self.optimized_sol.fun
         self.optimized_portfolio_yield = np.sum(self.optimized_weights * self.r)
-        sqweights = np.matmul(
+        sqweights = np.dot(
             np.expand_dims(self.optimized_weights, axis=1),
             np.expand_dims(self.optimized_weights, axis=0)
         )
@@ -212,7 +212,7 @@ class OptimizedWeightingPolicyUsingMPTEntropyCostFunction(OptimizedWeightingPoli
         self.optimized_weights = self.optimized_unnormalized_weights[:-1] / np.sum(self.optimized_unnormalized_weights[:-1])
         self.optimized_costfunction = -self.optimized_sol.fun
         self.optimized_portfolio_yield = np.sum(self.optimized_weights * self.r)
-        sqweights = np.matmul(
+        sqweights = np.dot(
             np.expand_dims(self.optimized_weights, axis=1),
             np.expand_dims(self.optimized_weights, axis=0)
         )
