@@ -50,7 +50,7 @@ jobs:
   py311:
     <<: *shared
     docker:
-      - image: cimg/python:3.10
+      - image: cimg/python:3.11
 
 workflows:
   version: 2
