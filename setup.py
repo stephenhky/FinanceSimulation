@@ -33,7 +33,6 @@ setup(
       "Topic :: Scientific/Engineering :: Mathematics",
       "Topic :: Software Development :: Libraries :: Python Modules",
       "Topic :: Software Development :: Version Control :: Git",
-      "Programming Language :: Python :: 3.7",
       "Programming Language :: Python :: 3.8",
       "Programming Language :: Python :: 3.9",
       "Programming Language :: Python :: 3.10",
