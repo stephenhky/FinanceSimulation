@@ -24,7 +24,7 @@ class TestMovingAverage(unittest.TestCase):
         # get last row
         lastrow_stockdata = testdf.iloc[len(testdf)-1].to_dict()
         lastday_considered = lastrow_stockdata['TimeStamp']
-        firstday_considered = lastday_considered['TimeStamp'] - pd.Timedelta('200 days')
+        firstday_considered = lastday_considered - pd.Timedelta('200 days')
         ma = np.mean(testdf.loc[
                          (testdf['TimeStamp'] > firstday_considered) & (testdf['TimeStamp'] <= lastday_considered)
                      ]['Close'])
