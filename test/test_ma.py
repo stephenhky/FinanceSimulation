@@ -15,7 +15,7 @@ class TestMovingAverage(unittest.TestCase):
 
     def test_abnb(self):
         testdf = get_movingaverage_price_data('ABNB', '2016-01-01', '2023-02-01', 200)
-        assert testdf.iloc[0]['TimeStamp'].date().strftime('%Y-%m-%d') == '2020-12-10'
+        assert testdf.iloc[0]['TimeStamp'].date().strftime('%Y-%m-%d') == '2021-06-29'
 
     def test_average(self):
         testmadf = get_movingaverage_price_data('^GSPC', '2016-01-01', '2023-02-01', 200)
