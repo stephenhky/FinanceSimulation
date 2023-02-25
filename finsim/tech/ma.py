@@ -26,4 +26,4 @@ def get_movingaverage_price_data(symbol, startdate, enddate, dayswindow, cachedd
         axis=1
     )
 
-    return madf.loc[madf['computema'], ['TimeStamp', 'computema', 'MA']]
+    return madf.loc[madf['computema'], ['TimeStamp', 'MA']]
