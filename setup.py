@@ -56,7 +56,8 @@ setup(
         'finsim.simulation',
         'finsim.portfolio',
         'finsim.portfolio.optimize',
-        'finsim.portfolio.optimize.native'
+        'finsim.portfolio.optimize.native',
+        'finsim.tech'
     ],
     include_dirs=[np.get_include()],
     setup_requires=['Cython', 'numpy', ],
