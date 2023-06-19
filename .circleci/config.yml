@@ -22,7 +22,7 @@ shared: &shared
     - run:
         name: Run Unit Tests
         command: |
-          python setup.py test
+          python -m unittest
 
 
 
