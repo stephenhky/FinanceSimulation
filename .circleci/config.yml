@@ -22,7 +22,8 @@ shared: &shared
     - run:
         name: Run Unit Tests
         command: |
-          python -m unittest
+          pip install -U pytest
+          pytest
 
 
 
