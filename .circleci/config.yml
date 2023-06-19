@@ -18,6 +18,7 @@ shared: &shared
         command: |
           pip install --upgrade --user pip
           pip install --upgrade --user .
+          python setup.py build_ext --inplace
 
     - run:
         name: Run Unit Tests
