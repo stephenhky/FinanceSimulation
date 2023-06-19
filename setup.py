@@ -1,11 +1,16 @@
 
-from setuptools import setup
+from setuptools import setup, Extension
 import numpy as np
 
-from Cython.Build import cythonize
-ext_modules = cythonize(['finsim/portfolio/optimize/native/cythonmetrics.pyx',
-                         'finsim/estimate/native/cythonfit.pyx',
-                         'finsim/estimate/native/cythonrisk.pyx'])
+# from Cython.Build import cythonize
+# ext_modules = cythonize(['finsim/portfolio/optimize/native/cythonmetrics.pyx',
+#                          'finsim/estimate/native/cythonfit.pyx',
+#                          'finsim/estimate/native/cythonrisk.pyx'])
+ext_modules = [
+    Extension('finsim.portfolio.optimize.native.cythonmetrics', ['finsim/portfolio/optimize/native/cythonmetrics.c']),
+    Extension('finsim.estimate.native.cythonfit', [ 'finsim/estimate/native/cythonfit.c']),
+    Extension('finsim.estimate.native.cythonrisk', ['finsim/estimate/native/cythonrisk.c'])
+]
 
 
 def readme():
@@ -25,7 +30,7 @@ def package_description():
 
 setup(
     name='finsim',
-    version="0.11.0",
+    version="0.11.1",
     description="Financial simulation and inference",
     long_description=package_description(),
     long_description_content_type='text/markdown',
