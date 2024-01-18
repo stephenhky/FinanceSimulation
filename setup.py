@@ -70,7 +70,7 @@ setup(
     tests_require=[
       'unittest2'
     ],
-    # scripts=[],
+    script=['script/retrieve_stock_symbols'],
     include_package_data=True,
     ext_modules=ext_modules,
     test_suite="test",
