@@ -1,16 +1,11 @@
 
-from setuptools import setup, Extension
+from setuptools import setup
 import numpy as np
+from Cython.Build import cythonize
 
-# from Cython.Build import cythonize
-# ext_modules = cythonize(['finsim/portfolio/optimize/native/cythonmetrics.pyx',
-#                          'finsim/estimate/native/cythonfit.pyx',
-#                          'finsim/estimate/native/cythonrisk.pyx'])
-ext_modules = [
-    Extension('finsim.portfolio.optimize.native.cythonmetrics', ['finsim/portfolio/optimize/native/cythonmetrics.c']),
-    Extension('finsim.estimate.native.cythonfit', [ 'finsim/estimate/native/cythonfit.c']),
-    Extension('finsim.estimate.native.cythonrisk', ['finsim/estimate/native/cythonrisk.c'])
-]
+ext_modules = cythonize(['finsim/portfolio/optimize/native/cythonmetrics.pyx',
+                         'finsim/estimate/native/cythonfit.pyx',
+                         'finsim/estimate/native/cythonrisk.pyx'])
 
 
 def readme():
