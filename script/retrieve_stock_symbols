@@ -1,0 +1,49 @@
+#!/usr/bin/env python
+
+from argparse import ArgumentParser
+import os
+
+import pandas as pd
+from finsim.data.finnhub import FinnHubStockReader
+
+
+def get_argparser():
+    argparser = ArgumentParser(description='Retrieve stock symbols from Finnhub')
+    argparser.add_argument('outputjson', help='path of the stock symbols (*.json)')
+    argparser.add_argument('--finnhubtokenpath', help='path of Finnhub tokens')
+    argparser.add_argument('--useenvtoken', help='Use the environment variable FINNHUBTOKEN as the tokens')
+    argparser.add_argument('--shorten', default=False, action='store_true', help='shorten list of symbols')
+    return argparser
+
+
+if __name__ == '__main__':
+    # parsing argument
+    args = get_argparser().parse_args()
+
+    # check if the output directory exists
+    dirname = os.path.dirname(args.outputjson)
+    if not os.path.isdir(dirname):
+        raise FileNotFoundError('Directory {} does not exist!'.format(dirname))
+
+    # get Finnhub tokens
+    if args.useenvtoken:
+        finnhub_token = os.getenv('FINNHUBTOKEN')
+        if finnhub_token is None:
+            raise ValueError('Finnhub tokens not found in the environment variable $FINNHUBTOKEN.')
+    else:
+        finnhub_token = open('finnhub.tokens', 'r').read().strip()
+
+    # initialize FinnHub reader
+    finnreader = FinnHubStockReader(finnhub_token)
+
+    # grab symbols
+    allsym = finnreader.get_all_US_symbols()
+    allsymdf = pd.DataFrame(allsym)
+
+    if args.shorten:
+        filtered_symdf = allsymdf[allsymdf['mic'].isin(['XNAS', 'XNYS', 'ARCX'])]
+        filtered_symdf = filtered_symdf[~filtered_symdf['type'].isin(['PUBLIC'])]
+        filtered_symdf = filtered_symdf[~filtered_symdf['symbol'].str.contains('\.')]
+        filtered_symdf.to_json(args.outputjson, orient='records')
+    else:
+        allsymdf.to_json(args.outputjson, orient='records')
