@@ -10,7 +10,7 @@ from finsim.data.finnhub import FinnHubStockReader
 def get_argparser():
     argparser = ArgumentParser(description='Retrieve stock symbols from Finnhub')
     argparser.add_argument('outputjson', help='path of the stock symbols (*.json)')
-    argparser.add_argument('--finhubbtokenpath', help='path of Finnhub tokens')
+    argparser.add_argument('--finnhubtokenpath', help='path of Finnhub tokens')
     argparser.add_argument('--useenvtoken', help='Use the environment variable FINNHUBTOKEN as the tokens')
     argparser.add_argument('--shorten', default=False, action='store_true', help='shorten list of symbols')
     return argparser
