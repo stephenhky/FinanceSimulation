@@ -31,7 +31,7 @@ if __name__ == '__main__':
         if finnhub_token is None:
             raise ValueError('Finnhub tokens not found in the environment variable $FINNHUBTOKEN.')
     else:
-        finnhub_token = open('finnhub.tokens', 'r').read().strip()
+        finnhub_token = open(args.finnhubtokenpath, 'r').read().strip()
 
     # initialize FinnHub reader
     finnreader = FinnHubStockReader(finnhub_token)
