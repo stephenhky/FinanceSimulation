@@ -9,7 +9,7 @@ from finsim.data.finnhub import FinnHubStockReader
 
 def get_argparser():
     argparser = ArgumentParser(description='Retrieve stock symbols from Finnhub')
-    argparser.add_argument('outputjson', help='path of the stock symbols (*.json)')
+    argparser.add_argument('outputpath', help='path of the stock symbols (*.json, *.h5, *.xlsx, *.csv)')
     argparser.add_argument('--finnhubtokenpath', help='path of Finnhub tokens')
     argparser.add_argument('--useenvtoken', help='Use the environment variable FINNHUBTOKEN as the tokens')
     argparser.add_argument('--shorten', default=False, action='store_true', help='shorten list of symbols')
@@ -19,9 +19,10 @@ def get_argparser():
 if __name__ == '__main__':
     # parsing argument
     args = get_argparser().parse_args()
+    extension = os.path.splitext(args.outputpath)[-1]
 
     # check if the output directory exists
-    dirname = os.path.dirname(args.outputjson)
+    dirname = os.path.dirname(args.outputpath)
     if not os.path.isdir(dirname):
         raise FileNotFoundError('Directory {} does not exist!'.format(dirname))
 
@@ -44,6 +45,17 @@ if __name__ == '__main__':
         filtered_symdf = allsymdf[allsymdf['mic'].isin(['XNAS', 'XNYS', 'ARCX'])]
         filtered_symdf = filtered_symdf[~filtered_symdf['type'].isin(['PUBLIC'])]
         filtered_symdf = filtered_symdf[~filtered_symdf['symbol'].str.contains('\.')]
-        filtered_symdf.to_json(args.outputjson, orient='records')
+        allsymdf = filtered_symdf
+
+    if extension == '.h5':
+        allsymdf.to_hdf(args.outputpath, 'fintable')
+    elif extension == '.json':
+        allsymdf.to_json(args.outputpath, orient='records')
+    elif extension == '.xlsx':
+        allsymdf.to_excel(args.outputpath)
+    elif extension == '.csv':
+        allsymdf.to_csv(args.outputpath)
+    elif extension == '.pickle' or extension == '.pkl':
+        allsymdf.to_pickle(args.outputpath)
     else:
-        allsymdf.to_json(args.outputjson, orient='records')
+        raise IOError('Extension {} not recognized.'.format(extension))
