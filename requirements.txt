@@ -1,10 +1,10 @@
 numpy>=1.20.3
 scipy>=1.10.0
-requests>=2.22.0
+requests>=2.31.0
 pandas>=1.5.0
 quandl>=3.5.0
 tqdm>=4.49.0
-tables>=3.8.0
+tables>=3.9.0
 yfinance>=0.2.12
 openpyxl>=3.1.0
 Cython>=0.29.0
