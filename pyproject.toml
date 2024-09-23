@@ -1,2 +1,65 @@
 [build-system]
-requires = ["setuptools", "wheel", "Cython>=0.29", "numpy >= 1.20"]
+requires = ["setuptools", "wheel", "Cython>=0.29", "numpy >= 1.24.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "finsim"
+version = "1.0.0a1"
+authors = [
+    {name = "Kwan Yuet Stephen Ho", email = "stephenhky@yahoo.com.hk"}
+]
+description = "Financial simulation and inference"
+readme = {file = "README.md", content-type = "text/markdown"}
+license = {text = "LGPL"}
+keywords = ["simulation", "finance", "quantitative finance", "inference", "portfolio analysis"]
+requires-python = ">=3.10"
+classifiers = [
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Version Control :: Git",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Cython",
+    "Programming Language :: C",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry"
+]
+dependencies = [
+    "numpy>=1.24.0",
+    "scipy>=1.10.0",
+    "requests>=2.31.0",
+    "pandas>=1.5.0",
+    "quandl>=3.5.0",
+    "tqdm>=4.49.0",
+    "tables>=3.8.5",
+    "yfinance>=0.2.12",
+    "openpyxl>=3.1.0",
+    "Cython>=0.29.0"
+]
+
+[project.urls]
+Repository = "https://github.com/stephenhky/FinanceSimulation"
+Issues = "https://github.com/stephenhky/FinanceSimulation/issues"
+
+[tool.setuptools]
+packages = [
+    "finsim",
+    "finsim.data",
+    "finsim.estimate",
+    "finsim.estimate.native",
+    "finsim.simulation",
+    "finsim.portfolio",
+    "finsim.portfolio.optimize",
+    "finsim.portfolio.optimize.native",
+    "finsim.tech",
+    "finsim.retrieve_stock_symbols_cli"
+]
+zip-safe = false
+
+[project.scripts]
+retrieve_stock_symbols = "finsim.retrieve_stock_symbols_cli:main_cli"
+
+[project.optional-dependencies]
+test = ["unittest2", "pytest", "pytest-cython"]
