@@ -1,10 +1,9 @@
-#!/usr/bin/env python
 
 from argparse import ArgumentParser
 import os
 
 import pandas as pd
-from finsim.data.finnhub import FinnHubStockReader
+from ..data.finnhub import FinnHubStockReader
 
 
 def get_argparser():
@@ -16,7 +15,7 @@ def get_argparser():
     return argparser
 
 
-if __name__ == '__main__':
+def main_cli():
     # parsing argument
     args = get_argparser().parse_args()
     extension = os.path.splitext(args.outputpath)[-1]

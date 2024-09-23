@@ -53,12 +53,13 @@ packages = [
     "finsim.portfolio",
     "finsim.portfolio.optimize",
     "finsim.portfolio.optimize.native",
-    "finsim.tech"
+    "finsim.tech",
+    "finsim.retrieve_stock_symbols_cli"
 ]
 zip-safe = false
 
 [project.scripts]
-retrieve_stock_symbols = "finsim.retrieve_stock_symbols:main_cli"
+retrieve_stock_symbols = "finsim.retrieve_stock_symbols_cli:main_cli"
 
 [project.optional-dependencies]
 test = ["unittest2", "pytest", "pytest-cython"]
