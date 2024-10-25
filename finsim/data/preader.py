@@ -33,8 +33,6 @@ def extract_online_yahoofinance_data(symbol, startdate, enddate):
 
     oricols = df.columns
     df['TimeStamp'] = df.index
-    # df['TimeStamp'] = df['TimeStamp'].dt.strftime('%Y-%m-%d')
-    # df['Date'] = df['TimeStamp'].apply(lambda ts: ts.date())
     df = df[['TimeStamp'] + list(oricols)]
 
     return df
@@ -55,7 +53,6 @@ def extract_batch_online_yahoofinance_data(symbols, startdate, enddate, threads=
             df = combined_df[symbol].copy()
             oricols = df.columns
             df['TimeStamp'] = df.index
-            # df['TimeStamp'] = df['TimeStamp'].dt.strftime('%Y-%m-%d')
             df = df[['TimeStamp'] + list(oricols)]
             dataframes[symbol] = df
         except:
@@ -102,10 +99,6 @@ def get_yahoofinance_data(symbol, startdate, enddate, cacheddir=None):
         preexist = False
         for row in table.where('symbol=="{}"'.format(symbol)):
             preexist = True
-            # print("{} <= {}: {}".format(row['query_startdate'].decode('utf-8'), startdate,
-            #                                     row['query_startdate'].decode('utf-8') <= startdate))
-            # print("{} <= {}: {}".format(row['query_enddate'].decode('utf-8'), enddate,
-            #                                     row['query_enddate'].decode('utf-8') >= enddate))
             if row['query_startdate'].decode('utf-8') <= startdate and row['query_enddate'].decode('utf-8') >= enddate:
                 df = pd.read_hdf(os.path.join(cacheddir, '{}.h5'.format(symbol)), 'yahoodata')
                 if len(df) > 0:
