@@ -33,7 +33,7 @@ def extract_online_yahoofinance_data(symbol, startdate, enddate):
 
     oricols = df.columns
     df['TimeStamp'] = df.index
-    df = df[['TimeStamp'] + list(oricols)]
+    df = df.loc[:, ['TimeStamp'] + list(oricols)]
 
     return df
 
@@ -53,7 +53,7 @@ def extract_batch_online_yahoofinance_data(symbols, startdate, enddate, threads=
             df = combined_df[symbol].copy()
             oricols = df.columns
             df['TimeStamp'] = df.index
-            df = df[['TimeStamp'] + list(oricols)]
+            df = df.loc[:, ['TimeStamp'] + list(oricols)]
             dataframes[symbol] = df
         except:
             dataframes[symbol] = pd.DataFrame({
@@ -253,5 +253,5 @@ def get_dividends_df(symbol):
     ticker = yf.Ticker(symbol)
     df = pd.DataFrame(ticker.dividends)
     df['TimeStamp'] = df.index.map(lambda item: datetime.strftime(item, '%Y-%m-%d'))
-    df = df[['TimeStamp', 'Dividends']]
+    df = df.loc[:, ['TimeStamp', 'Dividends']]
     return df
