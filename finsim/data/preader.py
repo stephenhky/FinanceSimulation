@@ -32,8 +32,11 @@ def extract_online_yahoofinance_data(symbol, startdate, enddate):
         })
 
     oricols = df.columns
+    if isinstance(oricols, pd.core.indexes.multi.MultiIndex):
+        df.columns = [col[0] for col in oricols]
+        oricols = df.columns
     df['TimeStamp'] = df.index
-    df = df.loc[:, ['TimeStamp'] + list(oricols)]
+    df = df.loc[:, ['TimeStamp'] + list(oricols)].reset_index()
 
     return df
 
