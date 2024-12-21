@@ -7,7 +7,7 @@ from finsim.data.preader import get_symbol_closing_price
 class TestDynamicPortfolio(unittest.TestCase):
     def test_get_voo_backtrack(self):
         self.assertAlmostEqual(
-            get_symbol_closing_price('VOO', '2016-01-01', backtrack=True),
+            get_symbol_closing_price('VOO', '2016-01-05', backtrack=True),
             186.92999267578125
         )
 

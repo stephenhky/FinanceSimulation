@@ -148,7 +148,7 @@ def get_BlackScholesMerton_stocks_estimation(
         covmat = np.zeros((len(symbols), len(symbols)))
 
         for i, stock_df in enumerate(stocks_data_dfs):
-            r, sigma = fit_BlackScholesMerton_model(stock_df['TimeStamp'].ravel(), stock_df['Close'].ravel())
+            r, sigma = fit_BlackScholesMerton_model(stock_df['TimeStamp'].to_numpy(), stock_df['Close'].to_numpy())
             rarray[i] = r
             covmat[i, i] = sigma*sigma
 
@@ -157,10 +157,10 @@ def get_BlackScholesMerton_stocks_estimation(
             stock_df_j = stocks_data_dfs[j]
             smallerlen = min(len(stock_df_i), len(stock_df_j))
             _, cov = fit_multivariate_BlackScholesMerton_model(
-                stock_df_i.loc[(len(stock_df_i)-smallerlen):, 'TimeStamp'].ravel(),
+                stock_df_i.loc[(len(stock_df_i)-smallerlen):, 'TimeStamp'].to_numpy(),
                 np.array([
-                    stock_df_i.loc[(len(stock_df_i)-smallerlen):, 'Close'].ravel(),
-                    stock_df_j.loc[(len(stock_df_j)-smallerlen):, 'Close'].ravel()
+                    stock_df_i.loc[(len(stock_df_i)-smallerlen):, 'Close'].to_numpy(),
+                    stock_df_j.loc[(len(stock_df_j)-smallerlen):, 'Close'].to_numpy()
                 ])
             )
             covmat[i, j] = cov[0, 1]
