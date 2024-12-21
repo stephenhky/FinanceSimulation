@@ -153,16 +153,15 @@ def get_yahoofinance_data(symbol, startdate, enddate, cacheddir=None):
 
 @lru_cache(maxsize=256)
 def get_symbol_closing_price(symbol, datestr, epsilon=1e-10, cacheddir=None, backtrack=False):
-    try:
-        return get_yahoofinance_data(symbol, datestr, datestr, cacheddir=cacheddir)['Close'][0]
-    except IndexError as e:
+    df = get_yahoofinance_data(symbol, datestr, datestr, cacheddir=cacheddir)
+    if len(df) == 0:
         if backtrack:
             prevdatestr = datetime.strftime(datetime.strptime(datestr, '%Y-%m-%d') - timedelta(days=1), '%Y-%m-%d')
             return get_symbol_closing_price(symbol, prevdatestr, epsilon=epsilon, cacheddir=cacheddir, backtrack=True)
         else:
-            raise e
-    except KeyError:
-        return epsilon
+            raise IndexError('Price not found!')
+    else:
+        return df['Close'][0]
 
 
 def finding_missing_symbols_in_cache(symbols, startdate, enddate, cacheddir):
