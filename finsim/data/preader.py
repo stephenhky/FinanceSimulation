@@ -17,7 +17,8 @@ def extract_online_yahoofinance_data(symbol, startdate, enddate):
         df = yf.download(
             symbol,
             start=datetime.strptime(startdate, '%Y-%m-%d'),
-            end=datetime.strptime(enddate, '%Y-%m-%d') + timedelta(days=1)
+            end=datetime.strptime(enddate, '%Y-%m-%d') + timedelta(days=1),
+            auto_adjust=False
         )
     except:
         logging.warning('Symbol {} does not exist between {} and {}.'.format(symbol, startdate, enddate))
