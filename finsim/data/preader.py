@@ -17,7 +17,8 @@ def extract_online_yahoofinance_data(symbol, startdate, enddate):
         df = yf.download(
             symbol,
             start=datetime.strptime(startdate, '%Y-%m-%d'),
-            end=datetime.strptime(enddate, '%Y-%m-%d') + timedelta(days=1)
+            end=datetime.strptime(enddate, '%Y-%m-%d') + timedelta(days=1),
+            auto_adjust=False
         )
     except:
         logging.warning('Symbol {} does not exist between {} and {}.'.format(symbol, startdate, enddate))
@@ -32,10 +33,11 @@ def extract_online_yahoofinance_data(symbol, startdate, enddate):
         })
 
     oricols = df.columns
+    if isinstance(oricols, pd.core.indexes.multi.MultiIndex):
+        df.columns = [col[0] for col in oricols]
+        oricols = df.columns
     df['TimeStamp'] = df.index
-    # df['TimeStamp'] = df['TimeStamp'].dt.strftime('%Y-%m-%d')
-    # df['Date'] = df['TimeStamp'].apply(lambda ts: ts.date())
-    df = df[['TimeStamp'] + list(oricols)]
+    df = df.loc[:, ['TimeStamp'] + list(oricols)].reset_index()
 
     return df
 
@@ -55,8 +57,7 @@ def extract_batch_online_yahoofinance_data(symbols, startdate, enddate, threads=
             df = combined_df[symbol].copy()
             oricols = df.columns
             df['TimeStamp'] = df.index
-            # df['TimeStamp'] = df['TimeStamp'].dt.strftime('%Y-%m-%d')
-            df = df[['TimeStamp'] + list(oricols)]
+            df = df.loc[:, ['TimeStamp'] + list(oricols)]
             dataframes[symbol] = df
         except:
             dataframes[symbol] = pd.DataFrame({
@@ -102,10 +103,6 @@ def get_yahoofinance_data(symbol, startdate, enddate, cacheddir=None):
         preexist = False
         for row in table.where('symbol=="{}"'.format(symbol)):
             preexist = True
-            # print("{} <= {}: {}".format(row['query_startdate'].decode('utf-8'), startdate,
-            #                                     row['query_startdate'].decode('utf-8') <= startdate))
-            # print("{} <= {}: {}".format(row['query_enddate'].decode('utf-8'), enddate,
-            #                                     row['query_enddate'].decode('utf-8') >= enddate))
             if row['query_startdate'].decode('utf-8') <= startdate and row['query_enddate'].decode('utf-8') >= enddate:
                 df = pd.read_hdf(os.path.join(cacheddir, '{}.h5'.format(symbol)), 'yahoodata')
                 if len(df) > 0:
@@ -156,16 +153,15 @@ def get_yahoofinance_data(symbol, startdate, enddate, cacheddir=None):
 
 @lru_cache(maxsize=256)
 def get_symbol_closing_price(symbol, datestr, epsilon=1e-10, cacheddir=None, backtrack=False):
-    try:
-        return get_yahoofinance_data(symbol, datestr, datestr, cacheddir=cacheddir)['Close'][0]
-    except IndexError as e:
+    df = get_yahoofinance_data(symbol, datestr, datestr, cacheddir=cacheddir)
+    if len(df) == 0:
         if backtrack:
             prevdatestr = datetime.strftime(datetime.strptime(datestr, '%Y-%m-%d') - timedelta(days=1), '%Y-%m-%d')
             return get_symbol_closing_price(symbol, prevdatestr, epsilon=epsilon, cacheddir=cacheddir, backtrack=True)
         else:
-            raise e
-    except KeyError:
-        return epsilon
+            raise IndexError('Price not found!')
+    else:
+        return df['Close'][0]
 
 
 def finding_missing_symbols_in_cache(symbols, startdate, enddate, cacheddir):
@@ -260,5 +256,5 @@ def get_dividends_df(symbol):
     ticker = yf.Ticker(symbol)
     df = pd.DataFrame(ticker.dividends)
     df['TimeStamp'] = df.index.map(lambda item: datetime.strftime(item, '%Y-%m-%d'))
-    df = df[['TimeStamp', 'Dividends']]
+    df = df.loc[:, ['TimeStamp', 'Dividends']]
     return df
