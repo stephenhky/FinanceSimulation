@@ -47,7 +47,7 @@ def main_cli():
         allsymdf = filtered_symdf
 
     if extension == '.h5':
-        allsymdf.to_hdf(args.outputpath, 'fintable')
+        allsymdf.to_hdf(args.outputpath, key='fintable')
     elif extension == '.json':
         allsymdf.to_json(args.outputpath, orient='records')
     elif extension == '.xlsx':
