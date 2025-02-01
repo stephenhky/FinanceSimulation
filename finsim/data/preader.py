@@ -104,7 +104,7 @@ def get_yahoofinance_data(symbol, startdate, enddate, cacheddir=None):
         for row in table.where('symbol=="{}"'.format(symbol)):
             preexist = True
             if row['query_startdate'].decode('utf-8') <= startdate and row['query_enddate'].decode('utf-8') >= enddate:
-                df = pd.read_hdf(os.path.join(cacheddir, '{}.h5'.format(symbol)), 'yahoodata')
+                df = pd.read_hdf(os.path.join(cacheddir, '{}.h5'.format(symbol)), key='yahoodata')
                 if len(df) > 0:
                     df = df[(df['TimeStamp'] >= startdate) & (df['TimeStamp'] <= enddate)]
                 metatable_h5file.close()
@@ -113,7 +113,7 @@ def get_yahoofinance_data(symbol, startdate, enddate, cacheddir=None):
 
         df = extract_online_yahoofinance_data(symbol, startdate, enddate)
         logging.debug('Caching data for {} from {} to {}'.format(symbol, startdate, enddate))
-        df.to_hdf(os.path.join(cacheddir, '{}.h5'.format(symbol)), 'yahoodata')
+        df.to_hdf(os.path.join(cacheddir, '{}.h5'.format(symbol)), key='yahoodata')
 
         if preexist:
             logging.debug('Updating symbol {} in metatable.'.format(symbol))
@@ -121,8 +121,8 @@ def get_yahoofinance_data(symbol, startdate, enddate, cacheddir=None):
                 row['query_startdate'] = startdate
                 row['query_enddate'] = enddate
                 if len(df) > 0:
-                    row['data_startdate'] = datetime.strftime(df['TimeStamp'][0].date(), '%Y-%m-%d')
-                    row['data_enddate'] = datetime.strftime(df['TimeStamp'][-1].date(), '%Y-%m-%d')
+                    row['data_startdate'] = datetime.strftime(df['TimeStamp'].to_list()[0].date(), '%Y-%m-%d')
+                    row['data_enddate'] = datetime.strftime(df['TimeStamp'].to_list()[-1].date(), '%Y-%m-%d')
                 else:
                     row['data_startdate'] = '0000-00-00'
                     row['data_enddate'] = ' 0000-00-00'
@@ -134,8 +134,8 @@ def get_yahoofinance_data(symbol, startdate, enddate, cacheddir=None):
             newrow['query_startdate'] = startdate
             newrow['query_enddate'] = enddate
             if len(df) > 0:
-                newrow['data_startdate'] = datetime.strftime(df['TimeStamp'][0].date(), '%Y-%m-%d')
-                newrow['data_enddate'] = datetime.strftime(df['TimeStamp'][-1].date(), '%Y-%m-%d')
+                newrow['data_startdate'] = datetime.strftime(df['TimeStamp'].to_list()[0].date(), '%Y-%m-%d')
+                newrow['data_enddate'] = datetime.strftime(df['TimeStamp'].to_list()[-1].date(), '%Y-%m-%d')
             else:
                 newrow['data_startdate'] = '0000-00-00'
                 newrow['data_enddate'] = '0000-00-00'
@@ -231,7 +231,7 @@ def generating_cached_yahoofinance_data(symbols, startdate, enddate, cacheddir, 
             df = dataframes[symbol]
             df = df[~df['Close'].isna()]
             logging.debug('Caching data for {} from {} to {}'.format(symbol, startdate, enddate))
-            df.to_hdf(os.path.join(cacheddir, '{}.h5'.format(symbol)), 'yahoodata')
+            df.to_hdf(os.path.join(cacheddir, '{}.h5'.format(symbol)), key='yahoodata')
 
             logging.debug('Creating symbol {} in metatable'.format(symbol))
             newrow = table.row
@@ -239,8 +239,8 @@ def generating_cached_yahoofinance_data(symbols, startdate, enddate, cacheddir, 
             newrow['query_startdate'] = startdate
             newrow['query_enddate'] = enddate
             if len(df) > 0:
-                newrow['data_startdate'] = datetime.strftime(df['TimeStamp'][0].date(), '%Y-%m-%d')
-                newrow['data_enddate'] = datetime.strftime(df['TimeStamp'][-1].date(), '%Y-%m-%d')
+                newrow['data_startdate'] = datetime.strftime(df['TimeStamp'].to_list()[0].date(), '%Y-%m-%d')
+                newrow['data_enddate'] = datetime.strftime(df['TimeStamp'].to_list()[-1].date(), '%Y-%m-%d')
             else:
                 newrow['data_startdate'] = '0000-00-00'
                 newrow['data_enddate'] = '0000-00-00'
