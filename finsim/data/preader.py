@@ -5,8 +5,11 @@ import logging
 from time import sleep
 import glob
 from functools import lru_cache
+import threading
+import traceback
 
 import pandas as pd
+import tables
 import yfinance as yf
 import tables as tb
 from tqdm import tqdm
@@ -196,6 +199,10 @@ def finding_missing_symbols_in_cache(symbols, startdate, enddate, cacheddir):
     return sorted(list(set(symbols) - set(existing_valid_symbols)))
 
 
+def dataframe_to_hdf(df, filepath, key):
+    df.to_hdf(filepath, key=key)
+
+
 def generating_cached_yahoofinance_data(symbols, startdate, enddate, cacheddir, slicebatch=50, waittime=1, threads=True):
     tocache_symbols = finding_missing_symbols_in_cache(symbols, startdate, enddate, cacheddir)
 
@@ -227,26 +234,40 @@ def generating_cached_yahoofinance_data(symbols, startdate, enddate, cacheddir, 
             except:
                 sleep(waittime)
 
+        threads = []
         for symbol in dataframes:
             df = dataframes[symbol]
             df = df[~df['Close'].isna()]
             logging.debug('Caching data for {} from {} to {}'.format(symbol, startdate, enddate))
-            df.to_hdf(os.path.join(cacheddir, '{}.h5'.format(symbol)), key='yahoodata')
+            thread = threading.Thread(
+                target=dataframe_to_hdf,
+                args=(df, os.path.join(cacheddir, '{}.h5'.format(symbol)), 'yahoodata')
+            )
+            # df.to_hdf(os.path.join(cacheddir, '{}.h5'.format(symbol)), key='yahoodata')
+            thread.start()
+            threads.append(thread)
 
-            logging.debug('Creating symbol {} in metatable'.format(symbol))
-            newrow = table.row
-            newrow['symbol'] = symbol
-            newrow['query_startdate'] = startdate
-            newrow['query_enddate'] = enddate
-            if len(df) > 0:
-                newrow['data_startdate'] = datetime.strftime(df['TimeStamp'].to_list()[0].date(), '%Y-%m-%d')
-                newrow['data_enddate'] = datetime.strftime(df['TimeStamp'].to_list()[-1].date(), '%Y-%m-%d')
-            else:
-                newrow['data_startdate'] = '0000-00-00'
-                newrow['data_enddate'] = '0000-00-00'
-            newrow.append()
+            try:
+                logging.debug('Creating symbol {} in metatable'.format(symbol))
+                newrow = table.row
+                newrow['symbol'] = symbol
+                newrow['query_startdate'] = startdate
+                newrow['query_enddate'] = enddate
+                if len(df) > 0:
+                    newrow['data_startdate'] = datetime.strftime(df['TimeStamp'].to_list()[0].date(), '%Y-%m-%d')
+                    newrow['data_enddate'] = datetime.strftime(df['TimeStamp'].to_list()[-1].date(), '%Y-%m-%d')
+                else:
+                    newrow['data_startdate'] = '0000-00-00'
+                    newrow['data_enddate'] = '0000-00-00'
+                newrow.append()
+                table.flush()
+            except tables.HDF5ExtError as e:
+                logging.error('Cannot append record for symbol {}'.format(symbol))
+                traceback.print_exc()
+                continue
 
-        table.flush()
+        for thread in threads:
+            thread.join()
 
     metatable_h5file.close()
 
