@@ -210,7 +210,8 @@ def generating_cached_yahoofinance_data(
         cacheddir,
         slicebatch=50,
         waittime=1,
-        threads=True
+        yfinance_multithreads=False,
+        io_multithreads=False
 ):
     tocache_symbols = finding_missing_symbols_in_cache(symbols, startdate, enddate, cacheddir)
 
@@ -236,7 +237,7 @@ def generating_cached_yahoofinance_data(
                     tocache_symbols[startidx:min(startidx + slicebatch, nbsymbols)],
                     startdate,
                     enddate,
-                    threads=threads
+                    threads=yfinance_multithreads
                 )
                 success = True
             except:
@@ -254,33 +255,37 @@ def generating_cached_yahoofinance_data(
                 thissymbol_enddate = '0000-00-00'
 
             logging.debug('Caching data for {} from {} to {}'.format(symbol, startdate, enddate))
-            thread = threading.Thread(
-                target=dataframe_to_hdf,
-                args=(df, os.path.join(cacheddir, '{}.h5'.format(symbol)), 'yahoodata')
-            )
-            # df.to_hdf(os.path.join(cacheddir, '{}.h5'.format(symbol)), key='yahoodata')
-            thread.start()
-            writing_threads.append(thread)
+            if io_multithreads:
+                dataframe_to_hdf(os.path.join(cacheddir, '{}.h5'.format(symbol)), key='yahoodata')
+            else:
+                thread = threading.Thread(
+                    target=dataframe_to_hdf,
+                    args=(df, os.path.join(cacheddir, '{}.h5'.format(symbol)), 'yahoodata')
+                )
+                # df.to_hdf(os.path.join(cacheddir, '{}.h5'.format(symbol)), key='yahoodata')
+                thread.start()
+                writing_threads.append(thread)
 
-            try:
-                logging.debug('Creating symbol {} in metatable'.format(symbol))
-                newrow = table.row
-                newrow['symbol'] = symbol
-                newrow['query_startdate'] = startdate
-                newrow['query_enddate'] = enddate
-                newrow['data_startdate'] = thissymbol_startdate
-                newrow['data_enddate'] = thissymbol_enddate
-                newrow.append()
+                try:
+                    logging.debug('Creating symbol {} in metatable'.format(symbol))
+                    newrow = table.row
+                    newrow['symbol'] = symbol
+                    newrow['query_startdate'] = startdate
+                    newrow['query_enddate'] = enddate
+                    newrow['data_startdate'] = thissymbol_startdate
+                    newrow['data_enddate'] = thissymbol_enddate
+                    newrow.append()
 
-            except tables.HDF5ExtError as e:
-                logging.error('Cannot append record for symbol {}'.format(symbol))
-                traceback.print_exc()
-                continue
+                except tables.HDF5ExtError as e:
+                    logging.error('Cannot append record for symbol {}'.format(symbol))
+                    traceback.print_exc()
+                    continue
 
         table.flush()
 
-        for thread in writing_threads:
-            thread.join()
+        if io_multithreads:
+            for thread in writing_threads:
+                thread.join()
 
     metatable_h5file.close()
 
