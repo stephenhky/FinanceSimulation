@@ -255,14 +255,13 @@ def generating_cached_yahoofinance_data(
                 thissymbol_enddate = '0000-00-00'
 
             logging.debug('Caching data for {} from {} to {}'.format(symbol, startdate, enddate))
-            if io_multithreads:
-                dataframe_to_hdf(os.path.join(cacheddir, '{}.h5'.format(symbol)), key='yahoodata')
+            if not io_multithreads:
+                dataframe_to_hdf(df, os.path.join(cacheddir, '{}.h5'.format(symbol)), key='yahoodata')
             else:
                 thread = threading.Thread(
                     target=dataframe_to_hdf,
                     args=(df, os.path.join(cacheddir, '{}.h5'.format(symbol)), 'yahoodata')
                 )
-                # df.to_hdf(os.path.join(cacheddir, '{}.h5'.format(symbol)), key='yahoodata')
                 thread.start()
                 writing_threads.append(thread)
 
@@ -281,7 +280,7 @@ def generating_cached_yahoofinance_data(
                     traceback.print_exc()
                     continue
 
-        table.flush()
+            table.flush()
 
         if io_multithreads:
             for thread in writing_threads:
