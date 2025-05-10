@@ -58,6 +58,7 @@ packages = [
     "finsim.retrieve_stock_symbols_cli"
 ]
 zip-safe = false
+include-package-data = true
 
 [project.scripts]
 retrieve_stock_symbols = "finsim.retrieve_stock_symbols_cli:main_cli"
