@@ -35,7 +35,7 @@ dependencies = [
     "quandl>=3.5.0",
     "tqdm>=4.49.0",
     "tables>=3.8.5",
-    "yfinance>=0.2.54",
+    "yfinance>=0.2.59",
     "openpyxl>=3.1.0",
     "Cython>=0.29.0"
 ]
