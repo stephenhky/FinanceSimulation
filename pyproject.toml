@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "finsim"
-version = "1.0.5"
+version = "1.0.6"
 authors = [
     {name = "Kwan Yuet Stephen Ho", email = "stephenhky@yahoo.com.hk"}
 ]
@@ -35,7 +35,7 @@ dependencies = [
     "quandl>=3.5.0",
     "tqdm>=4.49.0",
     "tables>=3.8.5",
-    "yfinance>=0.2.54",
+    "yfinance>=0.2.59",
     "openpyxl>=3.1.0",
     "Cython>=0.29.0"
 ]
@@ -58,6 +58,7 @@ packages = [
     "finsim.retrieve_stock_symbols_cli"
 ]
 zip-safe = false
+include-package-data = true
 
 [project.scripts]
 retrieve_stock_symbols = "finsim.retrieve_stock_symbols_cli:main_cli"
