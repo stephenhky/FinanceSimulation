@@ -3,9 +3,7 @@ from setuptools import setup
 import numpy as np
 from Cython.Build import cythonize
 
-ext_modules = cythonize(['finsim/portfolio/optimize/native/cythonmetrics.pyx',
-                         'finsim/estimate/native/cythonfit.pyx',
-                         'finsim/estimate/native/cythonrisk.pyx'])
+ext_modules = cythonize(['finsim/portfolio/optimize/native/cythonmetrics.pyx'])
 
 
 setup(

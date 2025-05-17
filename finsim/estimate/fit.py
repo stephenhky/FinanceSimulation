@@ -1,22 +1,29 @@
 
+from typing import Literal, Tuple
+
 import numpy as np
+import numpy.typing as npt
 from itertools import product
 
 from .constants import dividing_factors_dict
 from .native.pyfit import python_fit_BlackScholesMerton_model, python_fit_multivariate_BlackScholesMerton_model
-from .native.cythonfit import cython_fit_BlackScholesMerton_model, cython_fit_multivariate_BlackScholesMerton_model
 
 
 # Note: always round-off to seconds first, but flexible about the unit to be used.
 
-def fit_BlackScholesMerton_model(timestamps, prices, unit='year', lowlevellang='C'):
+def fit_BlackScholesMerton_model(
+        timestamps: npt.NDArray[np.datetime64],
+        prices: npt.NDArray[np.float64],
+        unit: Literal['second', 'minute', 'hour', 'day', 'year']='year',
+        lowlevellang: Literal['C', 'P']='P'
+) -> Tuple[float, float]:
     dividing_factor = dividing_factors_dict[unit]
 
     ts = np.array(timestamps, dtype='datetime64[s]')
     ts = np.array(ts, dtype=np.float64) / dividing_factor
 
     if lowlevellang == 'C':
-        return cython_fit_BlackScholesMerton_model(ts, prices)
+        raise ValueError("Cython fitting is no longer supported!")
     elif lowlevellang == 'P':
         return python_fit_BlackScholesMerton_model(ts, prices)
     else:
@@ -25,14 +32,19 @@ def fit_BlackScholesMerton_model(timestamps, prices, unit='year', lowlevellang='
                 lowlevellang))
 
 
-def fit_multivariate_BlackScholesMerton_model(timestamps, multiprices, unit='year', lowlevellang='C'):
+def fit_multivariate_BlackScholesMerton_model(
+        timestamps: npt.NDArray[np.datetime64],
+        multiprices: npt.NDArray[np.float64],
+        unit: Literal['second', 'minute', 'hour', 'day', 'year']='year',
+        lowlevellang: Literal['C', 'P']='P'
+) -> Tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
     dividing_factor = dividing_factors_dict[unit]
 
     ts = np.array(timestamps, dtype='datetime64[s]')
     ts = np.array(ts, dtype=np.float64) / dividing_factor
 
     if lowlevellang == 'C':
-        return cython_fit_multivariate_BlackScholesMerton_model(ts, multiprices)
+        raise ValueError("Cython fitting is no longer supported!")
     elif lowlevellang == 'P':
         return python_fit_multivariate_BlackScholesMerton_model(ts, multiprices)
     else:
@@ -43,7 +55,12 @@ def fit_multivariate_BlackScholesMerton_model(timestamps, multiprices, unit='yea
 
 ######## routines below are for time-weighted portfolio building
 
-def fit_timeweighted_BlackScholesMerton_model(timestamps, prices, weights, unit='year'):
+def fit_timeweighted_BlackScholesMerton_model(
+        timestamps: npt.NDArray[np.datetime64],
+        prices: npt.NDArray[np.float64],
+        weights: npt.NDArray[np.float64],
+        unit: Literal['second', 'minute', 'hour', 'day', 'year']='year'
+) -> Tuple[float, float]:
     dividing_factor = dividing_factors_dict[unit]
 
     ts = np.array(timestamps, dtype='datetime64[s]')
@@ -59,7 +76,12 @@ def fit_timeweighted_BlackScholesMerton_model(timestamps, prices, weights, unit=
     return r, sigma
 
 
-def fit_timeweighted_multivariate_BlackScholesMerton_model(timestamps, multiprices, weights, unit='year'):
+def fit_timeweighted_multivariate_BlackScholesMerton_model(
+        timestamps: npt.NDArray[np.datetime64],
+        multiprices: npt.NDArray[np.float64],
+        weights: npt.NDArray[np.float64],
+        unit: Literal['second', 'minute', 'hour', 'day', 'year']='year'
+) -> Tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
     dividing_factor = dividing_factors_dict[unit]
 
     ts = np.array(timestamps, dtype='datetime64[s]')

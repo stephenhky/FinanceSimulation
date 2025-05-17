@@ -1,8 +1,15 @@
 
 import numpy as np
+import numpy.typing as npt
+import numba as nb
 
 
-def python_estimate_downside_risk(ts, prices, target_return):
+@nb.njit
+def python_estimate_downside_risk(
+        ts: npt.NDArray[np.float64],
+        prices: npt.NDArray[np.float64],
+        target_return: float
+) -> float:
     dlogS = np.log(prices[1:] / prices[:-1])
     dt = ts[1:] - ts[:-1]
 
@@ -13,7 +20,12 @@ def python_estimate_downside_risk(ts, prices, target_return):
     return downside_risk
 
 
-def python_estimate_upside_risk(ts, prices, target_return):
+@nb.njit
+def python_estimate_upside_risk(
+        ts: npt.NDArray[np.float64],
+        prices: npt.NDArray[np.float64],
+        target_return: float
+) -> float:
     dlogS = np.log(prices[1:] / prices[:-1])
     dt = ts[1:] - ts[:-1]
 

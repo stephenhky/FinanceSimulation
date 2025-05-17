@@ -31,7 +31,8 @@ class TestParameterFitting(unittest.TestCase):
         self.assertAlmostEqual(mean_sigma, 0.02, delta=1.96*0.02/sqrt(1000))
 
     def test_fit_Cython(self):
-        self.fit_differentbackend('C')
+        with self.assertRaises(ValueError):
+            self.fit_differentbackend('C')
 
     def test_fit_python(self):
         self.fit_differentbackend('P')
