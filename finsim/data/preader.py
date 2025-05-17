@@ -1,6 +1,8 @@
 
 from datetime import datetime, timedelta
 import os
+from typing import Union
+from pathlib import Path
 import logging
 from time import sleep
 import glob
@@ -15,7 +17,7 @@ import tables as tb
 from tqdm import tqdm
 
 
-def extract_online_yahoofinance_data(symbol, startdate, enddate):
+def extract_online_yahoofinance_data(symbol: str, startdate: str, enddate: str) -> pd.DataFrame:
     try:
         df = yf.download(
             symbol,
@@ -24,7 +26,7 @@ def extract_online_yahoofinance_data(symbol, startdate, enddate):
             auto_adjust=False
         )
     except:
-        logging.warning('Symbol {} does not exist between {} and {}.'.format(symbol, startdate, enddate))
+        logging.warning(f'Symbol {symbol} does not exist between {startdate} and {enddate}.')
         return pd.DataFrame({
             'TimeStamp': [],
             'High': [],
@@ -45,7 +47,12 @@ def extract_online_yahoofinance_data(symbol, startdate, enddate):
     return df
 
 
-def extract_batch_online_yahoofinance_data(symbols, startdate, enddate, threads=True):
+def extract_batch_online_yahoofinance_data(
+        symbols: list[str],
+        startdate: str,
+        enddate: str,
+        threads: bool=True
+) -> pd.DataFrame:
     combined_df = yf.download(
         ' '.join(symbols),
         start=datetime.strptime(startdate, '%Y-%m-%d'),
@@ -87,75 +94,88 @@ METATABLE_ROWDES = {
 }
 
 
-def get_yahoofinance_data(symbol, startdate, enddate, cacheddir=None):
+def get_yahoofinance_data(
+        symbol: str,
+        startdate: str,
+        enddate: str,
+        cacheddir: Union[str, Path]=None
+) -> pd.DataFrame:
     if cacheddir is None:
         return extract_online_yahoofinance_data(symbol, startdate, enddate)
 
     if isinstance(cacheddir, str):
-        if not os.path.exists(cacheddir) or (os.path.exists(cacheddir) and not os.path.isdir(cacheddir)):
-            logging.info('Creating directory: {}'.format(cacheddir))
-            os.makedirs(cacheddir)
-        if not os.path.exists(os.path.join(cacheddir, METATABLE_FILENAME)):
-            logging.info('Creating file: {}'.format(os.path.join(cacheddir, METATABLE_FILENAME)))
-            metatable_h5file = tb.open_file(os.path.join(cacheddir, METATABLE_FILENAME), 'w')
-            table = metatable_h5file.create_table('/', 'metatable', METATABLE_ROWDES, title='metatable')
-        else:
-            metatable_h5file = tb.open_file(os.path.join(cacheddir, METATABLE_FILENAME), 'r+')
-            table = metatable_h5file.root.metatable
+        cacheddir = Path(cacheddir)
 
-        preexist = False
-        for row in table.where('symbol=="{}"'.format(symbol)):
-            preexist = True
-            if row['query_startdate'].decode('utf-8') <= startdate and row['query_enddate'].decode('utf-8') >= enddate:
-                df = pd.read_hdf(os.path.join(cacheddir, '{}.h5'.format(symbol)), key='yahoodata')
-                if len(df) > 0:
-                    df = df[(df['TimeStamp'] >= startdate) & (df['TimeStamp'] <= enddate)]
-                metatable_h5file.close()
-                df = df[~df['Close'].isna()]
-                return df
+    if not cacheddir.is_dir():
+        logging.info(f'Creating directory: {cacheddir.as_posix()}')
+        cacheddir.mkdir()
 
-        df = extract_online_yahoofinance_data(symbol, startdate, enddate)
-        logging.debug('Caching data for {} from {} to {}'.format(symbol, startdate, enddate))
-        df.to_hdf(os.path.join(cacheddir, '{}.h5'.format(symbol)), key='yahoodata')
-
-        if preexist:
-            logging.debug('Updating symbol {} in metatable.'.format(symbol))
-            for row in table.where('symbol=="{}"'.format(symbol)):
-                row['query_startdate'] = startdate
-                row['query_enddate'] = enddate
-                if len(df) > 0:
-                    row['data_startdate'] = datetime.strftime(df['TimeStamp'].to_list()[0].date(), '%Y-%m-%d')
-                    row['data_enddate'] = datetime.strftime(df['TimeStamp'].to_list()[-1].date(), '%Y-%m-%d')
-                else:
-                    row['data_startdate'] = '0000-00-00'
-                    row['data_enddate'] = ' 0000-00-00'
-                row.update()
-        else:
-            logging.debug('Creating symbol {} in metatable'.format(symbol))
-            newrow = table.row
-            newrow['symbol'] = symbol
-            newrow['query_startdate'] = startdate
-            newrow['query_enddate'] = enddate
-            if len(df) > 0:
-                newrow['data_startdate'] = datetime.strftime(df['TimeStamp'].to_list()[0].date(), '%Y-%m-%d')
-                newrow['data_enddate'] = datetime.strftime(df['TimeStamp'].to_list()[-1].date(), '%Y-%m-%d')
-            else:
-                newrow['data_startdate'] = '0000-00-00'
-                newrow['data_enddate'] = '0000-00-00'
-            newrow.append()
-
-        table.flush()
-        metatable_h5file.close()
-
-        df = df[~df['Close'].isna()]
-
-        return df
+    cached_metafile_path = cacheddir / METATABLE_FILENAME
+    if not cached_metafile_path.exists():
+        logging.info(f'Creating file: {cached_metafile_path.as_posix()}')
+        metatable_h5file = tb.open_file(cached_metafile_path.as_posix(), 'w')
+        table = metatable_h5file.create_table('/', 'metatable', METATABLE_ROWDES, title='metatable')
     else:
-        raise TypeError('Type of cacheddir has to be str, but got {} instead!'.format(type(cacheddir)))
+        metatable_h5file = tb.open_file(cached_metafile_path.as_posix(), 'r+')
+        table = metatable_h5file.root.metatable
+
+    preexist = False
+    for row in table.where('symbol=="{}"'.format(symbol)):
+        preexist = True
+        if row['query_startdate'].decode('utf-8') <= startdate and row['query_enddate'].decode('utf-8') >= enddate:
+            df = pd.read_hdf((cacheddir / f"{symbol}.h5").as_posix(), key='yahoodata')
+            if len(df) > 0:
+                df = df[(df['TimeStamp'] >= startdate) & (df['TimeStamp'] <= enddate)]
+            metatable_h5file.close()
+            df = df[~df['Close'].isna()]
+            return df
+
+    df = extract_online_yahoofinance_data(symbol, startdate, enddate)
+    logging.debug(f'Caching data for {symbol} from {startdate} to {enddate}')
+    df.to_hdf((cacheddir / f"{symbol}.h5").as_posix(), key='yahoodata')
+
+    if preexist:
+        logging.debug('Updating symbol {} in metatable.'.format(symbol))
+        for row in table.where('symbol=="{}"'.format(symbol)):
+            row['query_startdate'] = startdate
+            row['query_enddate'] = enddate
+            if len(df) > 0:
+                row['data_startdate'] = datetime.strftime(df['TimeStamp'].to_list()[0].date(), '%Y-%m-%d')
+                row['data_enddate'] = datetime.strftime(df['TimeStamp'].to_list()[-1].date(), '%Y-%m-%d')
+            else:
+                row['data_startdate'] = '0000-00-00'
+                row['data_enddate'] = ' 0000-00-00'
+            row.update()
+    else:
+        logging.debug('Creating symbol {} in metatable'.format(symbol))
+        newrow = table.row
+        newrow['symbol'] = symbol
+        newrow['query_startdate'] = startdate
+        newrow['query_enddate'] = enddate
+        if len(df) > 0:
+            newrow['data_startdate'] = datetime.strftime(df['TimeStamp'].to_list()[0].date(), '%Y-%m-%d')
+            newrow['data_enddate'] = datetime.strftime(df['TimeStamp'].to_list()[-1].date(), '%Y-%m-%d')
+        else:
+            newrow['data_startdate'] = '0000-00-00'
+            newrow['data_enddate'] = '0000-00-00'
+        newrow.append()
+
+    table.flush()
+    metatable_h5file.close()
+
+    df = df[~df['Close'].isna()]
+
+    return df
 
 
 @lru_cache(maxsize=256)
-def get_symbol_closing_price(symbol, datestr, epsilon=1e-10, cacheddir=None, backtrack=False):
+def get_symbol_closing_price(
+        symbol: str,
+        datestr: str,
+        epsilon: float=1e-10,
+        cacheddir: Union[Path, str]=None,
+        backtrack: bool=False
+) -> float:
     df = get_yahoofinance_data(symbol, datestr, datestr, cacheddir=cacheddir)
     if len(df) == 0:
         if backtrack:
@@ -167,12 +187,21 @@ def get_symbol_closing_price(symbol, datestr, epsilon=1e-10, cacheddir=None, bac
         return df['Close'][0]
 
 
-def finding_missing_symbols_in_cache(symbols, startdate, enddate, cacheddir):
-    if not os.path.exists(os.path.join(cacheddir, METATABLE_FILENAME)):
+def finding_missing_symbols_in_cache(
+        symbols: list[str],
+        startdate: str,
+        enddate: str,
+        cacheddir: Union[str, Path]
+) -> list[str]:
+    if isinstance(cacheddir, str):
+        cacheddir = Path(cacheddir)
+
+    cached_metafile_path = cacheddir / METATABLE_FILENAME
+    if not cached_metafile_path.exists():
         return symbols
 
     # in table
-    metatable = pd.read_hdf(os.path.join(cacheddir, METATABLE_FILENAME), 'metatable')
+    metatable = pd.read_hdf(cached_metafile_path.as_posix(), 'metatable')
     existing_within_range_symbols = list(
         metatable['symbol'][
             (metatable['query_startdate'] <= startdate) & (metatable['query_enddate'] >= enddate)
@@ -185,10 +214,10 @@ def finding_missing_symbols_in_cache(symbols, startdate, enddate, cacheddir):
 
     # check what are in the cached directories
     existing_symbols = [
-        os.path.basename(filepath)
-        for filepath in glob.glob(os.path.join(cacheddir, '*.h5'))
+        symbolfilepath.stem
+        for symbolfilepath in cacheddir.glob("*.h5")
+        if symbolfilepath is not cached_metafile_path
     ]
-    existing_symbols = [filename[:-3] for filename in existing_symbols if filename != METATABLE_FILENAME]
     if logging.root.level >= logging.DEBUG:
         logging.debug('exisiting symbols')
         for symbol in existing_symbols:
@@ -199,33 +228,36 @@ def finding_missing_symbols_in_cache(symbols, startdate, enddate, cacheddir):
     return sorted(list(set(symbols) - set(existing_valid_symbols)))
 
 
-def dataframe_to_hdf(df, filepath, key):
-    df.to_hdf(filepath, key=key)
+def dataframe_to_hdf(df: pd.DataFrame, filepath: Union[Path, str], key: str) -> None:
+    df.to_hdf(filepath if isinstance(filepath, str) else filepath.as_posix(), key=key)
 
 
 def generating_cached_yahoofinance_data(
-        symbols,
-        startdate,
-        enddate,
-        cacheddir,
-        slicebatch=50,
-        waittime=1,
-        yfinance_multithreads=False,
-        io_multithreads=False
-):
+        symbols: list[str],
+        startdate: str,
+        enddate: str,
+        cacheddir: Union[str, Path],
+        slicebatch: int=50,
+        waittime: int=1,
+        yfinance_multithreads: bool=False,
+        io_multithreads: bool=False
+) -> None:
+    if isinstance(cacheddir, str):
+        cacheddir = Path(cacheddir)
+    cached_metafile_path = cacheddir / METATABLE_FILENAME
     tocache_symbols = finding_missing_symbols_in_cache(symbols, startdate, enddate, cacheddir)
 
-    logging.info('Total number of symbols: {}'.format(len(symbols)))
-    logging.info('Total number of symbols needed to cache: {}'.format(len(tocache_symbols)))
-    if not os.path.exists(cacheddir) or (os.path.exists(cacheddir) and not os.path.isdir(cacheddir)):
-        logging.info('Creating directory: {}'.format(cacheddir))
-        os.makedirs(cacheddir)
-    if not os.path.exists(os.path.join(cacheddir, METATABLE_FILENAME)):
-        logging.info('Creating file: {}'.format(os.path.join(cacheddir, METATABLE_FILENAME)))
-        metatable_h5file = tb.open_file(os.path.join(cacheddir, METATABLE_FILENAME), 'w')
+    logging.info(f'Total number of symbols: {len(symbols)}')
+    logging.info(f'Total number of symbols needed to cache: {len(tocache_symbols)}')
+    if not cacheddir.is_dir():
+        logging.info(f'Creating directory: {cacheddir.as_posix()}')
+        cacheddir.mkdir()
+    if not cached_metafile_path.exists():
+        logging.info(f'Creating file: {cached_metafile_path.as_posix()}')
+        metatable_h5file = tb.open_file(cached_metafile_path.as_posix(), 'w')
         table = metatable_h5file.create_table('/', 'metatable', METATABLE_ROWDES, title='metatable')
     else:
-        metatable_h5file = tb.open_file(os.path.join(cacheddir, METATABLE_FILENAME), 'r+')
+        metatable_h5file = tb.open_file(cached_metafile_path.as_posix(), 'r+')
         table = metatable_h5file.root.metatable
 
     nbsymbols = len(tocache_symbols)
@@ -254,19 +286,19 @@ def generating_cached_yahoofinance_data(
                 thissymbol_startdate = '0000-00-00'
                 thissymbol_enddate = '0000-00-00'
 
-            logging.debug('Caching data for {} from {} to {}'.format(symbol, startdate, enddate))
+            logging.debug(f'Caching data for {symbol} from {startdate} to {enddate}')
             if not io_multithreads:
-                dataframe_to_hdf(df, os.path.join(cacheddir, '{}.h5'.format(symbol)), key='yahoodata')
+                dataframe_to_hdf(df, cacheddir / f'{symbol}.h5', key='yahoodata')
             else:
                 thread = threading.Thread(
                     target=dataframe_to_hdf,
-                    args=(df, os.path.join(cacheddir, '{}.h5'.format(symbol)), 'yahoodata')
+                    args=(df, cacheddir / f'{symbol}.h5', 'yahoodata')
                 )
                 thread.start()
                 writing_threads.append(thread)
 
                 try:
-                    logging.debug('Creating symbol {} in metatable'.format(symbol))
+                    logging.debug(f'Creating symbol {symbol} in metatable')
                     newrow = table.row
                     newrow['symbol'] = symbol
                     newrow['query_startdate'] = startdate
@@ -276,7 +308,7 @@ def generating_cached_yahoofinance_data(
                     newrow.append()
 
                 except tables.HDF5ExtError as e:
-                    logging.error('Cannot append record for symbol {}'.format(symbol))
+                    logging.error(f'Cannot append record for symbol {symbol}')
                     traceback.print_exc()
                     continue
 
@@ -290,7 +322,7 @@ def generating_cached_yahoofinance_data(
 
 
 @lru_cache(maxsize=30)
-def get_dividends_df(symbol):
+def get_dividends_df(symbol: str) -> pd.DataFrame:
     ticker = yf.Ticker(symbol)
     df = pd.DataFrame(ticker.dividends)
     df['TimeStamp'] = df.index.map(lambda item: datetime.strftime(item, '%Y-%m-%d'))
