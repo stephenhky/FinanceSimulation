@@ -64,4 +64,4 @@ include-package-data = true
 retrieve_stock_symbols = "finsim.retrieve_stock_symbols_cli:main_cli"
 
 [project.optional-dependencies]
-test = ["unittest2", "pytest", "pytest-cython"]
+test = ["unittest2", "pytest"]
