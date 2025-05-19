@@ -7,12 +7,10 @@ import json
 
 import numpy as np
 import pandas as pd
+
+from . import InsufficientSharesException
 from .portfolio import Portfolio
 from ..data.preader import get_dividends_df
-
-
-class InsufficientSharesException(Exception):
-    pass
 
 
 class DynamicPortfolio(Portfolio):
