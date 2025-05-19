@@ -3,10 +3,15 @@ import logging
 from functools import partial
 from itertools import product
 from datetime import datetime
+from pathlib import Path
+from typing import Union, Tuple
 
 import numpy as np
-from scipy.optimize import minimize
+import numpy.typing as npt
+import pandas as pd
+from scipy.optimize import minimize, OptimizeResult
 from tqdm import tqdm
+import numba as nb
 
 from .metrics import sharpe_ratio, mpt_costfunction, mpt_entropy_costfunction
 from ..helper import align_timestamps_stock_dataframes
@@ -16,15 +21,26 @@ from ...estimate.fit import fit_multivariate_BlackScholesMerton_model, fit_Black
     fit_timeweighted_BlackScholesMerton_model, fit_timeweighted_multivariate_BlackScholesMerton_model
 
 
-def getarrayelementminusminvalue(array, minvalue, index):
+@nb.njit(nb.float64(nb.float64[:], nb.float64, nb.int32))
+def getarrayelementminusminvalue(
+        array: npt.NDArray[np.float64],
+        minvalue: float,
+        index: int
+) -> float:
     return array[index] - minvalue
 
 
-def checksumarray(array, total):
+@nb.njit(nb.float64(nb.float64[:], nb.float64))
+def checksumarray(array: npt.NDArray[np.float64], total: float) -> float:
     return total - np.sum(array)
 
 
-def optimized_portfolio_on_sharperatio(r, cov, rf, minweight=0.):
+def optimized_portfolio_on_sharperatio(
+        r: npt.NDArray[np.float64],
+        cov: npt.NDArray[np.float64],
+        rf: float,
+        minweight: float=0.
+) -> OptimizeResult:
     func = partial(sharpe_ratio, r=r, cov=cov, rf=rf)
     nbstocks = len(r)
     initialguess = np.repeat(1 / nbstocks, nbstocks)
@@ -44,7 +60,13 @@ def optimized_portfolio_on_sharperatio(r, cov, rf, minweight=0.):
     )
 
 
-def optimized_portfolio_mpt_costfunction(r, cov, rf, lamb, V0=10.):
+def optimized_portfolio_mpt_costfunction(
+        r: npt.NDArray[np.float64],
+        cov: npt.NDArray[np.float64],
+        rf: float,
+        lamb: float,
+        V0: float=10.
+) -> OptimizeResult:
     func = partial(mpt_costfunction, r=r, cov=cov, rf=rf, lamb=lamb, V0=V0)
     nbstocks = len(r)
     constraints = [
@@ -64,7 +86,14 @@ def optimized_portfolio_mpt_costfunction(r, cov, rf, lamb, V0=10.):
     )
 
 
-def optimized_portfolio_mpt_entropy_costfunction(r, cov, rf, lamb0, lamb1, V=10.):
+def optimized_portfolio_mpt_entropy_costfunction(
+        r: npt.NDArray[np.float64],
+        cov: npt.NDArray[np.float64],
+        rf: float,
+        lamb0: float,
+        lamb1: float,
+        V: float=10.
+) -> OptimizeResult:
     func = partial(mpt_entropy_costfunction, r=r, cov=cov, rf=rf, lamb0=lamb0, lamb1=lamb1, V=V)
     nbstocks = len(r)
     constraints = [
@@ -84,12 +113,12 @@ def optimized_portfolio_mpt_entropy_costfunction(r, cov, rf, lamb0, lamb1, V=10.
     )
 
 
-def intermediate_wrangle_stock_df_without_dividends(stock_df):
+def intermediate_wrangle_stock_df_without_dividends(stock_df: pd.DataFrame) -> pd.DataFrame:
     stock_df.loc[:, 'EffVal'] = stock_df['Close'] * 1.
     return stock_df
 
 
-def intermediate_wrangle_stock_df_with_dividends(stock_df, sym):
+def intermediate_wrangle_stock_df_with_dividends(stock_df: pd.DataFrame, sym: str) -> pd.DataFrame:
     dividends_df = get_dividends_df(sym)
     dividends_df = dividends_df.rename(columns={'date': 'TimeStamp'})
     dividends_df.loc[:, 'Cash'] = np.cumsum(dividends_df['Dividends'].ravel())
@@ -101,13 +130,13 @@ def intermediate_wrangle_stock_df_with_dividends(stock_df, sym):
 
 
 def get_BlackScholesMerton_stocks_estimation(
-        symbols,
-        startdate,
-        enddate,
-        progressbar=True,
-        cacheddir=None,
-        include_dividends=False
-):
+        symbols: list[str],
+        startdate: str,
+        enddate: str,
+        progressbar: bool=True,
+        cacheddir: Union[Path, str]=None,
+        include_dividends: bool=False
+) -> Tuple[npt.NDArray, npt.NDArray]:
     logging.info('Reading financial data...')
     symreadingprogress = tqdm(symbols) if progressbar else symbols
     stocks_data_dfs = [
@@ -132,7 +161,7 @@ def get_BlackScholesMerton_stocks_estimation(
     maxlen = max(len(stocks_data_dfs[i]) for i in range(len(stocks_data_dfs)))
     minlen = min(len(stocks_data_dfs[i]) for i in range(len(stocks_data_dfs)) if len(stocks_data_dfs) > 0)   # exclude those stocks that do not exist
     absent_stocks = {sym for sym, df in zip(symbols, stocks_data_dfs) if len(df) == 0}
-    logging.debug('maxlen = {}; minlen = {}; absent_stocks: {}'.format(maxlen, minlen, ', '.join(absent_stocks)))
+    logging.debug(f'{maxlen=}; {minlen=}; absent_stocks: {", ".join(absent_stocks)}')
 
     # same length, directly compare
     if maxlen == minlen:
@@ -170,12 +199,12 @@ def get_BlackScholesMerton_stocks_estimation(
 
 
 def get_stocks_timeweighted_estimation(
-        symbols,
-        timeweightdf,
-        progressbar=True,
-        cacheddir=None,
-        include_dividends=False
-):
+        symbols: list[str],
+        timeweightdf: pd.DataFrame,
+        progressbar: bool=True,
+        cacheddir: Union[Path, str]=None,
+        include_dividends: bool=False
+) -> Tuple[npt.NDArray, npt.NDArray]:
     logging.info('Parsing weights according to date')
     startdate = timeweightdf['TimeStamp'][0]
     if isinstance(startdate, datetime):
@@ -209,7 +238,7 @@ def get_stocks_timeweighted_estimation(
     minlen = min(len(stocks_data_dfs[i]) for i in range(len(stocks_data_dfs)) if
                  len(stocks_data_dfs) > 0)  # exclude those stocks that do not exist
     absent_stocks = {sym for sym, df in zip(symbols, stocks_data_dfs) if len(df) == 0}
-    logging.debug('maxlen = {}; minlen = {}; absent_stocks: {}'.format(maxlen, minlen, ', '.join(absent_stocks)))
+    logging.debug(f'{maxlen=}; {minlen=}; absent_stocks: {", ".join(absent_stocks)}')
 
     # same length, directly compare
     if maxlen == minlen and maxlen == len(timeweightdf):
