@@ -2,7 +2,8 @@
 import unittest
 import logging
 
-from finsim.portfolio import DynamicPortfolio, InsufficientSharesException
+from finsim.portfolio import DynamicPortfolio
+from finsim.portfolio.helper import InsufficientSharesException
 
 logging.basicConfig(level=logging.DEBUG)
 

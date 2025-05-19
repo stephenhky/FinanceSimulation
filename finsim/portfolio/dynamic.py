@@ -8,7 +8,7 @@ import json
 import numpy as np
 import pandas as pd
 
-from . import InsufficientSharesException
+from .helper import InsufficientSharesException
 from .portfolio import Portfolio
 from ..data.preader import get_dividends_df
 
