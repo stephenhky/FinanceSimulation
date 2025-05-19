@@ -25,7 +25,8 @@ class OptimizedWeightingPolicy(ABC):
             rf: float,
             r: npt.NDArray[np.float64]=None,
             cov: npt.NDArray[np.float64]=None,
-            symbols: list[str]=None):
+            symbols: list[str]=None
+    ):
         self.rf = rf
 
         assert len(r) == cov.shape[0]
