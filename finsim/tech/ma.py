@@ -1,12 +1,21 @@
 
 from datetime import timedelta, datetime
+from typing import Union
+from pathlib import Path
 
 import numpy as np
+import pandas as pd
 
 from ..data.preader import get_yahoofinance_data
 
 
-def get_movingaverage_price_data(symbol, startdate, enddate, dayswindow, cacheddir=None):
+def get_movingaverage_price_data(
+        symbol: str,
+        startdate: str,
+        enddate: str,
+        dayswindow: int,
+        cacheddir: Union[Path, str]=None
+) -> pd.DataFrame:
     # making the days difference calculation
     mastartdate = (datetime.strptime(startdate, '%Y-%m-%d') - timedelta(days=dayswindow)).strftime('%Y-%m-%d')
     df = get_yahoofinance_data(symbol, mastartdate, enddate, cacheddir=cacheddir)

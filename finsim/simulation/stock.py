@@ -3,23 +3,24 @@ from abc import ABC, abstractmethod
 from math import log, exp
 
 import numpy as np
+import numpy.typing as npt
 
 
 class AbstractStochasticValue(ABC):
     @abstractmethod
-    def generate_time_series(self, T, dt, nbsimulations=1):
+    def generate_time_series(self, T: float, dt: float, nbsimulations: int=1):
         pass
 
 
 class BlackScholesMertonStockPrices(AbstractStochasticValue):
-    def __init__(self, S0, r, sigma):
+    def __init__(self, S0: float, r: float, sigma: float):
         self.S0 = S0
         self.r = r
         self.sigma = sigma
 
         self.logS0 = log(S0)
 
-    def generate_time_series(self, T, dt, nbsimulations=1):
+    def generate_time_series(self, T, dt, nbsimulations=1) -> npt.NDArray[np.float64]:
         nbtimesteps = int(T // dt) + 1
         z = np.random.normal(size=(nbsimulations, nbtimesteps))
         logS = np.zeros((nbsimulations, nbtimesteps))
@@ -32,13 +33,13 @@ class BlackScholesMertonStockPrices(AbstractStochasticValue):
 
 
 class SquareRootDiffusionProcesses(AbstractStochasticValue):
-    def __init__(self, x0, theta, kappa, sigma):
+    def __init__(self, x0: float, theta: float, kappa: float, sigma: float):
         self.x0 = x0
         self.theta = theta
         self.kappa = kappa
         self.sigma = sigma
 
-    def generate_time_series(self, T, dt, nbsimulations=1):
+    def generate_time_series(self, T: float, dt: float, nbsimulations: int=1) -> npt.NDArray[np.float64]:
         nbtimesteps = int(T // dt) + 1
         z = np.random.normal(size=(nbsimulations, nbtimesteps))
         xarray = np.zeros((nbsimulations, nbtimesteps))
@@ -51,7 +52,7 @@ class SquareRootDiffusionProcesses(AbstractStochasticValue):
 
 
 class HestonStockPrices(AbstractStochasticValue):
-    def __init__(self, S0, r, v0, theta, kappa, sigma_v, rho):
+    def __init__(self, S0: float, r: float, v0: float, theta: float, kappa: float, sigma_v: float, rho: float):
         self.S0 = S0
         self.r = r
         self.v0 = v0
@@ -63,7 +64,7 @@ class HestonStockPrices(AbstractStochasticValue):
         self.logS0 = log(self.S0)
         self.rho = np.array([[1., self.rho], [self.rho, 1.]])
 
-    def generate_time_series(self, T, dt, nbsimulations=1):
+    def generate_time_series(self, T: float, dt: float, nbsimulations: int=1) -> npt.NDArray[np.float64]:
         nbtimesteps = int(T // dt) + 1
 
         # generate correlated random numbers
@@ -91,7 +92,7 @@ class HestonStockPrices(AbstractStochasticValue):
 
 
 class MertonJumpDiffusionStockPrices(AbstractStochasticValue):
-    def __init__(self, S0, r, sigma, mu, lamb, delta):
+    def __init__(self, S0: float, r: float, sigma: float, mu: float, lamb: float, delta: float):
         self.S0 = S0
         self.r = r
         self.sigma = sigma
@@ -101,7 +102,7 @@ class MertonJumpDiffusionStockPrices(AbstractStochasticValue):
 
         self.logS0 = log(self.S0)
 
-    def generate_time_series(self, T, dt, nbsimulations=1):
+    def generate_time_series(self, T: float, dt: float, nbsimulations: int=1) -> npt.NDArray[np.float64]:
         nbtimesteps = int(T // dt) + 1
         z1 = np.random.normal(size=(nbsimulations, nbtimesteps))
         logS = np.zeros((nbsimulations, nbtimesteps))
