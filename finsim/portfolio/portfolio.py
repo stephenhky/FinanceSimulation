@@ -1,10 +1,15 @@
 
 import json
 import logging
+import sys
 from collections import defaultdict
-from typing import Union, Self, Any
+from typing import Union, Any
 from pathlib import Path
 from io import TextIOWrapper
+if sys.version_info < (3, 11):
+    from typing_extensions import Self
+else:
+    from typing import Self
 
 from tqdm import tqdm
 import numpy as np

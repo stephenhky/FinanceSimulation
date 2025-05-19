@@ -4,9 +4,15 @@ from operator import itemgetter
 from collections import defaultdict
 import logging
 import json
-from typing import Union, Any, Self
+import sys
+from typing import Union, Any
 from pathlib import Path
 from io import TextIOWrapper
+import warnings
+if sys.version_info < (3, 11):
+    from typing_extensions import Self
+else:
+    from typing import Self
 
 import numpy as np
 import pandas as pd
@@ -137,6 +143,8 @@ class DynamicPortfolio(Portfolio):
             progressbar: bool = False
     ) -> pd.DataFrame:
         assert self.is_sorted()
+        if progressbar:
+            warnings.warn("Use of progress bar for DynamicPortfolio is deprecated.")
 
         startidx = self.find_cursor_for_date(startdate)
         endidx = self.find_cursor_for_date(enddate)
@@ -263,9 +271,9 @@ class DynamicPortfolioWithDividends(DynamicPortfolio):
             startdate: str,
             enddate: str,
             cacheddir: Union[Path, str]=None,
-            progressbar: bool= True
+            progressbar: bool= False
     ) -> pd.DataFrame:
-        worthdf = super(DynamicPortfolioWithDividends, self).get_portfolio_values_overtime(startdate, enddate, cacheddir=cacheddir)
+        worthdf = super(DynamicPortfolioWithDividends, self).get_portfolio_values_overtime(startdate, enddate, cacheddir=cacheddir, progressbar=progressbar)
         worthdf.rename(columns={'value': 'stock_value'}, inplace=True)
         self.calculate_cash_from_dividends(enddate)
         
