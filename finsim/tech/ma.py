@@ -1,7 +1,7 @@
 
 from datetime import timedelta, datetime
 from typing import Union
-from pathlib import Path
+from os import PathLike
 
 import numpy as np
 import pandas as pd
@@ -14,7 +14,7 @@ def get_movingaverage_price_data(
         startdate: str,
         enddate: str,
         dayswindow: int,
-        cacheddir: Union[Path, str]=None
+        cacheddir: Union[PathLike, str]=None
 ) -> pd.DataFrame:
     # making the days difference calculation
     mastartdate = (datetime.strptime(startdate, '%Y-%m-%d') - timedelta(days=dayswindow)).strftime('%Y-%m-%d')

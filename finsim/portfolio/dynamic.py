@@ -7,6 +7,7 @@ import json
 import sys
 from typing import Union, Any
 from pathlib import Path
+from os import PathLike
 from io import TextIOWrapper
 import warnings
 if sys.version_info < (3, 11):
@@ -27,7 +28,7 @@ class DynamicPortfolio(Portfolio):
             self,
             symbol_nbshares: dict[str, Union[int, float]],
             current_date: str,
-            cacheddir: Union[Path, str]=None
+            cacheddir: Union[PathLike, str]=None
     ):
         # current_date is a string, of format '%Y-%m-%d', such as '2020-02-23'
         super(DynamicPortfolio, self).__init__(symbol_nbshares, cacheddir=cacheddir)

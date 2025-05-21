@@ -4,7 +4,7 @@ import pandas as pd
 
 
 def align_timestamps_stock_dataframes(
-        stocks_data_dfs: pd.DataFrame,
+        stocks_data_dfs: list[pd.DataFrame],
         timestamps_as_index: bool=False
 ) -> pd.DataFrame:
     # unify the timestamps columns

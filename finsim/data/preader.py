@@ -1,11 +1,10 @@
 
 from datetime import datetime, timedelta
-import os
 from typing import Union
 from pathlib import Path
+from os import PathLike
 import logging
 from time import sleep
-import glob
 from functools import lru_cache
 import threading
 import traceback
@@ -98,7 +97,7 @@ def get_yahoofinance_data(
         symbol: str,
         startdate: str,
         enddate: str,
-        cacheddir: Union[str, Path]=None
+        cacheddir: Union[str, PathLike]=None
 ) -> pd.DataFrame:
     if cacheddir is None:
         return extract_online_yahoofinance_data(symbol, startdate, enddate)
@@ -135,7 +134,7 @@ def get_yahoofinance_data(
     df.to_hdf((cacheddir / f"{symbol}.h5").as_posix(), key='yahoodata')
 
     if preexist:
-        logging.debug('Updating symbol {} in metatable.'.format(symbol))
+        logging.debug(f'Updating symbol {symbol} in metatable.')
         for row in table.where('symbol=="{}"'.format(symbol)):
             row['query_startdate'] = startdate
             row['query_enddate'] = enddate
@@ -147,7 +146,7 @@ def get_yahoofinance_data(
                 row['data_enddate'] = ' 0000-00-00'
             row.update()
     else:
-        logging.debug('Creating symbol {} in metatable'.format(symbol))
+        logging.debug(f'Creating symbol {symbol} in metatable')
         newrow = table.row
         newrow['symbol'] = symbol
         newrow['query_startdate'] = startdate
@@ -201,7 +200,7 @@ def finding_missing_symbols_in_cache(
         return symbols
 
     # in table
-    metatable = pd.read_hdf(cached_metafile_path.as_posix(), 'metatable')
+    metatable = pd.read_hdf(cached_metafile_path, 'metatable')
     existing_within_range_symbols = list(
         metatable['symbol'][
             (metatable['query_startdate'] <= startdate) & (metatable['query_enddate'] >= enddate)
