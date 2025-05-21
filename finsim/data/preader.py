@@ -172,7 +172,7 @@ def get_symbol_closing_price(
         symbol: str,
         datestr: str,
         epsilon: float=1e-10,
-        cacheddir: Union[Path, str]=None,
+        cacheddir: Union[PathLike, str]=None,
         backtrack: bool=False
 ) -> float:
     df = get_yahoofinance_data(symbol, datestr, datestr, cacheddir=cacheddir)
