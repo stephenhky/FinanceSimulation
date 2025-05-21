@@ -11,7 +11,6 @@ shared: &shared
         command: |
           sudo apt-get update
           sudo apt-get install -y libc6
-#          sudo apt-get install -y g++
 
     - run:
         name: Installing Packages
