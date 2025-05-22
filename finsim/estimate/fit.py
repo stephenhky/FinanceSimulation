@@ -1,9 +1,9 @@
 
 from typing import Literal, Tuple
+from itertools import product
 
 import numpy as np
-import numpy.typing as npt
-from itertools import product
+from nptyping import NDArray, Shape, Float, Datetime64
 
 from .constants import dividing_factors_dict
 from .native.pyfit import python_fit_BlackScholesMerton_model, python_fit_multivariate_BlackScholesMerton_model
@@ -12,8 +12,8 @@ from .native.pyfit import python_fit_BlackScholesMerton_model, python_fit_multiv
 # Note: always round-off to seconds first, but flexible about the unit to be used.
 
 def fit_BlackScholesMerton_model(
-        timestamps: npt.NDArray[np.datetime64],
-        prices: npt.NDArray[np.float64],
+        timestamps: NDArray[Shape["*"], Datetime64],
+        prices: NDArray[Shape["*"], Float],
         unit: Literal['second', 'minute', 'hour', 'day', 'year']='year',
         lowlevellang: Literal['C', 'P']='P'
 ) -> Tuple[float, float]:
@@ -33,11 +33,11 @@ def fit_BlackScholesMerton_model(
 
 
 def fit_multivariate_BlackScholesMerton_model(
-        timestamps: npt.NDArray[np.datetime64],
-        multiprices: npt.NDArray[np.float64],
+        timestamps: NDArray[Shape["*"], Datetime64],
+        multiprices: NDArray[Shape["*, *"], Float],
         unit: Literal['second', 'minute', 'hour', 'day', 'year']='year',
         lowlevellang: Literal['C', 'P']='P'
-) -> Tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
+) -> Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
     dividing_factor = dividing_factors_dict[unit]
 
     ts = np.array(timestamps, dtype='datetime64[s]')
@@ -56,9 +56,9 @@ def fit_multivariate_BlackScholesMerton_model(
 ######## routines below are for time-weighted portfolio building
 
 def fit_timeweighted_BlackScholesMerton_model(
-        timestamps: npt.NDArray[np.datetime64],
-        prices: npt.NDArray[np.float64],
-        weights: npt.NDArray[np.float64],
+        timestamps: NDArray[Shape["*"], Datetime64],
+        prices: NDArray[Shape["*"], Float],
+        weights: NDArray[Shape["*"], Float],
         unit: Literal['second', 'minute', 'hour', 'day', 'year']='year'
 ) -> Tuple[float, float]:
     dividing_factor = dividing_factors_dict[unit]
@@ -77,11 +77,11 @@ def fit_timeweighted_BlackScholesMerton_model(
 
 
 def fit_timeweighted_multivariate_BlackScholesMerton_model(
-        timestamps: npt.NDArray[np.datetime64],
-        multiprices: npt.NDArray[np.float64],
-        weights: npt.NDArray[np.float64],
+        timestamps: NDArray[Shape["*"], Datetime64],
+        multiprices: NDArray[Shape["*, *"], Float],
+        weights: NDArray[Shape["*"], Float],
         unit: Literal['second', 'minute', 'hour', 'day', 'year']='year'
-) -> Tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
+) -> Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
     dividing_factor = dividing_factors_dict[unit]
 
     ts = np.array(timestamps, dtype='datetime64[s]')

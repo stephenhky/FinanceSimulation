@@ -2,14 +2,14 @@
 from typing import Tuple
 
 import numpy as np
-import numpy.typing as npt
 import numba as nb
+from nptyping import NDArray, Shape, Float
 
 
 @nb.njit
 def python_fit_BlackScholesMerton_model(
-        ts: npt.NDArray[np.float64],
-        prices: npt.NDArray[np.float64]
+        ts: NDArray[Shape["*"], Float],
+        prices: NDArray[Shape["*"], Float]
 ) -> Tuple[float, float]:
     dlogS = np.log(prices[1:] / prices[:-1])
     dt = ts[1:] - ts[:-1]
@@ -22,9 +22,9 @@ def python_fit_BlackScholesMerton_model(
 
 @nb.njit
 def python_fit_multivariate_BlackScholesMerton_model(
-        ts: npt.NDArray[np.float64],
-        multiprices: npt.NDArray[np.float64]
-) -> Tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
+        ts: NDArray[Shape["*"], Float],
+        multiprices: NDArray[Shape["*, *"], Float]
+) -> Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
     dlogS = np.log(multiprices[:, 1:] / multiprices[:, :-1])
     dt = ts[1:] - ts[:-1]
 

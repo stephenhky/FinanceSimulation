@@ -2,16 +2,16 @@
 from typing import Literal
 
 import numpy as np
-import numpy.typing as npt
 from scipy import stats
+from nptyping import NDArray, Shape, Float, Datetime64
 
 from .native.pyrisk import python_estimate_downside_risk, python_estimate_upside_risk
 from .constants import dividing_factors_dict
 
 
 def estimate_downside_risk(
-        timestamps: npt.NDArray[np.datetime64],
-        prices: npt.NDArray[np.float64],
+        timestamps: NDArray[Shape["*"], Datetime64],
+        prices: NDArray[Shape["*"], Float],
         target_return: float,
         unit: Literal['second', 'minute', 'hour', 'day', 'year']='year',
         lowlevellang: Literal['C', 'P']='P'
@@ -32,8 +32,8 @@ def estimate_downside_risk(
 
 
 def estimate_upside_risk(
-        timestamps: npt.NDArray[np.datetime64],
-        prices: npt.NDArray[np.float64],
+        timestamps: NDArray[Shape["*"], Datetime64],
+        prices: NDArray[Shape["*"], Float],
         target_return: float,
         unit: Literal['second', 'minute', 'hour', 'day', 'year'] = 'year',
         lowlevellang: Literal['C', 'P'] = 'P'
@@ -54,9 +54,9 @@ def estimate_upside_risk(
 
 
 def estimate_beta(
-        timestamps: npt.NDArray[np.datetime64],
-        prices: npt.NDArray[np.float64],
-        market_prices: npt.NDArray[np.float64],
+        timestamps: NDArray[Shape["*"], Datetime64],
+        prices: NDArray[Shape["*"], Float],
+        market_prices: NDArray[Shape["*"], Float],
         unit: Literal['second', 'minute', 'hour', 'day', 'year']='year'
 ) -> float:
     dividing_factor = dividing_factors_dict[unit]

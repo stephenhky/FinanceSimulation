@@ -36,7 +36,8 @@ dependencies = [
     "yfinance>=0.2.59",
     "openpyxl>=3.1.0",
     "numba",
-    "typing-extensions"
+    "typing-extensions",
+    "nptyping"
 ]
 
 [project.urls]
