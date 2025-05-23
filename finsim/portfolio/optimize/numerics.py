@@ -204,7 +204,7 @@ def get_stocks_timeweighted_estimation(
         progressbar: bool=True,
         cacheddir: Union[Path, str]=None,
         include_dividends: bool=False
-) -> Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*. *"], Float]]:
+) -> Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
     logging.info('Parsing weights according to date')
     startdate = timeweightdf['TimeStamp'][0]
     if isinstance(startdate, datetime):
