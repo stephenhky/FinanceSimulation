@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from math import log, exp
 
 import numpy as np
-import numpy.typing as npt
+from nptyping import NDArray, Shape, Float
 
 
 class AbstractStochasticValue(ABC):
@@ -20,7 +20,7 @@ class BlackScholesMertonStockPrices(AbstractStochasticValue):
 
         self.logS0 = log(S0)
 
-    def generate_time_series(self, T, dt, nbsimulations=1) -> npt.NDArray[np.float64]:
+    def generate_time_series(self, T, dt, nbsimulations=1) -> NDArray[Shape["*"], Float]:
         nbtimesteps = int(T // dt) + 1
         z = np.random.normal(size=(nbsimulations, nbtimesteps))
         logS = np.zeros((nbsimulations, nbtimesteps))
@@ -39,7 +39,7 @@ class SquareRootDiffusionProcesses(AbstractStochasticValue):
         self.kappa = kappa
         self.sigma = sigma
 
-    def generate_time_series(self, T: float, dt: float, nbsimulations: int=1) -> npt.NDArray[np.float64]:
+    def generate_time_series(self, T: float, dt: float, nbsimulations: int=1) -> NDArray[Shape["*"], Float]:
         nbtimesteps = int(T // dt) + 1
         z = np.random.normal(size=(nbsimulations, nbtimesteps))
         xarray = np.zeros((nbsimulations, nbtimesteps))
@@ -64,7 +64,7 @@ class HestonStockPrices(AbstractStochasticValue):
         self.logS0 = log(self.S0)
         self.rho = np.array([[1., self.rho], [self.rho, 1.]])
 
-    def generate_time_series(self, T: float, dt: float, nbsimulations: int=1) -> npt.NDArray[np.float64]:
+    def generate_time_series(self, T: float, dt: float, nbsimulations: int=1) -> NDArray[Shape["*"], Float]:
         nbtimesteps = int(T // dt) + 1
 
         # generate correlated random numbers
@@ -102,7 +102,7 @@ class MertonJumpDiffusionStockPrices(AbstractStochasticValue):
 
         self.logS0 = log(self.S0)
 
-    def generate_time_series(self, T: float, dt: float, nbsimulations: int=1) -> npt.NDArray[np.float64]:
+    def generate_time_series(self, T: float, dt: float, nbsimulations: int=1) -> NDArray[Shape["*"], Float]:
         nbtimesteps = int(T // dt) + 1
         z1 = np.random.normal(size=(nbsimulations, nbtimesteps))
         logS = np.zeros((nbsimulations, nbtimesteps))
