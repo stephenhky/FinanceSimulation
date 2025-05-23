@@ -4,16 +4,16 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 import numpy as np
-import numpy.typing as npt
 import pandas as pd
+from nptyping import NDArray, Shape, Float
 
 from .numerics import optimized_portfolio_on_sharperatio, optimized_portfolio_mpt_costfunction, optimized_portfolio_mpt_entropy_costfunction
 
 
-def mat_to_list(mat: np.ndarray[np.float64]) -> list[list[float]]:
+def mat_to_list(mat: NDArray[Shape["*, *"], Float]) -> list[list[float]]:
     return [
         [
-            mat[i, j] for j in range(mat.shape[1])
+            float(mat[i, j]) for j in range(mat.shape[1])
         ]
         for i in range(mat.shape[0])
     ]
@@ -23,8 +23,8 @@ class OptimizedWeightingPolicy(ABC):
     def __init__(
             self,
             rf: float,
-            r: npt.NDArray[np.float64]=None,
-            cov: npt.NDArray[np.float64]=None,
+            r: NDArray[Shape["*"], Float]=None,
+            cov: NDArray[Shape["*, *"], Float]=None,
             symbols: list[str]=None
     ):
         self.rf = rf
@@ -43,8 +43,8 @@ class OptimizedWeightingPolicy(ABC):
     @abstractmethod
     def optimize(
             self,
-            r: npt.NDArray[np.float64],
-            cov: npt.NDArray[np.float64],
+            r: NDArray[Shape["*"], Float],
+            cov: NDArray[Shape["*, *"], Float],
             symbols: list[str]=None
     ) -> None:
         pass
@@ -55,7 +55,7 @@ class OptimizedWeightingPolicy(ABC):
 
     @property
     @abstractmethod
-    def weights(self) -> npt.NDArray[np.float64]:
+    def weights(self) -> NDArray[Shape["*"], Float]:
         pass
 
     @property
@@ -69,7 +69,7 @@ class OptimizedWeightingPolicy(ABC):
         pass
 
     @property
-    def correlation_matrix(self) -> npt.NDArray[np.float64]:
+    def correlation_matrix(self) -> NDArray[Shape["*, *"], Float]:
         corr = np.zeros(self.cov.shape)
         for i, j in product(range(self.cov.shape[0]), range(self.cov.shape[1])):
             corr[i, j] = self.cov[i, j] / np.sqrt(self.cov[i, i] * self.cov[j, j])
@@ -109,8 +109,8 @@ class OptimizedWeightingPolicyUsingMPTSharpeRatio(OptimizedWeightingPolicy):
     def __init__(
             self,
             rf: float,
-            r: npt.NDArray[np.float64]=None,
-            cov: npt.NDArray[np.float64]=None,
+            r: NDArray[Shape["*"], Float]=None,
+            cov: NDArray[Shape["*, *"], Float]=None,
             symbols: list[str]=None,
             minweight: float=0.
     ):
@@ -121,8 +121,8 @@ class OptimizedWeightingPolicyUsingMPTSharpeRatio(OptimizedWeightingPolicy):
 
     def optimize(
             self,
-            r: npt.NDArray[np.float64],
-            cov: npt.NDArray[np.float64],
+            r: NDArray[Shape["*"], Float],
+            cov: NDArray[Shape["*, *"], Float],
             symbols: list[str]=None
     ) -> None:
         super(OptimizedWeightingPolicyUsingMPTSharpeRatio, self).optimize(r, cov, symbols=symbols)
@@ -139,7 +139,7 @@ class OptimizedWeightingPolicyUsingMPTSharpeRatio(OptimizedWeightingPolicy):
         self.optimized_volatility = np.sqrt(np.sum(sqweights * self.cov))
 
     @property
-    def weights(self) -> npt.NDArray[np.float64]:
+    def weights(self) -> NDArray[Shape["*"], Float]:
         return self.optimized_weights
 
     @property
@@ -169,8 +169,8 @@ class OptimizedWeightingPolicyUsingMPTCostFunction(OptimizedWeightingPolicy):
     def __init__(
             self,
             rf: float,
-            r: npt.NDArray[np.float64]=None,
-            cov: npt.NDArray[np.float64]=None,
+            r: NDArray[Shape["*"], Float],
+            cov: NDArray[Shape["*, *"], Float],
             symbols: list[str]=None,
             lamb: float=None,
             V0: float=10.0
@@ -184,8 +184,8 @@ class OptimizedWeightingPolicyUsingMPTCostFunction(OptimizedWeightingPolicy):
 
     def optimize(
             self,
-            r: npt.NDArray[np.float64],
-            cov: npt.NDArray[np.float64],
+            r: NDArray[Shape["*"], Float],
+            cov: NDArray[Shape["*, *"], Float],
             symbols: list[str]=None
     ) -> None:
         super(OptimizedWeightingPolicyUsingMPTCostFunction, self).optimize(r, cov, symbols=symbols)
@@ -203,7 +203,7 @@ class OptimizedWeightingPolicyUsingMPTCostFunction(OptimizedWeightingPolicy):
         self.optimized_volatility = np.sqrt(np.sum(sqweights * self.cov))
 
     @property
-    def weights(self) -> npt.NDArray[np.float64]:
+    def weights(self) -> NDArray[Shape["*"], Float]:
         return self.optimized_weights
 
     @property
@@ -235,8 +235,8 @@ class OptimizedWeightingPolicyUsingMPTEntropyCostFunction(OptimizedWeightingPoli
     def __init__(
             self,
             rf: float,
-            r: npt.NDArray[np.float64]=None,
-            cov: npt.NDArray[np.float64]=None,
+            r: NDArray[Shape["*"], Float]=None,
+            cov: NDArray[Shape["*, *"], Float]=None,
             symbols: list[str]=None,
             lamb0: float=None,
             lamb1: float=None,
@@ -252,8 +252,8 @@ class OptimizedWeightingPolicyUsingMPTEntropyCostFunction(OptimizedWeightingPoli
 
     def optimize(
             self,
-            r: npt.NDArray[np.float64],
-            cov: npt.NDArray[np.float64],
+            r: NDArray[Shape["*"], Float],
+            cov: NDArray[Shape["*, *"], Float],
             symbols: list[str]=None
     ) -> None:
         super(OptimizedWeightingPolicyUsingMPTEntropyCostFunction, self).optimize(r, cov, symbols=symbols)
@@ -271,7 +271,7 @@ class OptimizedWeightingPolicyUsingMPTEntropyCostFunction(OptimizedWeightingPoli
         self.optimized_volatility = np.sqrt(np.sum(sqweights * self.cov))
 
     @property
-    def weights(self) -> npt.NDArray[np.float64]:
+    def weights(self) -> NDArray[Shape["*"], Float]:
         return self.optimized_weights
 
     @property

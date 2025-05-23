@@ -13,8 +13,8 @@ else:
 
 from tqdm import tqdm
 import numpy as np
-import numpy.typing as npt
 import pandas as pd
+from nptyping import NDArray, Shape, Float
 
 from ..data.preader import get_yahoofinance_data, get_symbol_closing_price
 from .optimize.policy import OptimizedWeightingPolicy
@@ -187,7 +187,7 @@ class OptimizedPortfolio(Portfolio):
         return self.policy.portfolio_symbols
 
     @property
-    def weights(self) -> npt.NDArray[np.float64]:
+    def weights(self) -> NDArray[Shape["*"], Float]:
         return self.policy.weights
 
     @property
@@ -199,7 +199,7 @@ class OptimizedPortfolio(Portfolio):
         return self.policy.volatility
 
     @property
-    def correlation_matrix(self) -> npt.NDArray[np.float64]:
+    def correlation_matrix(self) -> NDArray[Shape["*, *"], Float]:
         return self.policy.correlation_matrix
 
     @property

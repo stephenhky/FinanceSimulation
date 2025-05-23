@@ -1,14 +1,14 @@
 
 import numpy as np
-import numpy.typing as npt
 import numba as nb
+from nptyping import NDArray, Shape, Float
 
 
 @nb.njit
 def python_sharpe_ratio(
-        weights: npt.NDArray[np.float64],
-        r: npt.NDArray[np.float64],
-        cov: npt.NDArray[np.float64],
+        weights: NDArray[Shape["*"], Float],
+        r: NDArray[Shape["*"], Float],
+        cov: NDArray[Shape["*, *"], Float],
         rf: float
 ) -> float:
     yieldrate = np.sum(weights * r)
@@ -19,9 +19,9 @@ def python_sharpe_ratio(
 
 @nb.njit
 def python_mpt_costfunction(
-        weights: npt.NDArray[np.float64],
-        r: npt.NDArray[np.float64],
-        cov: npt.NDArray[np.float64],
+        weights: NDArray[Shape["*"], Float],
+        r: NDArray[Shape["*"], Float],
+        cov: NDArray[Shape["*, *"], Float],
         rf: float,
         lamb: float,
         V0: float=10.
@@ -33,9 +33,9 @@ def python_mpt_costfunction(
 
 @nb.njit
 def python_mpt_entropy_costfunction(
-        weights: npt.NDArray[np.float64],
-        r: npt.NDArray[np.float64],
-        cov: npt.NDArray[np.float64],
+        weights: NDArray[Shape["*"], Float],
+        r: NDArray[Shape["*"], Float],
+        cov: NDArray[Shape["*, *"], Float],
         rf: float,
         lamb0: float,
         lamb1: float,

@@ -7,11 +7,11 @@ from pathlib import Path
 from typing import Union, Tuple
 
 import numpy as np
-import numpy.typing as npt
 import pandas as pd
 from scipy.optimize import minimize, OptimizeResult
 from tqdm import tqdm
 import numba as nb
+from nptyping import NDArray, Shape, Float
 
 from .metrics import sharpe_ratio, mpt_costfunction, mpt_entropy_costfunction
 from ..helper import align_timestamps_stock_dataframes
@@ -23,7 +23,7 @@ from ...estimate.fit import fit_multivariate_BlackScholesMerton_model, fit_Black
 
 @nb.njit(nb.float64(nb.float64[:], nb.float64, nb.int32))
 def getarrayelementminusminvalue(
-        array: npt.NDArray[np.float64],
+        array: NDArray[Shape["*"], Float],
         minvalue: float,
         index: int
 ) -> float:
@@ -31,13 +31,13 @@ def getarrayelementminusminvalue(
 
 
 @nb.njit(nb.float64(nb.float64[:], nb.float64))
-def checksumarray(array: npt.NDArray[np.float64], total: float) -> float:
+def checksumarray(array: NDArray[Shape["*"], Float], total: float) -> float:
     return total - np.sum(array)
 
 
 def optimized_portfolio_on_sharperatio(
-        r: npt.NDArray[np.float64],
-        cov: npt.NDArray[np.float64],
+        r: NDArray[Shape["*"], Float],
+        cov: NDArray[Shape["*, *"], Float],
         rf: float,
         minweight: float=0.
 ) -> OptimizeResult:
@@ -61,8 +61,8 @@ def optimized_portfolio_on_sharperatio(
 
 
 def optimized_portfolio_mpt_costfunction(
-        r: npt.NDArray[np.float64],
-        cov: npt.NDArray[np.float64],
+        r: NDArray[Shape["*"], Float],
+        cov: NDArray[Shape["*, *"], Float],
         rf: float,
         lamb: float,
         V0: float=10.
@@ -87,8 +87,8 @@ def optimized_portfolio_mpt_costfunction(
 
 
 def optimized_portfolio_mpt_entropy_costfunction(
-        r: npt.NDArray[np.float64],
-        cov: npt.NDArray[np.float64],
+        r: NDArray[Shape["*"], Float],
+        cov: NDArray[Shape["*, *"], Float],
         rf: float,
         lamb0: float,
         lamb1: float,
@@ -136,7 +136,7 @@ def get_BlackScholesMerton_stocks_estimation(
         progressbar: bool=True,
         cacheddir: Union[Path, str]=None,
         include_dividends: bool=False
-) -> Tuple[npt.NDArray, npt.NDArray]:
+) -> Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
     logging.info('Reading financial data...')
     symreadingprogress = tqdm(symbols) if progressbar else symbols
     stocks_data_dfs = [
@@ -204,7 +204,7 @@ def get_stocks_timeweighted_estimation(
         progressbar: bool=True,
         cacheddir: Union[Path, str]=None,
         include_dividends: bool=False
-) -> Tuple[npt.NDArray, npt.NDArray]:
+) -> Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*. *"], Float]]:
     logging.info('Parsing weights according to date')
     startdate = timeweightdf['TimeStamp'][0]
     if isinstance(startdate, datetime):

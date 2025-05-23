@@ -2,15 +2,15 @@
 from typing import Literal
 
 import numpy as np
-import numpy.typing as npt
+from nptyping import NDArray, Shape, Float
 
 from .native.pymetrics import python_sharpe_ratio, python_mpt_costfunction, python_mpt_entropy_costfunction
 
 
 def sharpe_ratio(
-        weights: npt.NDArray[np.float64],
-        r: npt.NDArray[np.float64],
-        cov: npt.NDArray[np.float64],
+        weights: NDArray[Shape["*"], Float],
+        r: NDArray[Shape["*"], Float],
+        cov: NDArray[Shape["*, *"], Float],
         rf: float,
         lowlevellang: Literal['C', 'P']='P'
 ) -> float:
@@ -23,9 +23,9 @@ def sharpe_ratio(
 
 
 def mpt_costfunction(
-        weights: npt.NDArray[np.float64],
-        r: npt.NDArray[np.float64],
-        cov: npt.NDArray[np.float64],
+        weights: NDArray[Shape["*"], Float],
+        r: NDArray[Shape["*"], Float],
+        cov: NDArray[Shape["*, *"], Float],
         rf: float,
         lamb: float,
         V0: float=10.,
@@ -40,9 +40,9 @@ def mpt_costfunction(
 
 
 def mpt_entropy_costfunction(
-        weights: npt.NDArray[np.float64],
-        r: npt.NDArray[np.float64],
-        cov: npt.NDArray[np.float64],
+        weights: NDArray[Shape["*"], Float],
+        r: NDArray[Shape["*"], Float],
+        cov: NDArray[Shape["*, *"], Float],
         rf: float,
         lamb0: float,
         lamb1: float,
