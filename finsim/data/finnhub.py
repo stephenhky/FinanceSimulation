@@ -1,26 +1,26 @@
 
 from datetime import datetime
+from typing import Any
 
 import requests
 import pandas as pd
+from pandas import DataFrame
 
 
 class FinnHubStockReader:
-    def __init__(self, token):
-        self.token = token
+    def __init__(self, token: str):
+        self._token = token
 
-    def get_all_US_symbols(self):
-        request_url = 'https://finnhub.io/api/v1/stock/symbol?exchange=US&token={}'.format(self.token)
+    def get_all_US_symbols(self) -> list[dict[str, Any]]:
+        request_url = f"https://finnhub.io/api/v1/stock/symbol?exchange=US&token={self._token}"
         r = requests.get(request_url)
         response = r.json()
         return response
 
-    # allsymbols_df = pd.DataFrame(finnhubReader.get_all_US_symbols())
-
-    def get_stock_candlestick(self, symbol, startdate, enddate):
+    def get_stock_candlestick(self, symbol: str, startdate: str, enddate: str) -> DataFrame:
         starttimestamp = int(datetime.strptime(startdate, '%Y-%m-%d').timestamp())
         endtimestamp = int(datetime.strptime(enddate, '%Y-%m-%d').timestamp())
-        request_url = 'https://finnhub.io/api/v1/stock/candle?symbol={}&resolution=1&from={}&to={}&token={}'.format(symbol, starttimestamp, endtimestamp, self.token)
+        request_url = 'https://finnhub.io/api/v1/stock/candle?symbol={}&resolution=1&from={}&to={}&token={}'.format(symbol, starttimestamp, endtimestamp, self._token)
         r = requests.get(request_url)
         response = r.json()
         if response['s'] == 'ok':

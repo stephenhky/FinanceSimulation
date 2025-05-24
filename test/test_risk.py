@@ -14,10 +14,6 @@ class TestRisk(unittest.TestCase):
             risk.python_estimate_downside_risk(ts, S, 0.0),
             0.0
         )
-        self.assertAlmostEqual(
-            risk.cython_estimate_downside_risk(ts, S, 0.0),
-            0.0
-        )
 
     def test_somedownward_movement(self):
         r_fake_array = np.array([0.1, 0.2, -0.1, -0.1, 0.3, 0.4])
@@ -29,10 +25,6 @@ class TestRisk(unittest.TestCase):
             risk.python_estimate_downside_risk(ts, S_array, 0.0),
             expected_downside_risk
         )
-        self.assertAlmostEqual(
-            risk.cython_estimate_downside_risk(ts, S_array, 0.0),
-            expected_downside_risk
-        )
 
     def test_noupward_movement(self):
         ts = np.linspace(0, 10, 11)
@@ -40,10 +32,6 @@ class TestRisk(unittest.TestCase):
 
         self.assertAlmostEqual(
             risk.python_estimate_upside_risk(ts, S, 0.0),
-            0.0
-        )
-        self.assertAlmostEqual(
-            risk.cython_estimate_upside_risk(ts, S, 0.0),
             0.0
         )
 
@@ -55,10 +43,6 @@ class TestRisk(unittest.TestCase):
 
         self.assertAlmostEqual(
             risk.python_estimate_upside_risk(ts, S_array, 0.0),
-            expected_upside_risk
-        )
-        self.assertAlmostEqual(
-            risk.cython_estimate_upside_risk(ts, S_array, 0.0),
             expected_upside_risk
         )
 

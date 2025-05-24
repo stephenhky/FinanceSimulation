@@ -6,7 +6,7 @@ import pandas as pd
 from ..data.finnhub import FinnHubStockReader
 
 
-def get_argparser():
+def get_argparser() -> ArgumentParser:
     argparser = ArgumentParser(description='Retrieve stock symbols from Finnhub')
     argparser.add_argument('outputpath', help='path of the stock symbols (*.json, *.h5, *.xlsx, *.csv)')
     argparser.add_argument('--finnhubtokenpath', help='path of Finnhub tokens')
