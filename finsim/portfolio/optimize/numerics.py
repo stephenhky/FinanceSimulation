@@ -3,8 +3,8 @@ import logging
 from functools import partial
 from itertools import product
 from datetime import datetime
-from pathlib import Path
 from typing import Union, Tuple
+from os import PathLike
 
 import numpy as np
 import pandas as pd
@@ -134,7 +134,7 @@ def get_BlackScholesMerton_stocks_estimation(
         startdate: str,
         enddate: str,
         progressbar: bool=True,
-        cacheddir: Union[Path, str]=None,
+        cacheddir: Union[PathLike, str]=None,
         include_dividends: bool=False
 ) -> Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
     logging.info('Reading financial data...')
@@ -202,7 +202,7 @@ def get_stocks_timeweighted_estimation(
         symbols: list[str],
         timeweightdf: pd.DataFrame,
         progressbar: bool=True,
-        cacheddir: Union[Path, str]=None,
+        cacheddir: Union[PathLike, str]=None,
         include_dividends: bool=False
 ) -> Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
     logging.info('Parsing weights according to date')

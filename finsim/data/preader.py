@@ -131,7 +131,7 @@ def get_yahoofinance_data(
 
     df = extract_online_yahoofinance_data(symbol, startdate, enddate)
     logging.debug(f'Caching data for {symbol} from {startdate} to {enddate}')
-    df.to_hdf((cacheddir / f"{symbol}.h5").as_posix(), key='yahoodata')
+    df.to_hdf(cacheddir / f"{symbol}.h5", key='yahoodata')
 
     if preexist:
         logging.debug(f'Updating symbol {symbol} in metatable.')
@@ -227,15 +227,15 @@ def finding_missing_symbols_in_cache(
     return sorted(list(set(symbols) - set(existing_valid_symbols)))
 
 
-def dataframe_to_hdf(df: pd.DataFrame, filepath: Union[Path, str], key: str) -> None:
-    df.to_hdf(filepath if isinstance(filepath, str) else filepath.as_posix(), key=key)
+def dataframe_to_hdf(df: pd.DataFrame, filepath: Union[PathLike, str], key: str) -> None:
+    df.to_hdf(filepath, key=key)
 
 
 def generating_cached_yahoofinance_data(
         symbols: list[str],
         startdate: str,
         enddate: str,
-        cacheddir: Union[str, Path],
+        cacheddir: Union[PathLike, str],
         slicebatch: int=50,
         waittime: int=1,
         yfinance_multithreads: bool=False,
