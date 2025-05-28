@@ -6,7 +6,6 @@ import logging
 import json
 import sys
 from typing import Union, Any
-from pathlib import Path
 from os import PathLike
 from io import TextIOWrapper
 import warnings
@@ -140,7 +139,7 @@ class DynamicPortfolio(Portfolio):
             self,
             startdate: str,
             enddate: str,
-            cacheddir: Union[Path, str]=None,
+            cacheddir: Union[PathLike, str]=None,
             progressbar: bool = False
     ) -> pd.DataFrame:
         assert self.is_sorted()
@@ -197,7 +196,7 @@ class DynamicPortfolio(Portfolio):
     def load_from_dict(
             cls,
             dynportdict: dict[str, Any],
-            cacheddir: Union[Path, str]=None
+            cacheddir: Union[PathLike, str]=None
     ) -> Self:
         assert dynportdict['name'] == 'DynamicPortfolio'
         dynport = cls(
@@ -219,7 +218,7 @@ class DynamicPortfolio(Portfolio):
     def load_from_json(
             cls,
             fileobj: TextIOWrapper,
-            cacheddir: Union[Path, str]=None
+            cacheddir: Union[PathLike, str]=None
     ) -> Self:
         dynportinfo = json.load(fileobj)
         return cls.load_from_dict(dynportinfo, cacheddir=cacheddir)
@@ -231,7 +230,7 @@ class DynamicPortfolioWithDividends(DynamicPortfolio):
             symbol_nbshares: dict[str, Union[float, int]],
             current_date: str,
             cash: float=0.,
-            cacheddir: Union[Path, str]=None
+            cacheddir: Union[PathLike, str]=None
     ):
         # current_date is a string, of format '%Y-%m-%d', such as '2020-02-23'
         super(DynamicPortfolioWithDividends, self).__init__(symbol_nbshares, current_date, cacheddir=cacheddir)
@@ -271,7 +270,7 @@ class DynamicPortfolioWithDividends(DynamicPortfolio):
             self,
             startdate: str,
             enddate: str,
-            cacheddir: Union[Path, str]=None,
+            cacheddir: Union[PathLike, str]=None,
             progressbar: bool= False
     ) -> pd.DataFrame:
         worthdf = super(DynamicPortfolioWithDividends, self).get_portfolio_values_overtime(startdate, enddate, cacheddir=cacheddir, progressbar=progressbar)

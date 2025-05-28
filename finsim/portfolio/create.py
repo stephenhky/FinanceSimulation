@@ -2,7 +2,7 @@
 from datetime import datetime, timedelta
 import warnings
 from typing import Union
-from pathlib import Path
+from os import PathLike
 
 import numpy as np
 import pandas as pd
@@ -22,7 +22,7 @@ def get_optimized_portfolio_on_sharpe_ratio(
         estimating_enddate: str,
         minweight: float=0.,
         lazy: bool=False,
-        cacheddir: Union[Path, str]=None,
+        cacheddir: Union[PathLike, str]=None,
         include_dividends: bool=False
 ) -> OptimizedPortfolio:
     if lazy:
@@ -48,7 +48,7 @@ def get_optimized_portfolio_on_mpt_costfunction(
         estimating_enddate: str,
         lamb: float,
         V0: float=10.,
-        cacheddir: Union[Path, str]=None,
+        cacheddir: Union[PathLike, str]=None,
         include_dividends: bool=False
 ) -> OptimizedPortfolio:
     r, cov = get_BlackScholesMerton_stocks_estimation(
@@ -73,7 +73,7 @@ def get_optimized_portfolio_on_mpt_entropy_costfunction(
         lamb0: float,
         lamb1: float,
         V: float=10.,
-        cacheddir: Union[Path, str]=None,
+        cacheddir: Union[PathLike, str]=None,
         include_dividends: bool=False
 ) -> OptimizedPortfolio:
     r, cov = get_BlackScholesMerton_stocks_estimation(
@@ -119,7 +119,7 @@ def get_optimized_exponential_timeweighted_portfolio_on_mpt_entropy_costfunction
         lamb0: float,
         lamb1: float,
         V: float=10.,
-        cacheddir: Union[Path, str]=None,
+        cacheddir: Union[PathLike, str]=None,
         include_dividends: bool=False
 ) -> OptimizedPortfolio:
     timeweightdf = get_exponential_timeweightdf(estimating_startdate, estimating_enddate, yearscale)

@@ -4,7 +4,7 @@ import logging
 import sys
 from collections import defaultdict
 from typing import Union, Any
-from pathlib import Path
+from os import PathLike
 from io import TextIOWrapper
 if sys.version_info < (3, 11):
     from typing_extensions import Self
@@ -25,7 +25,7 @@ class Portfolio:
     def __init__(
             self,
             symbols_nbshares: dict[str, Union[int, float]],    # e.g., symbols_nbshares = {'NVDA': 200, 'AMZN': 101}
-            cacheddir: Union[Path, str]=None
+            cacheddir: Union[PathLike, str]=None
     ):
         self.symbols_nbshares = symbols_nbshares
         self.cacheddir = cacheddir
@@ -41,7 +41,7 @@ class Portfolio:
             self,
             startdate: str,
             enddate: str,
-            cacheddir: Union[Path, str]=None,
+            cacheddir: Union[PathLike, str]=None,
             progressbar: bool=False
     ) -> pd.DataFrame:
         logging.debug('Reading financial data...')
@@ -146,12 +146,20 @@ class Portfolio:
         return json.dumps(self.symbols_nbshares)
 
     @classmethod
-    def load_from_json(cls, fileobj: TextIOWrapper, cacheddir: Union[Path, str]=None) -> Self:
+    def load_from_json(
+            cls,
+            fileobj: TextIOWrapper,
+            cacheddir: Union[PathLike, str]=None
+    ) -> Self:
         symbols_nbshares = json.load(fileobj)
         return cls(symbols_nbshares, cacheddir=cacheddir)
 
     @classmethod
-    def load_from_dict(cls, portdict: dict[str, Union[int, float]], cacheddir: Union[Path, str]=None) -> Self:
+    def load_from_dict(
+            cls,
+            portdict: dict[str, Union[int, float]],
+            cacheddir: Union[PathLike, str]=None
+    ) -> Self:
         return cls(portdict, cacheddir=cacheddir)
 
 
@@ -161,7 +169,7 @@ class OptimizedPortfolio(Portfolio):
             policy: OptimizedWeightingPolicy,
             totalworth: float,
             presetdate: str,
-            cacheddir: Union[Path, str]=None
+            cacheddir: Union[PathLike, str]=None
     ):
         super(OptimizedPortfolio, self).__init__({}, cacheddir=cacheddir)
         self.policy = policy
@@ -220,9 +228,17 @@ class OptimizedPortfolio(Portfolio):
         return self.get_portfolio().dumps_json()
 
     @classmethod
-    def load_from_json(cls, fileobj: TextIOWrapper, cacheddir: Union[Path, str]=None) -> Self:
+    def load_from_json(
+            cls,
+            fileobj: TextIOWrapper,
+            cacheddir: Union[PathLike, str]=None
+    ) -> Self:
         raise NotImplementedError('OptimizedPortfolio does not implement loading from json. Use Portfolio to load instead.')
 
     @classmethod
-    def load_from_dict(cls, portdict: TextIOWrapper, cacheddir: Union[Path, str]=None) -> Self:
+    def load_from_dict(
+            cls,
+            portdict: TextIOWrapper,
+            cacheddir: Union[PathLike, str]=None
+    ) -> Self:
         raise NotImplementedError('OptimizedPortfolio does not implement loading from json. Use Portfolio to load instead.')
