@@ -45,7 +45,7 @@ def estimate_upside_risk(
 
     if lowlevellang == 'C':
         raise ValueError("Cython fitting is no longer supported!")
-    elif lowlevellang == 'N':
+    elif lowlevellang == 'P':
         return python_estimate_upside_risk(ts, prices, target_return)
     else:
         raise ValueError(
