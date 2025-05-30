@@ -1,6 +1,8 @@
 
 from datetime import datetime, timedelta
 import warnings
+from typing import Union
+from os import PathLike
 
 import numpy as np
 import pandas as pd
@@ -12,17 +14,17 @@ from .optimize.policy import OptimizedWeightingPolicyUsingMPTSharpeRatio, \
 
 
 def get_optimized_portfolio_on_sharpe_ratio(
-        rf,
-        symbols,
-        totalworth,
-        presetdate,
-        estimating_startdate,
-        estimating_enddate,
-        minweight=0.,
-        lazy=False,
-        cacheddir=None,
-        include_dividends=False
-):
+        rf: float,
+        symbols: list[str],
+        totalworth: float,
+        presetdate: str,
+        estimating_startdate: str,
+        estimating_enddate: str,
+        minweight: float=0.,
+        lazy: bool=False,
+        cacheddir: Union[PathLike, str]=None,
+        include_dividends: bool=False
+) -> OptimizedPortfolio:
     if lazy:
         warnings.warn('Setting lazy=True is meaningless! Parameter deprecated!')
     r, cov = get_BlackScholesMerton_stocks_estimation(
@@ -38,17 +40,17 @@ def get_optimized_portfolio_on_sharpe_ratio(
 
 
 def get_optimized_portfolio_on_mpt_costfunction(
-        rf,
-        symbols,
-        totalworth,
-        presetdate,
-        estimating_startdate,
-        estimating_enddate,
-        lamb,
-        V0=10.,
-        cacheddir=None,
-        include_dividends=False
-):
+        rf: float,
+        symbols: list[str],
+        totalworth: float,
+        presetdate: str,
+        estimating_startdate: str,
+        estimating_enddate: str,
+        lamb: float,
+        V0: float=10.,
+        cacheddir: Union[PathLike, str]=None,
+        include_dividends: bool=False
+) -> OptimizedPortfolio:
     r, cov = get_BlackScholesMerton_stocks_estimation(
         symbols,
         estimating_startdate,
@@ -62,18 +64,18 @@ def get_optimized_portfolio_on_mpt_costfunction(
 
 
 def get_optimized_portfolio_on_mpt_entropy_costfunction(
-        rf,
-        symbols,
-        totalworth,
-        presetdate,
-        estimating_startdate,
-        estimating_enddate,
-        lamb0,
-        lamb1,
-        V=10.,
-        cacheddir=None,
-        include_dividends=False
-):
+        rf: float,
+        symbols: list[str],
+        totalworth: float,
+        presetdate: str,
+        estimating_startdate: str,
+        estimating_enddate: str,
+        lamb0: float,
+        lamb1: float,
+        V: float=10.,
+        cacheddir: Union[PathLike, str]=None,
+        include_dividends: bool=False
+) -> OptimizedPortfolio:
     r, cov = get_BlackScholesMerton_stocks_estimation(
         symbols,
         estimating_startdate,
@@ -88,7 +90,11 @@ def get_optimized_portfolio_on_mpt_entropy_costfunction(
 ########### Time-weighted portfolio ##############
 
 
-def get_exponential_timeweightdf(startdate, enddate, yearscale):
+def get_exponential_timeweightdf(
+        startdate: str,
+        enddate: str,
+        yearscale: float
+) -> pd.DataFrame:
     startdateobj = datetime.strptime(startdate, '%Y-%m-%d')
     enddateobj = datetime.strptime(enddate, '%Y-%m-%d')
 
@@ -103,19 +109,19 @@ def get_exponential_timeweightdf(startdate, enddate, yearscale):
 
 
 def get_optimized_exponential_timeweighted_portfolio_on_mpt_entropy_costfunction(
-        rf,
-        symbols,
-        totalworth,
-        presetdate,
-        estimating_startdate,
-        estimating_enddate,
-        yearscale,
-        lamb0,
-        lamb1,
-        V=10.,
-        cacheddir=None,
-        include_dividends=False
-):
+        rf: float,
+        symbols: list[str],
+        totalworth: float,
+        presetdate: str,
+        estimating_startdate: str,
+        estimating_enddate: str,
+        yearscale: float,
+        lamb0: float,
+        lamb1: float,
+        V: float=10.,
+        cacheddir: Union[PathLike, str]=None,
+        include_dividends: bool=False
+) -> OptimizedPortfolio:
     timeweightdf = get_exponential_timeweightdf(estimating_startdate, estimating_enddate, yearscale)
     r, cov = get_stocks_timeweighted_estimation(
         symbols,

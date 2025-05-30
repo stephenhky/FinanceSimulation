@@ -3,7 +3,10 @@ import numpy as np
 import pandas as pd
 
 
-def align_timestamps_stock_dataframes(stocks_data_dfs, timestamps_as_index=False):
+def align_timestamps_stock_dataframes(
+        stocks_data_dfs: list[pd.DataFrame],
+        timestamps_as_index: bool=False
+) -> pd.DataFrame:
     # unify the timestamps columns
     timestampset = set()
     for stock_df in stocks_data_dfs:
@@ -23,3 +26,7 @@ def align_timestamps_stock_dataframes(stocks_data_dfs, timestamps_as_index=False
         stocks_data_dfs[i] = stock_df
 
     return stocks_data_dfs
+
+
+class InsufficientSharesException(Exception):
+    pass

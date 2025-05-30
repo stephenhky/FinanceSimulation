@@ -4,19 +4,31 @@ from operator import itemgetter
 from collections import defaultdict
 import logging
 import json
+import sys
+from typing import Union, Any
+from os import PathLike
+from io import TextIOWrapper
+import warnings
+if sys.version_info < (3, 11):
+    from typing_extensions import Self
+else:
+    from typing import Self
 
 import numpy as np
 import pandas as pd
+
+from .helper import InsufficientSharesException
 from .portfolio import Portfolio
 from ..data.preader import get_dividends_df
 
 
-class InsufficientSharesException(Exception):
-    pass
-
-
 class DynamicPortfolio(Portfolio):
-    def __init__(self, symbol_nbshares, current_date, cacheddir=None):
+    def __init__(
+            self,
+            symbol_nbshares: dict[str, Union[int, float]],
+            current_date: str,
+            cacheddir: Union[PathLike, str]=None
+    ):
         # current_date is a string, of format '%Y-%m-%d', such as '2020-02-23'
         super(DynamicPortfolio, self).__init__(symbol_nbshares, cacheddir=cacheddir)
         self.current_date = current_date
@@ -26,16 +38,16 @@ class DynamicPortfolio(Portfolio):
         }]
         self.timeseriesidx = 0
 
-    def sort_time_series(self):
+    def sort_time_series(self) -> None:
         self.timeseries = sorted(self.timeseries, key=itemgetter('date'))
 
-    def is_sorted(self):
+    def is_sorted(self) -> bool:
         for i, j in zip(range(len(self.timeseries)-1), range(1, len(self.timeseries))):
             if not self.timeseries[i]['date'] < self.timeseries[j]['date']:
                 return False
         return True
 
-    def find_cursor_for_date(self, date):
+    def find_cursor_for_date(self, date: str) -> int:
         # date is a string, of format '%Y-%m-%d', such as '2020-02-23'
         start = 0
         end = len(self.timeseries)
@@ -58,7 +70,7 @@ class DynamicPortfolio(Portfolio):
                 idx = (start+end) // 2
         return idx
 
-    def move_cursor_to_date(self, newdate):
+    def move_cursor_to_date(self, newdate: str) -> None:
         # date is a string, of format '%Y-%m-%d', such as '2020-02-23'
         self.timeseriesidx = self.find_cursor_for_date(newdate)
         self.symbols_nbshares = self.timeseries[self.timeseriesidx]['portfolio'].symbols_nbshares.copy()
@@ -66,14 +78,19 @@ class DynamicPortfolio(Portfolio):
 
     def trade(
             self,
-            trade_date,
-            buy_stocks={},
-            sell_stocks={},
-            check_valid=False,
-            raise_insufficient_stock_error=False
-    ):
+            trade_date: str,
+            buy_stocks: dict[str, Union[float, int]]=None,
+            sell_stocks: dict[str, Union[float, int]]=None,
+            check_valid: bool=False,
+            raise_insufficient_stock_error: bool=False
+    ) -> None:
+        # validation
         assert self.is_sorted()
         assert trade_date > self.timeseries[-1]['date']
+        if buy_stocks is None:
+            buy_stocks = dict()
+        if sell_stocks is None:
+            sell_stocks = dict()
 
         # rectifying
         overlapping_symbols = set(buy_stocks.keys()).intersection(set(sell_stocks.keys()))
@@ -114,12 +131,20 @@ class DynamicPortfolio(Portfolio):
 
         self.move_cursor_to_date(trade_date)
         
-    def get_portfolio_value(self, datestr):
+    def get_portfolio_value(self, datestr: str) -> float:
         idx = self.find_cursor_for_date(datestr)
         return self.timeseries[idx]['portfolio'].get_portfolio_value(datestr)
 
-    def get_portfolio_values_overtime(self, startdate, enddate, cacheddir=None):
+    def get_portfolio_values_overtime(
+            self,
+            startdate: str,
+            enddate: str,
+            cacheddir: Union[PathLike, str]=None,
+            progressbar: bool = False
+    ) -> pd.DataFrame:
         assert self.is_sorted()
+        if progressbar:
+            warnings.warn("Use of progress bar for DynamicPortfolio is deprecated.")
 
         startidx = self.find_cursor_for_date(startdate)
         endidx = self.find_cursor_for_date(enddate)
@@ -146,7 +171,7 @@ class DynamicPortfolio(Portfolio):
         df['TimeStamp'] = df['TimeStamp'].map(lambda ts: datetime.strftime(ts, '%Y-%m-%d'))
         return df
 
-    def generate_dynamic_portfolio_dict(self):
+    def generate_dynamic_portfolio_dict(self) -> dict[str, Any]:
         dynport_dict = {'name': 'DynamicPortfolio'}
         dynport_dict['current_date'] = self.current_date
         dynport_dict['timeseries'] = []
@@ -159,16 +184,20 @@ class DynamicPortfolio(Portfolio):
             })
         return dynport_dict
 
-    def save_to_json(self, fileobj):
+    def save_to_json(self, fileobj: TextIOWrapper) -> None:
         dynport_dict = self.generate_dynamic_portfolio_dict()
         json.dump(dynport_dict, fileobj)
 
-    def dumps_json(self):
+    def dumps_json(self) -> str:
         dynport_dict = self.generate_dynamic_portfolio_dict()
         return json.dumps(dynport_dict)
 
     @classmethod
-    def load_from_dict(cls, dynportdict, cacheddir=None):
+    def load_from_dict(
+            cls,
+            dynportdict: dict[str, Any],
+            cacheddir: Union[PathLike, str]=None
+    ) -> Self:
         assert dynportdict['name'] == 'DynamicPortfolio'
         dynport = cls(
             dynportdict['timeseries'][0]['portfolio'],
@@ -186,19 +215,29 @@ class DynamicPortfolio(Portfolio):
         return dynport
     
     @classmethod
-    def load_from_json(cls, fileobj, cacheddir=None):
+    def load_from_json(
+            cls,
+            fileobj: TextIOWrapper,
+            cacheddir: Union[PathLike, str]=None
+    ) -> Self:
         dynportinfo = json.load(fileobj)
         return cls.load_from_dict(dynportinfo, cacheddir=cacheddir)
 
 
 class DynamicPortfolioWithDividends(DynamicPortfolio):
-    def __init__(self, symbol_nbshares, current_date, cash=0., cacheddir=None):
+    def __init__(
+            self,
+            symbol_nbshares: dict[str, Union[float, int]],
+            current_date: str,
+            cash: float=0.,
+            cacheddir: Union[PathLike, str]=None
+    ):
         # current_date is a string, of format '%Y-%m-%d', such as '2020-02-23'
         super(DynamicPortfolioWithDividends, self).__init__(symbol_nbshares, current_date, cacheddir=cacheddir)
         self.startcash = cash
         self.cashtimeseries = [{'date': current_date, 'cash': self.startcash}]
 
-    def calculate_cash_from_dividends(self, enddate):
+    def calculate_cash_from_dividends(self, enddate: str) -> None:
         startdate = self.timeseries[0]['date']
         self.cashtimeseries = [{'date': startdate, 'dividend': 0., 'cash': self.startcash}]
 
@@ -227,8 +266,14 @@ class DynamicPortfolioWithDividends(DynamicPortfolio):
                 cash = self.cashtimeseries[-1]['cash']
                 self.cashtimeseries.append({'date': dividend_date, 'dividend': dividend, 'cash': cash+dividend})
 
-    def get_portfolio_values_overtime(self, startdate, enddate, cacheddir=None):
-        worthdf = super(DynamicPortfolioWithDividends, self).get_portfolio_values_overtime(startdate, enddate, cacheddir=cacheddir)
+    def get_portfolio_values_overtime(
+            self,
+            startdate: str,
+            enddate: str,
+            cacheddir: Union[PathLike, str]=None,
+            progressbar: bool= False
+    ) -> pd.DataFrame:
+        worthdf = super(DynamicPortfolioWithDividends, self).get_portfolio_values_overtime(startdate, enddate, cacheddir=cacheddir, progressbar=progressbar)
         worthdf.rename(columns={'value': 'stock_value'}, inplace=True)
         self.calculate_cash_from_dividends(enddate)
         

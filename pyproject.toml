@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools", "wheel", "Cython>=0.29", "numpy >= 1.24.0"]
+requires = ["setuptools>=42", "wheel", "numpy >= 1.24.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "finsim"
-version = "1.0.6"
+version = "1.1.0"
 authors = [
     {name = "Kwan Yuet Stephen Ho", email = "stephenhky@yahoo.com.hk"}
 ]
@@ -21,8 +21,6 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
-    "Programming Language :: Cython",
-    "Programming Language :: C",
     "Intended Audience :: Science/Research",
     "Intended Audience :: Developers",
     "Intended Audience :: Financial and Insurance Industry"
@@ -37,7 +35,9 @@ dependencies = [
     "tables>=3.8.5",
     "yfinance>=0.2.59",
     "openpyxl>=3.1.0",
-    "Cython>=0.29.0"
+    "numba",
+    "typing-extensions",
+    "nptyping"
 ]
 
 [project.urls]
@@ -64,4 +64,4 @@ include-package-data = true
 retrieve_stock_symbols = "finsim.retrieve_stock_symbols_cli:main_cli"
 
 [project.optional-dependencies]
-test = ["unittest2", "pytest", "pytest-cython"]
+test = ["unittest2", "pytest"]

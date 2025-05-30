@@ -1,20 +1,28 @@
 
+from typing import Literal
+
 import numpy as np
 from scipy import stats
+from nptyping import NDArray, Shape, Float, Datetime64
 
 from .native.pyrisk import python_estimate_downside_risk, python_estimate_upside_risk
-from .native.cythonrisk import cython_estimate_downside_risk, cython_estimate_upside_risk
 from .constants import dividing_factors_dict
 
 
-def estimate_downside_risk(timestamps, prices, target_return, unit='year', lowlevellang='C'):
+def estimate_downside_risk(
+        timestamps: NDArray[Shape["*"], Datetime64],
+        prices: NDArray[Shape["*"], Float],
+        target_return: float,
+        unit: Literal['second', 'minute', 'hour', 'day', 'year']='year',
+        lowlevellang: Literal['C', 'P']='P'
+) -> float:
     dividing_factor = dividing_factors_dict[unit]
 
     ts = np.array(timestamps, dtype='datetime64[s]')
     ts = np.array(ts, dtype=np.float64) / dividing_factor
 
     if lowlevellang == 'C':
-        return cython_estimate_downside_risk(ts, prices, target_return)
+        raise ValueError("Cython fitting is no longer supported!")
     elif lowlevellang == 'P':
         return python_estimate_downside_risk(ts, prices, target_return)
     else:
@@ -23,15 +31,21 @@ def estimate_downside_risk(timestamps, prices, target_return, unit='year', lowle
                 lowlevellang))
 
 
-def estimate_upside_risk(timestamps, prices, target_return, unit='year', lowlevellang='C'):
+def estimate_upside_risk(
+        timestamps: NDArray[Shape["*"], Datetime64],
+        prices: NDArray[Shape["*"], Float],
+        target_return: float,
+        unit: Literal['second', 'minute', 'hour', 'day', 'year'] = 'year',
+        lowlevellang: Literal['C', 'P'] = 'P'
+) -> float:
     dividing_factor = dividing_factors_dict[unit]
 
     ts = np.array(timestamps, dtype='datetime64[s]')
     ts = np.array(ts, dtype=np.float64) / dividing_factor
 
     if lowlevellang == 'C':
-        return cython_estimate_upside_risk(ts, prices, target_return)
-    elif lowlevellang == 'N':
+        raise ValueError("Cython fitting is no longer supported!")
+    elif lowlevellang == 'P':
         return python_estimate_upside_risk(ts, prices, target_return)
     else:
         raise ValueError(
@@ -39,7 +53,12 @@ def estimate_upside_risk(timestamps, prices, target_return, unit='year', lowleve
                 lowlevellang))
 
 
-def estimate_beta(timestamps, prices, market_prices, unit='year'):
+def estimate_beta(
+        timestamps: NDArray[Shape["*"], Datetime64],
+        prices: NDArray[Shape["*"], Float],
+        market_prices: NDArray[Shape["*"], Float],
+        unit: Literal['second', 'minute', 'hour', 'day', 'year']='year'
+) -> float:
     dividing_factor = dividing_factors_dict[unit]
 
     ts = np.array(timestamps, dtype='datetime64[s]')
