@@ -43,6 +43,7 @@ dependencies = [
 [project.urls]
 Repository = "https://github.com/stephenhky/FinanceSimulation"
 Issues = "https://github.com/stephenhky/FinanceSimulation/issues"
+Documentation = "https://github.com/stephenhky/FinanceSimulation/docs"
 
 [tool.setuptools]
 packages = [
@@ -65,3 +66,4 @@ retrieve_stock_symbols = "finsim.retrieve_stock_symbols_cli:main_cli"
 
 [project.optional-dependencies]
 test = ["unittest2", "pytest"]
+docs = ["sphinx>=4.0.0", "sphinx-rtd-theme>=1.0.0"]
