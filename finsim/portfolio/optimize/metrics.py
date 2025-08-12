@@ -14,6 +14,21 @@ def sharpe_ratio(
         rf: float,
         lowlevellang: Literal['C', 'P']='P'
 ) -> float:
+    """Calculate the Sharpe ratio for a portfolio.
+    
+    Args:
+        weights: Array of portfolio weights
+        r: Array of expected returns
+        cov: Covariance matrix
+        rf: Risk-free rate
+        lowlevellang: Language for low-level implementation, 'P' for Python (default: 'P')
+        
+    Returns:
+        float: Sharpe ratio value
+        
+    Raises:
+        ValueError: If Cython fitting is attempted (no longer supported)
+    """
     if lowlevellang == 'C':
         raise ValueError("Cython fitting is no longer supported!")
     elif lowlevellang == 'P':
@@ -31,6 +46,23 @@ def mpt_costfunction(
         V0: float=10.,
         lowlevellang: Literal['C', 'P']='P'
 ) -> float:
+    """Calculate the MPT cost function for a portfolio.
+    
+    Args:
+        weights: Array of portfolio weights
+        r: Array of expected returns
+        cov: Covariance matrix
+        rf: Risk-free rate
+        lamb: Lambda parameter for the cost function
+        V0: Initial portfolio value (default: 10.0)
+        lowlevellang: Language for low-level implementation, 'P' for Python (default: 'P')
+        
+    Returns:
+        float: MPT cost function value
+        
+    Raises:
+        ValueError: If Cython fitting is attempted (no longer supported)
+    """
     if lowlevellang == 'C':
         raise ValueError("Cython fitting is no longer supported!")
     elif lowlevellang == 'P':
@@ -49,6 +81,24 @@ def mpt_entropy_costfunction(
         V: float=10.,
         lowlevellang: Literal['C', 'P']='C'
 ) -> float:
+    """Calculate the MPT entropy cost function for a portfolio.
+    
+    Args:
+        weights: Array of portfolio weights
+        r: Array of expected returns
+        cov: Covariance matrix
+        rf: Risk-free rate
+        lamb0: Lambda 0 parameter for the entropy cost function
+        lamb1: Lambda 1 parameter for the entropy cost function
+        V: Portfolio value parameter (default: 10.0)
+        lowlevellang: Language for low-level implementation, 'P' for Python (default: 'P')
+        
+    Returns:
+        float: MPT entropy cost function value
+        
+    Raises:
+        ValueError: If Cython fitting is attempted (no longer supported)
+    """
     if lowlevellang == 'C':
         raise ValueError("Cython fitting is no longer supported!")
     elif lowlevellang == 'P':

@@ -16,6 +16,18 @@ def get_movingaverage_price_data(
         dayswindow: int,
         cacheddir: Union[PathLike, str]=None
 ) -> pd.DataFrame:
+    """Get moving average price data for a stock symbol.
+    
+    Args:
+        symbol: Stock symbol
+        startdate: Start date in 'YYYY-MM-DD' format
+        enddate: End date in 'YYYY-MM-DD' format
+        dayswindow: Number of days for the moving average window
+        cacheddir: Directory for cached data (optional)
+        
+    Returns:
+        pd.DataFrame: DataFrame with 'TimeStamp' and 'MA' (moving average) columns
+    """
     # making the days difference calculation
     mastartdate = (datetime.strptime(startdate, '%Y-%m-%d') - timedelta(days=dayswindow)).strftime('%Y-%m-%d')
     df = get_yahoofinance_data(symbol, mastartdate, enddate, cacheddir=cacheddir)

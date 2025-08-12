@@ -7,6 +7,19 @@ def align_timestamps_stock_dataframes(
         stocks_data_dfs: list[pd.DataFrame],
         timestamps_as_index: bool=False
 ) -> pd.DataFrame:
+    """Align multiple stock data DataFrames to have consistent timestamps.
+    
+    This function takes a list of stock data DataFrames and aligns their timestamps
+    to ensure they all have the same time points, filling in missing data with
+    forward-filled values.
+    
+    Args:
+        stocks_data_dfs: List of stock data DataFrames to align
+        timestamps_as_index: Whether to use timestamps as the DataFrame index (default: False)
+        
+    Returns:
+        pd.DataFrame: List of aligned stock data DataFrames
+    """
     # unify the timestamps columns
     timestampset = set()
     for stock_df in stocks_data_dfs:
@@ -29,4 +42,5 @@ def align_timestamps_stock_dataframes(
 
 
 class InsufficientSharesException(Exception):
+    """Exception raised when there are insufficient shares for a transaction."""
     pass

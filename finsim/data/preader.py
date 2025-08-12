@@ -17,6 +17,17 @@ from tqdm import tqdm
 
 
 def extract_online_yahoofinance_data(symbol: str, startdate: str, enddate: str) -> pd.DataFrame:
+    """Extract stock data for a single symbol from Yahoo Finance.
+    
+    Args:
+        symbol: The stock symbol to retrieve
+        startdate: Start date in 'YYYY-MM-DD' format
+        enddate: End date in 'YYYY-MM-DD' format
+        
+    Returns:
+        A DataFrame containing the stock data with columns:
+        TimeStamp, High, Low, Open, Close, Adj Close, Volume
+    """
     try:
         df = yf.download(
             symbol,
@@ -52,6 +63,17 @@ def extract_batch_online_yahoofinance_data(
         enddate: str,
         threads: bool=True
 ) -> pd.DataFrame:
+    """Extract stock data for multiple symbols from Yahoo Finance in batch.
+    
+    Args:
+        symbols: List of stock symbols to retrieve
+        startdate: Start date in 'YYYY-MM-DD' format
+        enddate: End date in 'YYYY-MM-DD' format
+        threads: Whether to use threading for parallel downloads
+        
+    Returns:
+        A dictionary mapping symbols to DataFrames containing stock data
+    """
     combined_df = yf.download(
         ' '.join(symbols),
         start=datetime.strptime(startdate, '%Y-%m-%d'),
@@ -99,6 +121,17 @@ def get_yahoofinance_data(
         enddate: str,
         cacheddir: Union[str, PathLike]=None
 ) -> pd.DataFrame:
+    """Get Yahoo Finance data for a symbol, with optional caching.
+    
+    Args:
+        symbol: The stock symbol to retrieve
+        startdate: Start date in 'YYYY-MM-DD' format
+        enddate: End date in 'YYYY-MM-DD' format
+        cacheddir: Directory for caching data (optional)
+        
+    Returns:
+        A DataFrame containing the stock data
+    """
     if cacheddir is None:
         return extract_online_yahoofinance_data(symbol, startdate, enddate)
 
@@ -175,6 +208,21 @@ def get_symbol_closing_price(
         cacheddir: Union[PathLike, str]=None,
         backtrack: bool=False
 ) -> float:
+    """Get the closing price for a symbol on a specific date.
+    
+    Args:
+        symbol: The stock symbol
+        datestr: The date in 'YYYY-MM-DD' format
+        epsilon: Small value for numerical precision (default: 1e-10)
+        cacheddir: Directory for caching data (optional)
+        backtrack: Whether to backtrack to previous days if price not found
+        
+    Returns:
+        The closing price for the symbol on the specified date
+        
+    Raises:
+        IndexError: If price is not found and backtrack is False
+    """
     df = get_yahoofinance_data(symbol, datestr, datestr, cacheddir=cacheddir)
     if len(df) == 0:
         if backtrack:
@@ -192,6 +240,17 @@ def finding_missing_symbols_in_cache(
         enddate: str,
         cacheddir: Union[str, Path]
 ) -> list[str]:
+    """Find symbols that are missing from the cache.
+    
+    Args:
+        symbols: List of stock symbols
+        startdate: Start date in 'YYYY-MM-DD' format
+        enddate: End date in 'YYYY-MM-DD' format
+        cacheddir: Directory for caching data
+        
+    Returns:
+        List of symbols missing from cache
+    """
     if isinstance(cacheddir, str):
         cacheddir = Path(cacheddir)
 
@@ -228,6 +287,13 @@ def finding_missing_symbols_in_cache(
 
 
 def dataframe_to_hdf(df: pd.DataFrame, filepath: Union[PathLike, str], key: str) -> None:
+    """Save a DataFrame to an HDF file.
+    
+    Args:
+        df: The DataFrame to save
+        filepath: Path to the HDF file
+        key: Key to store the DataFrame under
+    """
     df.to_hdf(filepath, key=key)
 
 
@@ -241,6 +307,18 @@ def generating_cached_yahoofinance_data(
         yfinance_multithreads: bool=False,
         io_multithreads: bool=False
 ) -> None:
+    """Generate cached Yahoo Finance data for a list of symbols.
+    
+    Args:
+        symbols: List of stock symbols
+        startdate: Start date in 'YYYY-MM-DD' format
+        enddate: End date in 'YYYY-MM-DD' format
+        cacheddir: Directory for caching data
+        slicebatch: Number of symbols to process in each batch (default: 50)
+        waittime: Time to wait between batches in seconds (default: 1)
+        yfinance_multithreads: Whether to use multithreading for yfinance (default: False)
+        io_multithreads: Whether to use multithreading for I/O operations (default: False)
+    """
     if isinstance(cacheddir, str):
         cacheddir = Path(cacheddir)
     cached_metafile_path = cacheddir / METATABLE_FILENAME
@@ -322,6 +400,14 @@ def generating_cached_yahoofinance_data(
 
 @lru_cache(maxsize=30)
 def get_dividends_df(symbol: str) -> pd.DataFrame:
+    """Get dividend data for a symbol.
+    
+    Args:
+        symbol: The stock symbol
+        
+    Returns:
+        A DataFrame containing dividend data with columns TimeStamp and Dividends
+    """
     ticker = yf.Ticker(symbol)
     df = pd.DataFrame(ticker.dividends)
     df['TimeStamp'] = df.index.map(lambda item: datetime.strftime(item, '%Y-%m-%d'))

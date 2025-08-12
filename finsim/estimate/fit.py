@@ -17,6 +17,33 @@ def fit_BlackScholesMerton_model(
         unit: Literal['second', 'minute', 'hour', 'day', 'year']='year',
         lowlevellang: Literal['C', 'P']='P'
 ) -> Tuple[float, float]:
+    """Fit a Black-Scholes-Merton model to price data to estimate rate of return and volatility.
+    
+    This function estimates the parameters of the Black-Scholes-Merton model, which describes
+    the dynamics of a financial asset. It calculates the expected rate of return and volatility
+    from historical price data.
+    
+    Args:
+        timestamps: Array of timestamps corresponding to price observations
+        prices: Array of asset prices corresponding to the timestamps
+        unit: Time unit for calculations. Options are 'second', 'minute', 'hour', 'day', 'year'.
+              Default is 'year'.
+        lowlevellang: Language for low-level implementation. 'P' for Python, 'C' for Cython.
+                       Default is 'P'. Note: Cython implementation is no longer supported.
+        
+    Returns:
+        Tuple containing:
+            - rate (float): Estimated rate of return (drift parameter)
+            - sigma (float): Estimated volatility (diffusion parameter)
+        
+    Raises:
+        ValueError: If Cython fitting is attempted (no longer supported) or if an unknown
+                      low-level language is specified
+                      
+    Note:
+        The function internally converts timestamps to seconds and then to the specified unit.
+        The calculation uses the Python implementation of the Black-Scholes-Merton model.
+    """
     dividing_factor = dividing_factors_dict[unit]
 
     ts = np.array(timestamps, dtype='datetime64[s]')
@@ -38,6 +65,33 @@ def fit_multivariate_BlackScholesMerton_model(
         unit: Literal['second', 'minute', 'hour', 'day', 'year']='year',
         lowlevellang: Literal['C', 'P']='P'
 ) -> Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
+    """Fit a multivariate Black-Scholes-Merton model to price data for multiple assets.
+    
+    This function estimates the parameters of the multivariate Black-Scholes-Merton model,
+    which describes the dynamics of multiple financial assets and their correlations.
+    
+    Args:
+        timestamps: Array of timestamps corresponding to price observations
+        multiprices: 2D array of asset prices for multiple assets. Each row represents
+                      a different asset, and each column represents prices at a specific time
+        unit: Time unit for calculations. Options are 'second', 'minute', 'hour', 'day', 'year'.
+              Default is 'year'.
+        lowlevellang: Language for low-level implementation. 'P' for Python, 'C' for Cython.
+                       Default is 'P'. Note: Cython implementation is no longer supported.
+        
+    Returns:
+        Tuple containing:
+            - rates (NDArray[Shape["*"], Float]): Array of estimated rates of return for each asset
+            - covariance_matrix (NDArray[Shape["*, *"], Float]): Estimated covariance matrix of returns
+        
+    Raises:
+        ValueError: If Cython fitting is attempted (no longer supported) or if an unknown
+                      low-level language is specified
+                      
+    Note:
+        The function internally converts timestamps to seconds and then to the specified unit.
+        The calculation uses the Python implementation of the multivariate Black-Scholes-Merton model.
+    """
     dividing_factor = dividing_factors_dict[unit]
 
     ts = np.array(timestamps, dtype='datetime64[s]')
@@ -61,6 +115,23 @@ def fit_timeweighted_BlackScholesMerton_model(
         weights: NDArray[Shape["*"], Float],
         unit: Literal['second', 'minute', 'hour', 'day', 'year']='year'
 ) -> Tuple[float, float]:
+    """Fit a time-weighted Black-Scholes-Merton model to price data.
+    
+    This function estimates the parameters of the Black-Scholes-Merton model using
+    time-weighted observations, giving different importance to different time periods.
+    
+    Args:
+        timestamps: Array of timestamps corresponding to price observations
+        prices: Array of asset prices corresponding to the timestamps
+        weights: Array of weights for time-weighted calculations (same length as timestamps)
+        unit: Time unit for calculations. Options are 'second', 'minute', 'hour', 'day', 'year'.
+              Default is 'year'.
+        
+    Returns:
+        Tuple containing:
+            - rate (float): Time-weighted estimated rate of return
+            - sigma (float): Time-weighted estimated volatility
+    """
     dividing_factor = dividing_factors_dict[unit]
 
     ts = np.array(timestamps, dtype='datetime64[s]')
@@ -82,6 +153,24 @@ def fit_timeweighted_multivariate_BlackScholesMerton_model(
         weights: NDArray[Shape["*"], Float],
         unit: Literal['second', 'minute', 'hour', 'day', 'year']='year'
 ) -> Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
+    """Fit a time-weighted multivariate Black-Scholes-Merton model to price data for multiple assets.
+    
+    This function estimates the parameters of the multivariate Black-Scholes-Merton model
+    using time-weighted observations for multiple assets.
+    
+    Args:
+        timestamps: Array of timestamps corresponding to price observations
+        multiprices: 2D array of asset prices for multiple assets. Each row represents
+                      a different asset, and each column represents prices at a specific time
+        weights: Array of weights for time-weighted calculations (same length as timestamps)
+        unit: Time unit for calculations. Options are 'second', 'minute', 'hour', 'day', 'year'.
+              Default is 'year'.
+        
+    Returns:
+        Tuple containing:
+            - rates (NDArray[Shape["*"], Float]): Array of time-weighted estimated rates of return
+            - covariance_matrix (NDArray[Shape["*, *"], Float]): Time-weighted estimated covariance matrix
+    """
     dividing_factor = dividing_factors_dict[unit]
 
     ts = np.array(timestamps, dtype='datetime64[s]')

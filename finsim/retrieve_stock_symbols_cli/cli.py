@@ -7,6 +7,11 @@ from ..data.finnhub import FinnHubStockReader
 
 
 def get_argparser() -> ArgumentParser:
+    """Create and configure the argument parser for the CLI.
+    
+    Returns:
+        ArgumentParser: Configured argument parser
+    """
     argparser = ArgumentParser(description='Retrieve stock symbols from Finnhub')
     argparser.add_argument('outputpath', help='path of the stock symbols (*.json, *.h5, *.xlsx, *.csv)')
     argparser.add_argument('--finnhubtokenpath', help='path of Finnhub tokens')
@@ -16,6 +21,11 @@ def get_argparser() -> ArgumentParser:
 
 
 def main_cli():
+    """Main CLI function to retrieve stock symbols from Finnhub and save them to a file.
+    
+    This function parses command line arguments, retrieves stock symbols from Finnhub,
+    optionally filters them, and saves them to a file in various formats.
+    """
     # parsing argument
     args = get_argparser().parse_args()
     extension = os.path.splitext(args.outputpath)[-1]

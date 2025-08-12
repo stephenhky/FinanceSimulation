@@ -25,6 +25,27 @@ def get_optimized_portfolio_on_sharpe_ratio(
         cacheddir: Union[PathLike, str]=None,
         include_dividends: bool=False
 ) -> OptimizedPortfolio:
+    """Create an optimized portfolio based on the Sharpe ratio optimization method.
+    
+    This function creates a portfolio optimized using the Sharpe ratio maximization approach
+    from Modern Portfolio Theory (MPT). It estimates asset returns and covariances using
+    the Black-Scholes-Merton model and then optimizes weights to maximize the Sharpe ratio.
+    
+    Args:
+        rf: Risk-free rate
+        symbols: List of stock symbols to include in the portfolio
+        totalworth: Total value of the portfolio
+        presetdate: Date for which to calculate the portfolio composition
+        estimating_startdate: Start date for return estimation
+        estimating_enddate: End date for return estimation
+        minweight: Minimum weight for each asset (default: 0.0)
+        lazy: Deprecated parameter (default: False)
+        cacheddir: Directory for cached data (optional)
+        include_dividends: Whether to include dividends in calculations (default: False)
+        
+    Returns:
+        OptimizedPortfolio: An optimized portfolio object with calculated weights
+    """
     if lazy:
         warnings.warn('Setting lazy=True is meaningless! Parameter deprecated!')
     r, cov = get_BlackScholesMerton_stocks_estimation(
@@ -51,6 +72,27 @@ def get_optimized_portfolio_on_mpt_costfunction(
         cacheddir: Union[PathLike, str]=None,
         include_dividends: bool=False
 ) -> OptimizedPortfolio:
+    """Create an optimized portfolio based on the MPT cost function optimization method.
+    
+    This function creates a portfolio optimized using a cost function approach from
+    Modern Portfolio Theory (MPT). It estimates asset returns and covariances using
+    the Black-Scholes-Merton model and then optimizes weights using a cost function.
+    
+    Args:
+        rf: Risk-free rate
+        symbols: List of stock symbols to include in the portfolio
+        totalworth: Total value of the portfolio
+        presetdate: Date for which to calculate the portfolio composition
+        estimating_startdate: Start date for return estimation
+        estimating_enddate: End date for return estimation
+        lamb: Lambda parameter for the cost function
+        V0: Initial portfolio value (default: 10.0)
+        cacheddir: Directory for cached data (optional)
+        include_dividends: Whether to include dividends in calculations (default: False)
+        
+    Returns:
+        OptimizedPortfolio: An optimized portfolio object with calculated weights
+    """
     r, cov = get_BlackScholesMerton_stocks_estimation(
         symbols,
         estimating_startdate,
@@ -76,6 +118,28 @@ def get_optimized_portfolio_on_mpt_entropy_costfunction(
         cacheddir: Union[PathLike, str]=None,
         include_dividends: bool=False
 ) -> OptimizedPortfolio:
+    """Create an optimized portfolio based on the MPT entropy cost function optimization method.
+    
+    This function creates a portfolio optimized using an entropy cost function approach
+    from Modern Portfolio Theory (MPT). It estimates asset returns and covariances using
+    the Black-Scholes-Merton model and then optimizes weights using an entropy cost function.
+    
+    Args:
+        rf: Risk-free rate
+        symbols: List of stock symbols to include in the portfolio
+        totalworth: Total value of the portfolio
+        presetdate: Date for which to calculate the portfolio composition
+        estimating_startdate: Start date for return estimation
+        estimating_enddate: End date for return estimation
+        lamb0: Lambda 0 parameter for the entropy cost function
+        lamb1: Lambda 1 parameter for the entropy cost function
+        V: Portfolio value parameter (default: 10.0)
+        cacheddir: Directory for cached data (optional)
+        include_dividends: Whether to include dividends in calculations (default: False)
+        
+    Returns:
+        OptimizedPortfolio: An optimized portfolio object with calculated weights
+    """
     r, cov = get_BlackScholesMerton_stocks_estimation(
         symbols,
         estimating_startdate,
@@ -95,6 +159,19 @@ def get_exponential_timeweightdf(
         enddate: str,
         yearscale: float
 ) -> pd.DataFrame:
+    """Generate exponential time weights for portfolio optimization.
+    
+    This function creates a DataFrame with exponentially decaying weights over time,
+    which can be used for time-weighted portfolio optimization.
+    
+    Args:
+        startdate: Start date in 'YYYY-MM-DD' format
+        enddate: End date in 'YYYY-MM-DD' format
+        yearscale: Time scale parameter for exponential decay
+        
+    Returns:
+        pd.DataFrame: DataFrame with 'TimeStamp' and 'weight' columns
+    """
     startdateobj = datetime.strptime(startdate, '%Y-%m-%d')
     enddateobj = datetime.strptime(enddate, '%Y-%m-%d')
 
@@ -122,6 +199,30 @@ def get_optimized_exponential_timeweighted_portfolio_on_mpt_entropy_costfunction
         cacheddir: Union[PathLike, str]=None,
         include_dividends: bool=False
 ) -> OptimizedPortfolio:
+    """Create an optimized time-weighted portfolio using exponential weights and entropy cost function.
+    
+    This function creates a portfolio optimized using an entropy cost function approach
+    from Modern Portfolio Theory (MPT) with exponential time weighting. It estimates
+    asset returns and covariances using the Black-Scholes-Merton model with time weights
+    and then optimizes weights using an entropy cost function.
+    
+    Args:
+        rf: Risk-free rate
+        symbols: List of stock symbols to include in the portfolio
+        totalworth: Total value of the portfolio
+        presetdate: Date for which to calculate the portfolio composition
+        estimating_startdate: Start date for return estimation
+        estimating_enddate: End date for return estimation
+        yearscale: Time scale parameter for exponential decay
+        lamb0: Lambda 0 parameter for the entropy cost function
+        lamb1: Lambda 1 parameter for the entropy cost function
+        V: Portfolio value parameter (default: 10.0)
+        cacheddir: Directory for cached data (optional)
+        include_dividends: Whether to include dividends in calculations (default: False)
+        
+    Returns:
+        OptimizedPortfolio: An optimized time-weighted portfolio object with calculated weights
+    """
     timeweightdf = get_exponential_timeweightdf(estimating_startdate, estimating_enddate, yearscale)
     r, cov = get_stocks_timeweighted_estimation(
         symbols,

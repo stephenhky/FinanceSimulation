@@ -23,12 +23,26 @@ from ..data.preader import get_dividends_df
 
 
 class DynamicPortfolio(Portfolio):
+    """A class representing a dynamic portfolio that can change over time.
+    
+    This class extends the basic Portfolio class to support time-series operations
+    on portfolios, allowing for tracking of portfolio changes over time and
+    performing trades at specific dates.
+    """
+    
     def __init__(
             self,
             symbol_nbshares: dict[str, Union[int, float]],
             current_date: str,
             cacheddir: Union[PathLike, str]=None
     ):
+        """Initialize a DynamicPortfolio with initial holdings and a current date.
+        
+        Args:
+            symbol_nbshares: Dictionary mapping stock symbols to number of shares
+            current_date: Current date in 'YYYY-MM-DD' format
+            cacheddir: Directory for cached data (optional)
+        """
         # current_date is a string, of format '%Y-%m-%d', such as '2020-02-23'
         super(DynamicPortfolio, self).__init__(symbol_nbshares, cacheddir=cacheddir)
         self.current_date = current_date
@@ -39,15 +53,29 @@ class DynamicPortfolio(Portfolio):
         self.timeseriesidx = 0
 
     def sort_time_series(self) -> None:
+        """Sort the time series by date."""
         self.timeseries = sorted(self.timeseries, key=itemgetter('date'))
 
     def is_sorted(self) -> bool:
+        """Check if the time series is sorted by date.
+        
+        Returns:
+            bool: True if the time series is sorted, False otherwise
+        """
         for i, j in zip(range(len(self.timeseries)-1), range(1, len(self.timeseries))):
             if not self.timeseries[i]['date'] < self.timeseries[j]['date']:
                 return False
         return True
 
     def find_cursor_for_date(self, date: str) -> int:
+        """Find the index of the time series entry for a given date.
+        
+        Args:
+            date: Date in 'YYYY-MM-DD' format
+            
+        Returns:
+            int: Index of the time series entry for the given date
+        """
         # date is a string, of format '%Y-%m-%d', such as '2020-02-23'
         start = 0
         end = len(self.timeseries)
@@ -71,6 +99,11 @@ class DynamicPortfolio(Portfolio):
         return idx
 
     def move_cursor_to_date(self, newdate: str) -> None:
+        """Move the cursor to a specific date.
+        
+        Args:
+            newdate: Date in 'YYYY-MM-DD' format
+        """
         # date is a string, of format '%Y-%m-%d', such as '2020-02-23'
         self.timeseriesidx = self.find_cursor_for_date(newdate)
         self.symbols_nbshares = self.timeseries[self.timeseriesidx]['portfolio'].symbols_nbshares.copy()
@@ -84,6 +117,15 @@ class DynamicPortfolio(Portfolio):
             check_valid: bool=False,
             raise_insufficient_stock_error: bool=False
     ) -> None:
+        """Perform a trade on a specific date.
+        
+        Args:
+            trade_date: Date of the trade in 'YYYY-MM-DD' format
+            buy_stocks: Dictionary mapping symbols to number of shares to buy (optional)
+            sell_stocks: Dictionary mapping symbols to number of shares to sell (optional)
+            check_valid: Whether to check if the trade is valid (default: False)
+            raise_insufficient_stock_error: Whether to raise an error for insufficient stocks (default: False)
+        """
         # validation
         assert self.is_sorted()
         assert trade_date > self.timeseries[-1]['date']
@@ -132,6 +174,14 @@ class DynamicPortfolio(Portfolio):
         self.move_cursor_to_date(trade_date)
         
     def get_portfolio_value(self, datestr: str) -> float:
+        """Calculate the total value of the portfolio on a specific date.
+        
+        Args:
+            datestr: Date in 'YYYY-MM-DD' format
+            
+        Returns:
+            float: Total portfolio value on the specified date
+        """
         idx = self.find_cursor_for_date(datestr)
         return self.timeseries[idx]['portfolio'].get_portfolio_value(datestr)
 
@@ -142,6 +192,17 @@ class DynamicPortfolio(Portfolio):
             cacheddir: Union[PathLike, str]=None,
             progressbar: bool = False
     ) -> pd.DataFrame:
+        """Calculate the portfolio value over a time period.
+        
+        Args:
+            startdate: Start date in 'YYYY-MM-DD' format
+            enddate: End date in 'YYYY-MM-DD' format
+            cacheddir: Directory for cached data (optional)
+            progressbar: Whether to show a progress bar (default: False)
+            
+        Returns:
+            pd.DataFrame: DataFrame with 'TimeStamp' and 'value' columns
+        """
         assert self.is_sorted()
         if progressbar:
             warnings.warn("Use of progress bar for DynamicPortfolio is deprecated.")
@@ -172,6 +233,11 @@ class DynamicPortfolio(Portfolio):
         return df
 
     def generate_dynamic_portfolio_dict(self) -> dict[str, Any]:
+        """Generate a dictionary representation of the dynamic portfolio.
+        
+        Returns:
+            dict[str, Any]: Dictionary representation of the dynamic portfolio
+        """
         dynport_dict = {'name': 'DynamicPortfolio'}
         dynport_dict['current_date'] = self.current_date
         dynport_dict['timeseries'] = []
@@ -185,10 +251,20 @@ class DynamicPortfolio(Portfolio):
         return dynport_dict
 
     def save_to_json(self, fileobj: TextIOWrapper) -> None:
+        """Save the dynamic portfolio to a JSON file.
+        
+        Args:
+            fileobj: File object to write the portfolio data to
+        """
         dynport_dict = self.generate_dynamic_portfolio_dict()
         json.dump(dynport_dict, fileobj)
 
     def dumps_json(self) -> str:
+        """Serialize the dynamic portfolio to a JSON string.
+        
+        Returns:
+            str: JSON string representation of the dynamic portfolio
+        """
         dynport_dict = self.generate_dynamic_portfolio_dict()
         return json.dumps(dynport_dict)
 
@@ -198,6 +274,15 @@ class DynamicPortfolio(Portfolio):
             dynportdict: dict[str, Any],
             cacheddir: Union[PathLike, str]=None
     ) -> Self:
+        """Load a dynamic portfolio from a dictionary.
+        
+        Args:
+            dynportdict: Dictionary representation of the dynamic portfolio
+            cacheddir: Directory for cached data (optional)
+            
+        Returns:
+            Self: A new DynamicPortfolio object loaded from the dictionary
+        """
         assert dynportdict['name'] == 'DynamicPortfolio'
         dynport = cls(
             dynportdict['timeseries'][0]['portfolio'],
@@ -220,11 +305,27 @@ class DynamicPortfolio(Portfolio):
             fileobj: TextIOWrapper,
             cacheddir: Union[PathLike, str]=None
     ) -> Self:
+        """Load a dynamic portfolio from a JSON file.
+        
+        Args:
+            fileobj: File object to read the portfolio data from
+            cacheddir: Directory for cached data (optional)
+            
+        Returns:
+            Self: A new DynamicPortfolio object loaded from the JSON file
+        """
         dynportinfo = json.load(fileobj)
         return cls.load_from_dict(dynportinfo, cacheddir=cacheddir)
 
 
 class DynamicPortfolioWithDividends(DynamicPortfolio):
+    """A class representing a dynamic portfolio that includes dividend calculations.
+    
+    This class extends the DynamicPortfolio class to include calculations for
+    dividends received over time, providing a more complete picture of portfolio
+    performance.
+    """
+    
     def __init__(
             self,
             symbol_nbshares: dict[str, Union[float, int]],
@@ -232,12 +333,25 @@ class DynamicPortfolioWithDividends(DynamicPortfolio):
             cash: float=0.,
             cacheddir: Union[PathLike, str]=None
     ):
+        """Initialize a DynamicPortfolioWithDividends with initial holdings, cash, and a current date.
+        
+        Args:
+            symbol_nbshares: Dictionary mapping stock symbols to number of shares
+            current_date: Current date in 'YYYY-MM-DD' format
+            cash: Initial cash amount (default: 0.0)
+            cacheddir: Directory for cached data (optional)
+        """
         # current_date is a string, of format '%Y-%m-%d', such as '2020-02-23'
         super(DynamicPortfolioWithDividends, self).__init__(symbol_nbshares, current_date, cacheddir=cacheddir)
         self.startcash = cash
         self.cashtimeseries = [{'date': current_date, 'cash': self.startcash}]
 
     def calculate_cash_from_dividends(self, enddate: str) -> None:
+        """Calculate cash from dividends received over time.
+        
+        Args:
+            enddate: End date for dividend calculations in 'YYYY-MM-DD' format
+        """
         startdate = self.timeseries[0]['date']
         self.cashtimeseries = [{'date': startdate, 'dividend': 0., 'cash': self.startcash}]
 
@@ -273,6 +387,17 @@ class DynamicPortfolioWithDividends(DynamicPortfolio):
             cacheddir: Union[PathLike, str]=None,
             progressbar: bool= False
     ) -> pd.DataFrame:
+        """Calculate the portfolio value over a time period, including dividends.
+        
+        Args:
+            startdate: Start date in 'YYYY-MM-DD' format
+            enddate: End date in 'YYYY-MM-DD' format
+            cacheddir: Directory for cached data (optional)
+            progressbar: Whether to show a progress bar (default: False)
+            
+        Returns:
+            pd.DataFrame: DataFrame with 'TimeStamp', 'stock_value', 'cash', and 'value' columns
+        """
         worthdf = super(DynamicPortfolioWithDividends, self).get_portfolio_values_overtime(startdate, enddate, cacheddir=cacheddir, progressbar=progressbar)
         worthdf.rename(columns={'value': 'stock_value'}, inplace=True)
         self.calculate_cash_from_dividends(enddate)

@@ -27,11 +27,30 @@ def getarrayelementminusminvalue(
         minvalue: float,
         index: int
 ) -> float:
+    """Get the difference between an array element and a minimum value.
+    
+    Args:
+        array: Input array
+        minvalue: Minimum value to subtract
+        index: Index of the element in the array
+        
+    Returns:
+        float: Difference between array element and minimum value
+    """
     return array[index] - minvalue
 
 
 @nb.njit(nb.float64(nb.float64[:], nb.float64))
 def checksumarray(array: NDArray[Shape["*"], Float], total: float) -> float:
+    """Calculate the difference between a total and the sum of an array.
+    
+    Args:
+        array: Input array
+        total: Total value to compare against
+        
+    Returns:
+        float: Difference between total and sum of array
+    """
     return total - np.sum(array)
 
 
@@ -41,6 +60,17 @@ def optimized_portfolio_on_sharperatio(
         rf: float,
         minweight: float=0.
 ) -> OptimizeResult:
+    """Optimize a portfolio based on the Sharpe ratio.
+    
+    Args:
+        r: Array of expected returns
+        cov: Covariance matrix
+        rf: Risk-free rate
+        minweight: Minimum weight for each asset (default: 0.0)
+        
+    Returns:
+        OptimizeResult: Optimization result object
+    """
     func = partial(sharpe_ratio, r=r, cov=cov, rf=rf)
     nbstocks = len(r)
     initialguess = np.repeat(1 / nbstocks, nbstocks)
@@ -67,6 +97,18 @@ def optimized_portfolio_mpt_costfunction(
         lamb: float,
         V0: float=10.
 ) -> OptimizeResult:
+    """Optimize a portfolio based on the MPT cost function.
+    
+    Args:
+        r: Array of expected returns
+        cov: Covariance matrix
+        rf: Risk-free rate
+        lamb: Lambda parameter for the cost function
+        V0: Initial portfolio value (default: 10.0)
+        
+    Returns:
+        OptimizeResult: Optimization result object
+    """
     func = partial(mpt_costfunction, r=r, cov=cov, rf=rf, lamb=lamb, V0=V0)
     nbstocks = len(r)
     constraints = [
@@ -94,6 +136,19 @@ def optimized_portfolio_mpt_entropy_costfunction(
         lamb1: float,
         V: float=10.
 ) -> OptimizeResult:
+    """Optimize a portfolio based on the MPT entropy cost function.
+    
+    Args:
+        r: Array of expected returns
+        cov: Covariance matrix
+        rf: Risk-free rate
+        lamb0: Lambda 0 parameter for the entropy cost function
+        lamb1: Lambda 1 parameter for the entropy cost function
+        V: Portfolio value parameter (default: 10.0)
+        
+    Returns:
+        OptimizeResult: Optimization result object
+    """
     func = partial(mpt_entropy_costfunction, r=r, cov=cov, rf=rf, lamb0=lamb0, lamb1=lamb1, V=V)
     nbstocks = len(r)
     constraints = [
@@ -114,11 +169,28 @@ def optimized_portfolio_mpt_entropy_costfunction(
 
 
 def intermediate_wrangle_stock_df_without_dividends(stock_df: pd.DataFrame) -> pd.DataFrame:
+    """Process stock data without dividends.
+    
+    Args:
+        stock_df: DataFrame containing stock data
+        
+    Returns:
+        pd.DataFrame: Processed stock DataFrame with 'EffVal' column
+    """
     stock_df.loc[:, 'EffVal'] = stock_df['Close'] * 1.
     return stock_df
 
 
 def intermediate_wrangle_stock_df_with_dividends(stock_df: pd.DataFrame, sym: str) -> pd.DataFrame:
+    """Process stock data with dividends.
+    
+    Args:
+        stock_df: DataFrame containing stock data
+        sym: Stock symbol
+        
+    Returns:
+        pd.DataFrame: Processed stock DataFrame with 'EffVal' column including dividends
+    """
     dividends_df = get_dividends_df(sym)
     dividends_df = dividends_df.rename(columns={'date': 'TimeStamp'})
     dividends_df.loc[:, 'Cash'] = np.cumsum(dividends_df['Dividends'].ravel())
@@ -137,6 +209,19 @@ def get_BlackScholesMerton_stocks_estimation(
         cacheddir: Union[PathLike, str]=None,
         include_dividends: bool=False
 ) -> Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
+    """Get Black-Scholes-Merton model estimations for a list of stocks.
+    
+    Args:
+        symbols: List of stock symbols
+        startdate: Start date in 'YYYY-MM-DD' format
+        enddate: End date in 'YYYY-MM-DD' format
+        progressbar: Whether to show a progress bar (default: True)
+        cacheddir: Directory for cached data (optional)
+        include_dividends: Whether to include dividends in the calculation (default: False)
+        
+    Returns:
+        Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]: Tuple of (rarray, covmat)
+    """
     logging.info('Reading financial data...')
     symreadingprogress = tqdm(symbols) if progressbar else symbols
     stocks_data_dfs = [
@@ -205,6 +290,18 @@ def get_stocks_timeweighted_estimation(
         cacheddir: Union[PathLike, str]=None,
         include_dividends: bool=False
 ) -> Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
+    """Get time-weighted estimations for a list of stocks.
+    
+    Args:
+        symbols: List of stock symbols
+        timeweightdf: DataFrame containing timestamps and weights
+        progressbar: Whether to show a progress bar (default: True)
+        cacheddir: Directory for cached data (optional)
+        include_dividends: Whether to include dividends in the calculation (default: False)
+        
+    Returns:
+        Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]: Tuple of (rarray, covmat)
+    """
     logging.info('Parsing weights according to date')
     startdate = timeweightdf['TimeStamp'][0]
     if isinstance(startdate, datetime):

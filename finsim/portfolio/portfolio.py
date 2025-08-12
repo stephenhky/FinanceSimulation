@@ -22,15 +22,36 @@ from .helper import align_timestamps_stock_dataframes
 
 
 class Portfolio:
+    """A class representing a portfolio of financial assets.
+    
+    This class manages a collection of assets (stocks) with their respective quantities
+    and provides methods for calculating portfolio values, performing operations on
+    portfolios, and saving/loading portfolio data.
+    """
+    
     def __init__(
             self,
             symbols_nbshares: dict[str, Union[int, float]],    # e.g., symbols_nbshares = {'NVDA': 200, 'AMZN': 101}
             cacheddir: Union[PathLike, str]=None
     ):
+        """Initialize a Portfolio with asset symbols and quantities.
+        
+        Args:
+            symbols_nbshares: Dictionary mapping stock symbols to number of shares
+            cacheddir: Directory for cached data (optional)
+        """
         self.symbols_nbshares = symbols_nbshares
         self.cacheddir = cacheddir
 
     def get_portfolio_value(self, datestr: str) -> float:
+        """Calculate the total value of the portfolio on a specific date.
+        
+        Args:
+            datestr: Date in 'YYYY-MM-DD' format
+            
+        Returns:
+            float: Total portfolio value on the specified date
+        """
         portfolio_value = sum([
             self.symbols_nbshares[symbol] * get_symbol_closing_price(symbol, datestr, cacheddir=self.cacheddir)
             for symbol in self.symbols_nbshares
@@ -87,6 +108,16 @@ class Portfolio:
         return df
 
     def __add__(self, other: Self) -> Self:
+        """Add two portfolios together.
+        
+        This method combines two portfolios by adding the quantities of the same assets.
+        
+        Args:
+            other: Another Portfolio object to add to this one
+            
+        Returns:
+            Self: A new Portfolio object representing the combined portfolios
+        """
         assert isinstance(other, Portfolio)
 
         symshares1 = defaultdict(lambda: 0, self.symbols_nbshares)
@@ -97,6 +128,16 @@ class Portfolio:
         return Portfolio(total_symbols_shares, cacheddir=self.cacheddir)
 
     def __sub__(self, other: Self) -> Self:
+        """Subtract one portfolio from another.
+        
+        This method subtracts the quantities of assets in one portfolio from another.
+        
+        Args:
+            other: Another Portfolio object to subtract from this one
+            
+        Returns:
+            Self: A new Portfolio object representing the difference between portfolios
+        """
         assert isinstance(other, Portfolio)
 
         symshares1 = defaultdict(lambda: 0, self.symbols_nbshares)
@@ -107,6 +148,17 @@ class Portfolio:
         return Portfolio(symbols_diff_shares, cacheddir=self.cacheddir)
 
     def __eq__(self, other: Self) -> bool:
+        """Check if two portfolios are equal.
+        
+        This method compares two portfolios to see if they have the same assets
+        and quantities.
+        
+        Args:
+            other: Another Portfolio object to compare with this one
+            
+        Returns:
+            bool: True if portfolios are equal, False otherwise
+        """
         assert isinstance(other, Portfolio)
 
         for symbol, nbshares in self.symbols_nbshares.items():
@@ -118,31 +170,81 @@ class Portfolio:
         return True
 
     def __ne__(self, other: Self) -> bool:
+        """Check if two portfolios are not equal.
+        
+        This method compares two portfolios to see if they have different assets
+        or quantities.
+        
+        Args:
+            other: Another Portfolio object to compare with this one
+            
+        Returns:
+            bool: True if portfolios are not equal, False otherwise
+        """
         return not self.__eq__(other)
 
     @property
     def portfolio_symbols_nbshares(self) -> dict[str, Union[int, float]]:
+        """Get the dictionary of symbols and number of shares.
+        
+        Returns:
+            dict[str, Union[int, float]]: Dictionary mapping symbols to number of shares
+        """
         return self.symbols_nbshares
 
     def roundoff_nbshares(self) -> None:
+        """Round off the number of shares for all assets to the nearest integer.
+        
+        This method modifies the portfolio in-place by rounding the number of
+        shares for each asset to the nearest integer.
+        """
         for symbol in self.symbols_nbshares:
             nbshares = round(self.symbols_nbshares[symbol])
             self.symbols_nbshares[symbol] = nbshares
 
     def multiply(self, factor: float) -> None:
+        """Multiply the number of shares for all assets by a factor.
+        
+        This method modifies the portfolio in-place by multiplying the number of
+        shares for each asset by the specified factor.
+        
+        Args:
+            factor: The factor by which to multiply the number of shares
+        """
         for symbol in self.symbols_nbshares:
             nbshares = self.symbols_nbshares[symbol]
             self.symbols_nbshares[symbol] = nbshares * factor
             
     def __mul__(self, other: dict[str, Union[int, float]]) -> Self:
+        """Multiply the portfolio by a scalar factor.
+        
+        This method creates a new portfolio with the number of shares for each
+        asset multiplied by the specified factor.
+        
+        Args:
+            other: The factor by which to multiply the number of shares
+            
+        Returns:
+            Self: A new Portfolio object with multiplied share quantities
+        """
         assert isinstance(other, int) or isinstance(other, float)
         newshares = {symbol: nbshares*other for symbol, nbshares in self.symbols_nbshares.items()}
         return Portfolio(newshares, cacheddir=self.cacheddir)
 
     def save_to_json(self, fileobj: TextIOWrapper) -> None:
+        """Save the portfolio to a JSON file.
+        
+        Args:
+            fileobj: File object to write the portfolio data to
+        """
         json.dump(self.symbols_nbshares, fileobj)
 
     def dumps_json(self) -> str:
+        """Serialize the portfolio to a JSON string.
+        
+        Returns:
+            str: JSON string representation of the portfolio
+        """
         return json.dumps(self.symbols_nbshares)
 
     @classmethod
@@ -151,6 +253,15 @@ class Portfolio:
             fileobj: TextIOWrapper,
             cacheddir: Union[PathLike, str]=None
     ) -> Self:
+        """Load a portfolio from a JSON file.
+        
+        Args:
+            fileobj: File object to read the portfolio data from
+            cacheddir: Directory for cached data (optional)
+            
+        Returns:
+            Self: A new Portfolio object loaded from the JSON file
+        """
         symbols_nbshares = json.load(fileobj)
         return cls(symbols_nbshares, cacheddir=cacheddir)
 
@@ -160,10 +271,26 @@ class Portfolio:
             portdict: dict[str, Union[int, float]],
             cacheddir: Union[PathLike, str]=None
     ) -> Self:
+        """Load a portfolio from a dictionary.
+        
+        Args:
+            portdict: Dictionary mapping symbols to number of shares
+            cacheddir: Directory for cached data (optional)
+            
+        Returns:
+            Self: A new Portfolio object loaded from the dictionary
+        """
         return cls(portdict, cacheddir=cacheddir)
 
 
 class OptimizedPortfolio(Portfolio):
+    """A class representing an optimized portfolio of financial assets.
+    
+    This class extends the basic Portfolio class to include optimization features
+    based on Modern Portfolio Theory, with methods for calculating optimal weights
+    and portfolio metrics.
+    """
+    
     def __init__(
             self,
             policy: OptimizedWeightingPolicy,
@@ -171,6 +298,14 @@ class OptimizedPortfolio(Portfolio):
             presetdate: str,
             cacheddir: Union[PathLike, str]=None
     ):
+        """Initialize an OptimizedPortfolio with an optimization policy.
+        
+        Args:
+            policy: The optimization policy to use for calculating weights
+            totalworth: Total value of the portfolio
+            presetdate: Date for which to calculate the portfolio composition
+            cacheddir: Directory for cached data (optional)
+        """
         super(OptimizedPortfolio, self).__init__({}, cacheddir=cacheddir)
         self.policy = policy
         self.totalworth = totalworth
@@ -178,6 +313,11 @@ class OptimizedPortfolio(Portfolio):
         self.compute()
 
     def compute(self) -> None:
+        """Compute the optimized portfolio composition.
+        
+        This method calculates the number of shares for each asset based on
+        the optimization policy and the total portfolio value.
+        """
         prices = {
             symbol: get_symbol_closing_price(symbol, self.presetdate, cacheddir=self.cacheddir)
             for symbol in self.policy.symbols
@@ -192,39 +332,89 @@ class OptimizedPortfolio(Portfolio):
 
     @property
     def portfolio_symbols(self) -> list[str]:
+        """Get the list of symbols in the portfolio.
+        
+        Returns:
+            list[str]: List of symbols in the portfolio
+        """
         return self.policy.portfolio_symbols
 
     @property
     def weights(self) -> NDArray[Shape["*"], Float]:
+        """Get the optimized weights for each asset.
+        
+        Returns:
+            NDArray[Shape["*"], Float]: Array of optimized weights
+        """
         return self.policy.weights
 
     @property
     def portfolio_yield(self) -> float:
+        """Get the expected yield of the optimized portfolio.
+        
+        Returns:
+            float: Expected yield of the portfolio
+        """
         return self.policy.portfolio_yield
 
     @property
     def volatility(self) -> float:
+        """Get the volatility of the optimized portfolio.
+        
+        Returns:
+            float: Volatility of the portfolio
+        """
         return self.policy.volatility
 
     @property
     def correlation_matrix(self) -> NDArray[Shape["*, *"], Float]:
+        """Get the correlation matrix of the optimized portfolio.
+        
+        Returns:
+            NDArray[Shape["*, *"], Float]: Correlation matrix of the portfolio
+        """
         return self.policy.correlation_matrix
 
     @property
     def named_correlation_matrix(self) -> pd.DataFrame:
+        """Get the named correlation matrix of the optimized portfolio.
+        
+        Returns:
+            pd.DataFrame: Named correlation matrix of the portfolio
+        """
         return self.policy.named_correlation_matrix
 
     @property
     def portfolio_summary(self) -> dict[str, Any]:
+        """Get a summary of the optimized portfolio.
+        
+        Returns:
+            dict[str, Any]: Dictionary containing portfolio summary information
+        """
         return self.summary
 
     def get_portfolio(self) -> Portfolio:
+        """Get the underlying Portfolio object.
+        
+        Returns:
+            Portfolio: The underlying Portfolio object
+        """
         return Portfolio(self.symbols_nbshares, cacheddir=self.cacheddir)
 
     def save_to_json(self, fileobj: TextIOWrapper) -> None:
+        """Save the optimized portfolio to a JSON file.
+        
+        Args:
+            fileobj: File object to write the portfolio data to
+        """
         self.get_portfolio().save_to_json(fileobj)
 
     def dumps_json(self) -> str:
+        """Serialize the optimized portfolio to a JSON string.
+        
+        Returns:
+            str: JSON string representation of the portfolio
+        """
         return self.get_portfolio().dumps_json()
 
     @classmethod
@@ -233,6 +423,17 @@ class OptimizedPortfolio(Portfolio):
             fileobj: TextIOWrapper,
             cacheddir: Union[PathLike, str]=None
     ) -> Self:
+        """Load an optimized portfolio from a JSON file.
+        
+        Note: This method is not implemented for OptimizedPortfolio. Use Portfolio.load_from_json instead.
+        
+        Args:
+            fileobj: File object to read the portfolio data from
+            cacheddir: Directory for cached data (optional)
+            
+        Raises:
+            NotImplementedError: Always raised as this method is not implemented
+        """
         raise NotImplementedError('OptimizedPortfolio does not implement loading from json. Use Portfolio to load instead.')
 
     @classmethod
@@ -241,4 +442,15 @@ class OptimizedPortfolio(Portfolio):
             portdict: TextIOWrapper,
             cacheddir: Union[PathLike, str]=None
     ) -> Self:
+        """Load an optimized portfolio from a dictionary.
+        
+        Note: This method is not implemented for OptimizedPortfolio. Use Portfolio.load_from_dict instead.
+        
+        Args:
+            portdict: Dictionary mapping symbols to number of shares
+            cacheddir: Directory for cached data (optional)
+            
+        Raises:
+            NotImplementedError: Always raised as this method is not implemented
+        """
         raise NotImplementedError('OptimizedPortfolio does not implement loading from json. Use Portfolio to load instead.')

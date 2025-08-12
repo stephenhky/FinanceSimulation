@@ -7,13 +7,34 @@ from nptyping import NDArray, Shape, Float
 
 
 class AbstractStochasticValue(ABC):
+    """Abstract base class for stochastic value generators."""
+    
     @abstractmethod
     def generate_time_series(self, T: float, dt: float, nbsimulations: int=1):
+        """Generate a time series of values.
+        
+        Args:
+            T: Time horizon
+            dt: Time step
+            nbsimulations: Number of simulations (default: 1)
+        """
         pass
 
 
 class BlackScholesMertonStockPrices(AbstractStochasticValue):
+    """Generate stock prices using the Black-Scholes-Merton model.
+    
+    This class implements the Black-Scholes-Merton model for stock price simulation.
+    """
+    
     def __init__(self, S0: float, r: float, sigma: float):
+        """Initialize the Black-Scholes-Merton stock price generator.
+        
+        Args:
+            S0: Initial stock price
+            r: Risk-free rate
+            sigma: Volatility
+        """
         self.S0 = S0
         self.r = r
         self.sigma = sigma
@@ -21,6 +42,16 @@ class BlackScholesMertonStockPrices(AbstractStochasticValue):
         self.logS0 = log(S0)
 
     def generate_time_series(self, T, dt, nbsimulations=1) -> NDArray[Shape["*"], Float]:
+        """Generate a time series of stock prices using the Black-Scholes-Merton model.
+        
+        Args:
+            T: Time horizon
+            dt: Time step
+            nbsimulations: Number of simulations (default: 1)
+            
+        Returns:
+            NDArray[Shape["*"], Float]: Array of stock prices
+        """
         nbtimesteps = int(T // dt) + 1
         z = np.random.normal(size=(nbsimulations, nbtimesteps))
         logS = np.zeros((nbsimulations, nbtimesteps))
@@ -33,13 +64,36 @@ class BlackScholesMertonStockPrices(AbstractStochasticValue):
 
 
 class SquareRootDiffusionProcesses(AbstractStochasticValue):
+    """Generate values using the square root diffusion process.
+    
+    This class implements the square root diffusion process for value simulation.
+    """
+    
     def __init__(self, x0: float, theta: float, kappa: float, sigma: float):
+        """Initialize the square root diffusion process generator.
+        
+        Args:
+            x0: Initial value
+            theta: Long-term mean
+            kappa: Speed of mean reversion
+            sigma: Volatility
+        """
         self.x0 = x0
         self.theta = theta
         self.kappa = kappa
         self.sigma = sigma
 
     def generate_time_series(self, T: float, dt: float, nbsimulations: int=1) -> NDArray[Shape["*"], Float]:
+        """Generate a time series of values using the square root diffusion process.
+        
+        Args:
+            T: Time horizon
+            dt: Time step
+            nbsimulations: Number of simulations (default: 1)
+            
+        Returns:
+            NDArray[Shape["*"], Float]: Array of values
+        """
         nbtimesteps = int(T // dt) + 1
         z = np.random.normal(size=(nbsimulations, nbtimesteps))
         xarray = np.zeros((nbsimulations, nbtimesteps))
@@ -52,7 +106,23 @@ class SquareRootDiffusionProcesses(AbstractStochasticValue):
 
 
 class HestonStockPrices(AbstractStochasticValue):
+    """Generate stock prices using the Heston model.
+    
+    This class implements the Heston model for stock price simulation with stochastic volatility.
+    """
+    
     def __init__(self, S0: float, r: float, v0: float, theta: float, kappa: float, sigma_v: float, rho: float):
+        """Initialize the Heston stock price generator.
+        
+        Args:
+            S0: Initial stock price
+            r: Risk-free rate
+            v0: Initial variance
+            theta: Long-term variance
+            kappa: Speed of mean reversion
+            sigma_v: Volatility of variance
+            rho: Correlation between stock price and variance
+        """
         self.S0 = S0
         self.r = r
         self.v0 = v0
@@ -65,6 +135,16 @@ class HestonStockPrices(AbstractStochasticValue):
         self.rho = np.array([[1., self.rho], [self.rho, 1.]])
 
     def generate_time_series(self, T: float, dt: float, nbsimulations: int=1) -> NDArray[Shape["*"], Float]:
+        """Generate a time series of stock prices using the Heston model.
+        
+        Args:
+            T: Time horizon
+            dt: Time step
+            nbsimulations: Number of simulations (default: 1)
+            
+        Returns:
+            NDArray[Shape["*"], Float]: Array of stock prices
+        """
         nbtimesteps = int(T // dt) + 1
 
         # generate correlated random numbers
@@ -92,7 +172,22 @@ class HestonStockPrices(AbstractStochasticValue):
 
 
 class MertonJumpDiffusionStockPrices(AbstractStochasticValue):
+    """Generate stock prices using the Merton jump-diffusion model.
+    
+    This class implements the Merton jump-diffusion model for stock price simulation.
+    """
+    
     def __init__(self, S0: float, r: float, sigma: float, mu: float, lamb: float, delta: float):
+        """Initialize the Merton jump-diffusion stock price generator.
+        
+        Args:
+            S0: Initial stock price
+            r: Risk-free rate
+            sigma: Volatility
+            mu: Expected jump size
+            lamb: Jump intensity
+            delta: Jump size volatility
+        """
         self.S0 = S0
         self.r = r
         self.sigma = sigma
@@ -103,6 +198,16 @@ class MertonJumpDiffusionStockPrices(AbstractStochasticValue):
         self.logS0 = log(self.S0)
 
     def generate_time_series(self, T: float, dt: float, nbsimulations: int=1) -> NDArray[Shape["*"], Float]:
+        """Generate a time series of stock prices using the Merton jump-diffusion model.
+        
+        Args:
+            T: Time horizon
+            dt: Time step
+            nbsimulations: Number of simulations (default: 1)
+            
+        Returns:
+            NDArray[Shape["*"], Float]: Array of stock prices
+        """
         nbtimesteps = int(T // dt) + 1
         z1 = np.random.normal(size=(nbsimulations, nbtimesteps))
         logS = np.zeros((nbsimulations, nbtimesteps))
