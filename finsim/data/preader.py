@@ -63,7 +63,7 @@ def extract_batch_online_yahoofinance_data(
         startdate: str,
         enddate: str,
         threads: bool=True
-) -> dict(str, pd.DataFrame):
+) -> dict[str, pd.DataFrame]:
     """Extract stock data for multiple symbols from Yahoo Finance in batch.
     
     Args:
