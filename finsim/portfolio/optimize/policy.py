@@ -217,7 +217,6 @@ class OptimizedWeightingPolicyUsingMPTSharpeRatio(OptimizedWeightingPolicy):
             cov: Covariance matrix
             symbols: List of symbols (optional)
         """
-        super(OptimizedWeightingPolicyUsingMPTSharpeRatio, self).optimize(r, cov, symbols=symbols)
         self.optimized_sol = optimized_portfolio_on_sharperatio(r, cov, self.rf, minweight=self.minweight)
         self.optimized = True
 
@@ -333,7 +332,6 @@ class OptimizedWeightingPolicyUsingMPTCostFunction(OptimizedWeightingPolicy):
             cov: Covariance matrix
             symbols: List of symbols (optional)
         """
-        super(OptimizedWeightingPolicyUsingMPTCostFunction, self).optimize(r, cov, symbols=symbols)
         self.optimized_sol = optimized_portfolio_mpt_costfunction(r, cov, self.rf, self.lamb, V0=self.V0)
         self.optimized = True
 
@@ -455,7 +453,6 @@ class OptimizedWeightingPolicyUsingMPTEntropyCostFunction(OptimizedWeightingPoli
             cov: Covariance matrix
             symbols: List of symbols (optional)
         """
-        super(OptimizedWeightingPolicyUsingMPTEntropyCostFunction, self).optimize(r, cov, symbols=symbols)
         self.optimized_sol = optimized_portfolio_mpt_entropy_costfunction(r, cov, self.rf, self.lamb0, self.lamb1, V=self.V)
         self.optimized = True
 
