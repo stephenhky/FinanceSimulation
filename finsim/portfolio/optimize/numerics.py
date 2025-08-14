@@ -3,7 +3,7 @@ import logging
 from functools import partial
 from itertools import product
 from datetime import datetime
-from typing import Union, Tuple
+from typing import Tuple
 from os import PathLike
 
 import numpy as np
@@ -181,17 +181,17 @@ def intermediate_wrangle_stock_df_without_dividends(stock_df: pd.DataFrame) -> p
     return stock_df
 
 
-def intermediate_wrangle_stock_df_with_dividends(stock_df: pd.DataFrame, sym: str) -> pd.DataFrame:
+def intermediate_wrangle_stock_df_with_dividends(stock_df: pd.DataFrame, symbol: str) -> pd.DataFrame:
     """Process stock data with dividends.
     
     Args:
         stock_df: DataFrame containing stock data
-        sym: Stock symbol
+        symbol: Stock symbol
         
     Returns:
         pd.DataFrame: Processed stock DataFrame with 'EffVal' column including dividends
     """
-    dividends_df = get_dividends_df(sym)
+    dividends_df = get_dividends_df(symbol)
     dividends_df = dividends_df.rename(columns={'date': 'TimeStamp'})
     dividends_df.loc[:, 'Cash'] = np.cumsum(dividends_df['Dividends'].ravel())
     stock_df.loc[:, 'TimeStamp'] = stock_df['TimeStamp'].map(lambda ts: datetime.strftime(ts, '%Y-%m-%d'))
@@ -206,7 +206,7 @@ def get_BlackScholesMerton_stocks_estimation(
         startdate: str,
         enddate: str,
         progressbar: bool=True,
-        cacheddir: Union[PathLike, str]=None,
+        cacheddir: PathLike | str=None,
         include_dividends: bool=False
 ) -> Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
     """Get Black-Scholes-Merton model estimations for a list of stocks.
@@ -287,7 +287,7 @@ def get_stocks_timeweighted_estimation(
         symbols: list[str],
         timeweightdf: pd.DataFrame,
         progressbar: bool=True,
-        cacheddir: Union[PathLike, str]=None,
+        cacheddir: PathLike | str=None,
         include_dividends: bool=False
 ) -> Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
     """Get time-weighted estimations for a list of stocks.

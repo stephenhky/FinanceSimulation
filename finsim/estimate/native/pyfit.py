@@ -1,6 +1,4 @@
 
-from typing import Tuple
-
 import numpy as np
 import numba as nb
 from nptyping import NDArray, Shape, Float
@@ -10,7 +8,7 @@ from nptyping import NDArray, Shape, Float
 def python_fit_BlackScholesMerton_model(
         ts: NDArray[Shape["*"], Float],
         prices: NDArray[Shape["*"], Float]
-) -> Tuple[float, float]:
+) -> tuple[float, float]:
     """Fit a Black-Scholes-Merton model to price data using Python implementation.
     
     This function estimates the parameters of the Black-Scholes-Merton model, which describes
@@ -39,7 +37,7 @@ def python_fit_BlackScholesMerton_model(
 def python_fit_multivariate_BlackScholesMerton_model(
         ts: NDArray[Shape["*"], Float],
         multiprices: NDArray[Shape["*, *"], Float]
-) -> Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
+) -> tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
     """Fit a multivariate Black-Scholes-Merton model to price data for multiple assets.
     
     This function estimates the parameters of the multivariate Black-Scholes-Merton model,

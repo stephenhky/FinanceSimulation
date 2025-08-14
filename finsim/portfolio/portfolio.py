@@ -3,7 +3,7 @@ import json
 import logging
 import sys
 from collections import defaultdict
-from typing import Union, Any
+from typing import Any
 from os import PathLike
 from io import TextIOWrapper
 if sys.version_info < (3, 11):
@@ -12,7 +12,6 @@ else:
     from typing import Self
 
 from tqdm import tqdm
-import numpy as np
 import pandas as pd
 from nptyping import NDArray, Shape, Float
 
@@ -31,8 +30,8 @@ class Portfolio:
     
     def __init__(
             self,
-            symbols_nbshares: dict[str, Union[int, float]],    # e.g., symbols_nbshares = {'NVDA': 200, 'AMZN': 101}
-            cacheddir: Union[PathLike, str]=None
+            symbols_nbshares: dict[str, int | float],    # e.g., symbols_nbshares = {'NVDA': 200, 'AMZN': 101}
+            cacheddir: PathLike | str=None
     ):
         """Initialize a Portfolio with asset symbols and quantities.
         
@@ -62,7 +61,7 @@ class Portfolio:
             self,
             startdate: str,
             enddate: str,
-            cacheddir: Union[PathLike, str]=None,
+            cacheddir: PathLike | str=None,
             progressbar: bool=False
     ) -> pd.DataFrame:
         logging.debug('Reading financial data...')
@@ -184,7 +183,7 @@ class Portfolio:
         return not self.__eq__(other)
 
     @property
-    def portfolio_symbols_nbshares(self) -> dict[str, Union[int, float]]:
+    def portfolio_symbols_nbshares(self) -> dict[str, int | float]:
         """Get the dictionary of symbols and number of shares.
         
         Returns:
@@ -215,7 +214,7 @@ class Portfolio:
             nbshares = self.symbols_nbshares[symbol]
             self.symbols_nbshares[symbol] = nbshares * factor
             
-    def __mul__(self, other: dict[str, Union[int, float]]) -> Self:
+    def __mul__(self, other: dict[str, int | float]) -> Self:
         """Multiply the portfolio by a scalar factor.
         
         This method creates a new portfolio with the number of shares for each
@@ -251,7 +250,7 @@ class Portfolio:
     def load_from_json(
             cls,
             fileobj: TextIOWrapper,
-            cacheddir: Union[PathLike, str]=None
+            cacheddir: PathLike | str=None
     ) -> Self:
         """Load a portfolio from a JSON file.
         
@@ -268,8 +267,8 @@ class Portfolio:
     @classmethod
     def load_from_dict(
             cls,
-            portdict: dict[str, Union[int, float]],
-            cacheddir: Union[PathLike, str]=None
+            portdict: dict[str, int | float],
+            cacheddir: PathLike | str=None
     ) -> Self:
         """Load a portfolio from a dictionary.
         
@@ -296,7 +295,7 @@ class OptimizedPortfolio(Portfolio):
             policy: OptimizedWeightingPolicy,
             totalworth: float,
             presetdate: str,
-            cacheddir: Union[PathLike, str]=None
+            cacheddir: PathLike | str=None
     ):
         """Initialize an OptimizedPortfolio with an optimization policy.
         
@@ -421,7 +420,7 @@ class OptimizedPortfolio(Portfolio):
     def load_from_json(
             cls,
             fileobj: TextIOWrapper,
-            cacheddir: Union[PathLike, str]=None
+            cacheddir: PathLike | str=None
     ) -> Self:
         """Load an optimized portfolio from a JSON file.
         
@@ -440,7 +439,7 @@ class OptimizedPortfolio(Portfolio):
     def load_from_dict(
             cls,
             portdict: TextIOWrapper,
-            cacheddir: Union[PathLike, str]=None
+            cacheddir: PathLike | str=None
     ) -> Self:
         """Load an optimized portfolio from a dictionary.
         

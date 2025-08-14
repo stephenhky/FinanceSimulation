@@ -1,5 +1,5 @@
 
-from typing import Literal, Tuple
+from typing import Literal
 from itertools import product
 
 import numpy as np
@@ -14,9 +14,8 @@ from .native.pyfit import python_fit_BlackScholesMerton_model, python_fit_multiv
 def fit_BlackScholesMerton_model(
         timestamps: NDArray[Shape["*"], Datetime64],
         prices: NDArray[Shape["*"], Float],
-        unit: Literal['second', 'minute', 'hour', 'day', 'year']='year',
-        lowlevellang: Literal['C', 'P']='P'
-) -> Tuple[float, float]:
+        unit: Literal['second', 'minute', 'hour', 'day', 'year']='year'
+) -> tuple[float, float]:
     """Fit a Black-Scholes-Merton model to price data to estimate rate of return and volatility.
     
     This function estimates the parameters of the Black-Scholes-Merton model, which describes
@@ -28,17 +27,11 @@ def fit_BlackScholesMerton_model(
         prices: Array of asset prices corresponding to the timestamps
         unit: Time unit for calculations. Options are 'second', 'minute', 'hour', 'day', 'year'.
               Default is 'year'.
-        lowlevellang: Language for low-level implementation. 'P' for Python, 'C' for Cython.
-                       Default is 'P'. Note: Cython implementation is no longer supported.
-        
+
     Returns:
         Tuple containing:
             - rate (float): Estimated rate of return (drift parameter)
             - sigma (float): Estimated volatility (diffusion parameter)
-        
-    Raises:
-        ValueError: If Cython fitting is attempted (no longer supported) or if an unknown
-                      low-level language is specified
                       
     Note:
         The function internally converts timestamps to seconds and then to the specified unit.
@@ -49,22 +42,14 @@ def fit_BlackScholesMerton_model(
     ts = np.array(timestamps, dtype='datetime64[s]')
     ts = np.array(ts, dtype=np.float64) / dividing_factor
 
-    if lowlevellang == 'C':
-        raise ValueError("Cython fitting is no longer supported!")
-    elif lowlevellang == 'P':
-        return python_fit_BlackScholesMerton_model(ts, prices)
-    else:
-        raise ValueError(
-            'Unknown low-level language: {}. (Should be "P" (Python), or "C" (Cython).)'.format(
-                lowlevellang))
+    return python_fit_BlackScholesMerton_model(ts, prices)
 
 
 def fit_multivariate_BlackScholesMerton_model(
         timestamps: NDArray[Shape["*"], Datetime64],
         multiprices: NDArray[Shape["*, *"], Float],
         unit: Literal['second', 'minute', 'hour', 'day', 'year']='year',
-        lowlevellang: Literal['C', 'P']='P'
-) -> Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
+) -> tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
     """Fit a multivariate Black-Scholes-Merton model to price data for multiple assets.
     
     This function estimates the parameters of the multivariate Black-Scholes-Merton model,
@@ -76,18 +61,12 @@ def fit_multivariate_BlackScholesMerton_model(
                       a different asset, and each column represents prices at a specific time
         unit: Time unit for calculations. Options are 'second', 'minute', 'hour', 'day', 'year'.
               Default is 'year'.
-        lowlevellang: Language for low-level implementation. 'P' for Python, 'C' for Cython.
-                       Default is 'P'. Note: Cython implementation is no longer supported.
-        
+
     Returns:
         Tuple containing:
             - rates (NDArray[Shape["*"], Float]): Array of estimated rates of return for each asset
             - covariance_matrix (NDArray[Shape["*, *"], Float]): Estimated covariance matrix of returns
-        
-    Raises:
-        ValueError: If Cython fitting is attempted (no longer supported) or if an unknown
-                      low-level language is specified
-                      
+
     Note:
         The function internally converts timestamps to seconds and then to the specified unit.
         The calculation uses the Python implementation of the multivariate Black-Scholes-Merton model.
@@ -97,14 +76,7 @@ def fit_multivariate_BlackScholesMerton_model(
     ts = np.array(timestamps, dtype='datetime64[s]')
     ts = np.array(ts, dtype=np.float64) / dividing_factor
 
-    if lowlevellang == 'C':
-        raise ValueError("Cython fitting is no longer supported!")
-    elif lowlevellang == 'P':
-        return python_fit_multivariate_BlackScholesMerton_model(ts, multiprices)
-    else:
-        raise ValueError(
-            'Unknown low-level language: {}. (Should be "C" (Cython).)'.format(
-                lowlevellang))
+    return python_fit_multivariate_BlackScholesMerton_model(ts, multiprices)
 
 
 ######## routines below are for time-weighted portfolio building
@@ -114,7 +86,7 @@ def fit_timeweighted_BlackScholesMerton_model(
         prices: NDArray[Shape["*"], Float],
         weights: NDArray[Shape["*"], Float],
         unit: Literal['second', 'minute', 'hour', 'day', 'year']='year'
-) -> Tuple[float, float]:
+) -> tuple[float, float]:
     """Fit a time-weighted Black-Scholes-Merton model to price data.
     
     This function estimates the parameters of the Black-Scholes-Merton model using
@@ -152,7 +124,7 @@ def fit_timeweighted_multivariate_BlackScholesMerton_model(
         multiprices: NDArray[Shape["*, *"], Float],
         weights: NDArray[Shape["*"], Float],
         unit: Literal['second', 'minute', 'hour', 'day', 'year']='year'
-) -> Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
+) -> tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
     """Fit a time-weighted multivariate Black-Scholes-Merton model to price data for multiple assets.
     
     This function estimates the parameters of the multivariate Black-Scholes-Merton model

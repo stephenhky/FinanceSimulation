@@ -5,7 +5,7 @@ from collections import defaultdict
 import logging
 import json
 import sys
-from typing import Union, Any
+from typing import Any
 from os import PathLike
 from io import TextIOWrapper
 import warnings
@@ -32,9 +32,9 @@ class DynamicPortfolio(Portfolio):
     
     def __init__(
             self,
-            symbol_nbshares: dict[str, Union[int, float]],
+            symbol_nbshares: dict[str, int | float],
             current_date: str,
-            cacheddir: Union[PathLike, str]=None
+            cacheddir: PathLike | str=None
     ):
         """Initialize a DynamicPortfolio with initial holdings and a current date.
         
@@ -112,8 +112,8 @@ class DynamicPortfolio(Portfolio):
     def trade(
             self,
             trade_date: str,
-            buy_stocks: dict[str, Union[float, int]]=None,
-            sell_stocks: dict[str, Union[float, int]]=None,
+            buy_stocks: dict[str, float | int]=None,
+            sell_stocks: dict[str, float | int]=None,
             check_valid: bool=False,
             raise_insufficient_stock_error: bool=False
     ) -> None:
@@ -189,7 +189,7 @@ class DynamicPortfolio(Portfolio):
             self,
             startdate: str,
             enddate: str,
-            cacheddir: Union[PathLike, str]=None,
+            cacheddir: PathLike | str=None,
             progressbar: bool = False
     ) -> pd.DataFrame:
         """Calculate the portfolio value over a time period.
@@ -238,9 +238,11 @@ class DynamicPortfolio(Portfolio):
         Returns:
             dict[str, Any]: Dictionary representation of the dynamic portfolio
         """
-        dynport_dict = {'name': 'DynamicPortfolio'}
-        dynport_dict['current_date'] = self.current_date
-        dynport_dict['timeseries'] = []
+        dynport_dict = {
+            'name': 'DynamicPortfolio',
+            'current_date': self.current_date,
+            'timeseries': []
+        }
         for portdict in self.timeseries:
             trade_date = portdict['date']
             portfolio = portdict['portfolio']
@@ -272,7 +274,7 @@ class DynamicPortfolio(Portfolio):
     def load_from_dict(
             cls,
             dynportdict: dict[str, Any],
-            cacheddir: Union[PathLike, str]=None
+            cacheddir: PathLike | str=None
     ) -> Self:
         """Load a dynamic portfolio from a dictionary.
         
@@ -303,7 +305,7 @@ class DynamicPortfolio(Portfolio):
     def load_from_json(
             cls,
             fileobj: TextIOWrapper,
-            cacheddir: Union[PathLike, str]=None
+            cacheddir: PathLike | str=None
     ) -> Self:
         """Load a dynamic portfolio from a JSON file.
         
@@ -328,10 +330,10 @@ class DynamicPortfolioWithDividends(DynamicPortfolio):
     
     def __init__(
             self,
-            symbol_nbshares: dict[str, Union[float, int]],
+            symbol_nbshares: dict[str, float | int],
             current_date: str,
             cash: float=0.,
-            cacheddir: Union[PathLike, str]=None
+            cacheddir: PathLike | str=None
     ):
         """Initialize a DynamicPortfolioWithDividends with initial holdings, cash, and a current date.
         
@@ -384,7 +386,7 @@ class DynamicPortfolioWithDividends(DynamicPortfolio):
             self,
             startdate: str,
             enddate: str,
-            cacheddir: Union[PathLike, str]=None,
+            cacheddir: PathLike | str=None,
             progressbar: bool= False
     ) -> pd.DataFrame:
         """Calculate the portfolio value over a time period, including dividends.

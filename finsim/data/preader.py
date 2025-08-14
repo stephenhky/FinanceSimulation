@@ -1,6 +1,5 @@
 
 from datetime import datetime, timedelta
-from typing import Union
 from pathlib import Path
 from os import PathLike
 import logging
@@ -8,6 +7,7 @@ from time import sleep
 from functools import lru_cache
 import threading
 import traceback
+import sys
 
 import pandas as pd
 import tables
@@ -37,6 +37,7 @@ def extract_online_yahoofinance_data(symbol: str, startdate: str, enddate: str) 
         )
     except:
         logging.warning(f'Symbol {symbol} does not exist between {startdate} and {enddate}.')
+        traceback.print_exc(file=sys.stderr)
         return pd.DataFrame({
             'TimeStamp': [],
             'High': [],
@@ -62,7 +63,7 @@ def extract_batch_online_yahoofinance_data(
         startdate: str,
         enddate: str,
         threads: bool=True
-) -> pd.DataFrame:
+) -> dict(str, pd.DataFrame):
     """Extract stock data for multiple symbols from Yahoo Finance in batch.
     
     Args:
@@ -119,7 +120,7 @@ def get_yahoofinance_data(
         symbol: str,
         startdate: str,
         enddate: str,
-        cacheddir: Union[str, PathLike]=None
+        cacheddir: str | PathLike=None
 ) -> pd.DataFrame:
     """Get Yahoo Finance data for a symbol, with optional caching.
     
@@ -205,7 +206,7 @@ def get_symbol_closing_price(
         symbol: str,
         datestr: str,
         epsilon: float=1e-10,
-        cacheddir: Union[PathLike, str]=None,
+        cacheddir: PathLike | str=None,
         backtrack: bool=False
 ) -> float:
     """Get the closing price for a symbol on a specific date.
@@ -238,7 +239,7 @@ def finding_missing_symbols_in_cache(
         symbols: list[str],
         startdate: str,
         enddate: str,
-        cacheddir: Union[str, Path]
+        cacheddir: str | PathLike
 ) -> list[str]:
     """Find symbols that are missing from the cache.
     
@@ -286,7 +287,7 @@ def finding_missing_symbols_in_cache(
     return sorted(list(set(symbols) - set(existing_valid_symbols)))
 
 
-def dataframe_to_hdf(df: pd.DataFrame, filepath: Union[PathLike, str], key: str) -> None:
+def dataframe_to_hdf(df: pd.DataFrame, filepath: PathLike | str, key: str) -> None:
     """Save a DataFrame to an HDF file.
     
     Args:
@@ -301,7 +302,7 @@ def generating_cached_yahoofinance_data(
         symbols: list[str],
         startdate: str,
         enddate: str,
-        cacheddir: Union[PathLike, str],
+        cacheddir: PathLike | str,
         slicebatch: int=50,
         waittime: int=1,
         yfinance_multithreads: bool=False,

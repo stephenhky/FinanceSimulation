@@ -76,7 +76,7 @@ class OptimizedWeightingPolicy(ABC):
             cov: Covariance matrix
             symbols: List of symbols (optional)
         """
-        pass
+        raise NotImplemented()
 
     @property
     def portfolio_symbols(self) -> list[str]:
@@ -95,7 +95,7 @@ class OptimizedWeightingPolicy(ABC):
         Returns:
             NDArray[Shape["*"], Float]: Array of optimized weights
         """
-        pass
+        raise NotImplemented()
 
     @property
     @abstractmethod
@@ -105,7 +105,7 @@ class OptimizedWeightingPolicy(ABC):
         Returns:
             float: Expected yield of the portfolio
         """
-        pass
+        raise NotImplemented()
 
     @property
     @abstractmethod
@@ -115,7 +115,7 @@ class OptimizedWeightingPolicy(ABC):
         Returns:
             float: Volatility of the portfolio
         """
-        pass
+        NotImplemented()
 
     @property
     def correlation_matrix(self) -> NDArray[Shape["*, *"], Float]:
@@ -404,7 +404,6 @@ class OptimizedWeightingPolicyUsingMPTCostFunction(OptimizedWeightingPolicy):
             str: Type of the optimization policy
         """
         return 'OptimizedWeightingPolicyUsingMPTCostFunction'
-
 
 
 class OptimizedWeightingPolicyUsingMPTEntropyCostFunction(OptimizedWeightingPolicy):

@@ -18,7 +18,7 @@ class AbstractStochasticValue(ABC):
             dt: Time step
             nbsimulations: Number of simulations (default: 1)
         """
-        pass
+        raise NotImplemented()
 
 
 class BlackScholesMertonStockPrices(AbstractStochasticValue):
@@ -41,7 +41,12 @@ class BlackScholesMertonStockPrices(AbstractStochasticValue):
 
         self.logS0 = log(S0)
 
-    def generate_time_series(self, T, dt, nbsimulations=1) -> NDArray[Shape["*"], Float]:
+    def generate_time_series(
+            self,
+            T: float,
+            dt: float,
+            nbsimulations: int=1
+    ) -> NDArray[Shape["*"], Float]:
         """Generate a time series of stock prices using the Black-Scholes-Merton model.
         
         Args:

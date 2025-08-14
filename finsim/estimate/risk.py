@@ -13,8 +13,7 @@ def estimate_downside_risk(
         timestamps: NDArray[Shape["*"], Datetime64],
         prices: NDArray[Shape["*"], Float],
         target_return: float,
-        unit: Literal['second', 'minute', 'hour', 'day', 'year']='year',
-        lowlevellang: Literal['C', 'P']='P'
+        unit: Literal['second', 'minute', 'hour', 'day', 'year']='year'
 ) -> float:
     """Estimate the downside risk of an asset based on historical price data.
     
@@ -27,16 +26,10 @@ def estimate_downside_risk(
         target_return: The target return threshold for calculating downside risk
         unit: Time unit for calculations. Options are 'second', 'minute', 'hour', 'day', 'year'.
               Default is 'year'.
-        lowlevellang: Language for low-level implementation. 'P' for Python, 'C' for Cython.
-                       Default is 'P'. Note: Cython implementation is no longer supported.
-        
+
     Returns:
         float: The estimated downside risk (standard deviation of returns below target)
         
-    Raises:
-        ValueError: If Cython fitting is attempted (no longer supported) or if an unknown
-                      low-level language is specified
-                      
     Note:
         The function internally converts timestamps to seconds and then to the specified unit.
         The calculation uses the Python implementation of downside risk estimation.
@@ -46,22 +39,14 @@ def estimate_downside_risk(
     ts = np.array(timestamps, dtype='datetime64[s]')
     ts = np.array(ts, dtype=np.float64) / dividing_factor
 
-    if lowlevellang == 'C':
-        raise ValueError("Cython fitting is no longer supported!")
-    elif lowlevellang == 'P':
-        return python_estimate_downside_risk(ts, prices, target_return)
-    else:
-        raise ValueError(
-            'Unknown low-level language: {}. (Should be "P" (Python), or "C" (Cython))'.format(
-                lowlevellang))
+    return python_estimate_downside_risk(ts, prices, target_return)
 
 
 def estimate_upside_risk(
         timestamps: NDArray[Shape["*"], Datetime64],
         prices: NDArray[Shape["*"], Float],
         target_return: float,
-        unit: Literal['second', 'minute', 'hour', 'day', 'year'] = 'year',
-        lowlevellang: Literal['C', 'P'] = 'P'
+        unit: Literal['second', 'minute', 'hour', 'day', 'year'] = 'year'
 ) -> float:
     """Estimate the upside risk of an asset based on historical price data.
     
@@ -74,16 +59,10 @@ def estimate_upside_risk(
         target_return: The target return threshold for calculating upside risk
         unit: Time unit for calculations. Options are 'second', 'minute', 'hour', 'day', 'year'.
               Default is 'year'.
-        lowlevellang: Language for low-level implementation. 'P' for Python, 'C' for Cython.
-                       Default is 'P'. Note: Cython implementation is no longer supported.
-        
+
     Returns:
         float: The estimated upside risk (standard deviation of returns above target)
         
-    Raises:
-        ValueError: If Cython fitting is attempted (no longer supported) or if an unknown
-                      low-level language is specified
-                      
     Note:
         The function internally converts timestamps to seconds and then to the specified unit.
         The calculation uses the Python implementation of upside risk estimation.
@@ -93,14 +72,7 @@ def estimate_upside_risk(
     ts = np.array(timestamps, dtype='datetime64[s]')
     ts = np.array(ts, dtype=np.float64) / dividing_factor
 
-    if lowlevellang == 'C':
-        raise ValueError("Cython fitting is no longer supported!")
-    elif lowlevellang == 'P':
-        return python_estimate_upside_risk(ts, prices, target_return)
-    else:
-        raise ValueError(
-            'Unknown low-level language: {}. (Should be "P" (Python), or "C" (Cython).)'.format(
-                lowlevellang))
+    return python_estimate_upside_risk(ts, prices, target_return)
 
 
 def estimate_beta(
