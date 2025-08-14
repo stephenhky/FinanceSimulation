@@ -43,7 +43,7 @@ dependencies = [
 [project.urls]
 Repository = "https://github.com/stephenhky/FinanceSimulation"
 Issues = "https://github.com/stephenhky/FinanceSimulation/issues"
-Documentation = "https://github.com/stephenhky/FinanceSimulation/docs"
+Documentation = "https://financesimulation.readthedocs.io"
 
 [tool.setuptools]
 packages = [
