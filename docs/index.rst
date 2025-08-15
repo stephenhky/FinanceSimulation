@@ -1,19 +1,6 @@
 Welcome to finsim's documentation!
 ===================================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   modules
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
 Introduction
 ============
 
@@ -47,3 +34,10 @@ API Reference
    :maxdepth: 4
 
    finsim
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
