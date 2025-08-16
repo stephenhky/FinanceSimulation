@@ -5,11 +5,13 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
+import numba as nb
 from nptyping import NDArray, Shape, Float
 
 from .numerics import optimized_portfolio_on_sharperatio, optimized_portfolio_mpt_costfunction, optimized_portfolio_mpt_entropy_costfunction
 
 
+@nb.njit
 def mat_to_list(mat: NDArray[Shape["*, *"], Float]) -> list[list[float]]:
     """Convert a 2D numpy array to a list of lists.
     
