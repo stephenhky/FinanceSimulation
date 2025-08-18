@@ -20,6 +20,7 @@ import pandas as pd
 from .helper import InsufficientSharesException
 from .portfolio import Portfolio
 from ..data.preader import get_dividends_df
+from ..schemas.portfolios import DynamicPortfolioSchema
 
 
 class DynamicPortfolio(Portfolio):
@@ -286,19 +287,21 @@ class DynamicPortfolio(Portfolio):
             Self: A new DynamicPortfolio object loaded from the dictionary
         """
         assert dynportdict['name'] == 'DynamicPortfolio'
+        validated_dynportdict = DynamicPortfolioSchema.model_validate(dynportdict).model_dump()
+
         dynport = cls(
-            dynportdict['timeseries'][0]['portfolio'],
-            dynportdict['timeseries'][0]['date'],
+            validated_dynportdict['timeseries'][0]['portfolio'],
+            validated_dynportdict['timeseries'][0]['date'].strftime('%Y-%m-%d'),
             cacheddir=cacheddir
         )
-        for portdict in dynportdict['timeseries'][1:]:
-            tradedate = portdict['date']
+        for portdict in validated_dynportdict['timeseries'][1:]:
+            tradedate = portdict['date'].strftime('%Y-%m-%d')
             symbols_nbshares = portdict['portfolio']
             dynport.timeseries.append({'date': tradedate,
                                        'portfolio': Portfolio(symbols_nbshares, cacheddir=cacheddir)
                                        })
 
-        dynport.move_cursor_to_date(dynportdict['current_date'])
+        dynport.move_cursor_to_date(validated_dynportdict['current_date'].strftime('%Y-%m-%d'))
         return dynport
     
     @classmethod
