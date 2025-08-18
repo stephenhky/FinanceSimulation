@@ -18,6 +18,7 @@ from nptyping import NDArray, Shape, Float
 from ..data.preader import get_yahoofinance_data, get_symbol_closing_price
 from .optimize.policy import OptimizedWeightingPolicy
 from .helper import align_timestamps_stock_dataframes
+from ..schemas.portfolios import PortfolioSchema
 
 
 class Portfolio:
@@ -39,7 +40,9 @@ class Portfolio:
             symbols_nbshares: Dictionary mapping stock symbols to number of shares
             cacheddir: Directory for cached data (optional)
         """
-        self.symbols_nbshares = symbols_nbshares
+        validated_portdict = PortfolioSchema.model_validate({'content': symbols_nbshares}).model_dump().get('content')
+
+        self.symbols_nbshares = validated_portdict
         self.cacheddir = cacheddir
 
     def get_portfolio_value(self, datestr: str) -> float:
@@ -214,7 +217,7 @@ class Portfolio:
             nbshares = self.symbols_nbshares[symbol]
             self.symbols_nbshares[symbol] = nbshares * factor
             
-    def __mul__(self, other: dict[str, int | float]) -> Self:
+    def __mul__(self, other: int | float) -> Self:
         """Multiply the portfolio by a scalar factor.
         
         This method creates a new portfolio with the number of shares for each
@@ -262,7 +265,7 @@ class Portfolio:
             Self: A new Portfolio object loaded from the JSON file
         """
         symbols_nbshares = json.load(fileobj)
-        return cls(symbols_nbshares, cacheddir=cacheddir)
+        return cls.load_from_dict(symbols_nbshares, cacheddir=cacheddir)
 
     @classmethod
     def load_from_dict(

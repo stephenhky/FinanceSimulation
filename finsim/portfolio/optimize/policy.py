@@ -117,7 +117,7 @@ class OptimizedWeightingPolicy(ABC):
         Returns:
             float: Volatility of the portfolio
         """
-        NotImplemented()
+        raise NotImplemented()
 
     @property
     def correlation_matrix(self) -> NDArray[Shape["*, *"], Float]:
