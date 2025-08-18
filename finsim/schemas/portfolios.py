@@ -22,4 +22,4 @@ class DynamicPortfolioSchema(BaseModel):
 
     name: str
     current_date: date
-    timeseries: list(PortfolioTimePointScheme)
+    timeseries: list[PortfolioTimePointScheme]
