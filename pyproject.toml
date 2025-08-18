@@ -37,7 +37,8 @@ dependencies = [
     "openpyxl>=3.1.0",
     "numba",
     "typing-extensions",
-    "nptyping"
+    "nptyping",
+    "pydantic"
 ]
 
 [project.urls]
