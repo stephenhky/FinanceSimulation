@@ -1,6 +1,7 @@
 
 from datetime import timedelta, datetime
 from os import PathLike
+from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -13,7 +14,7 @@ def get_movingaverage_price_data(
         startdate: str,
         enddate: str,
         dayswindow: int,
-        cacheddir: PathLike | str=None
+        cacheddir: Optional[PathLike | str]=None
 ) -> pd.DataFrame:
     """Get moving average price data for a stock symbol.
     

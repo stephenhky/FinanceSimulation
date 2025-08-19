@@ -1,7 +1,7 @@
 
 from itertools import product
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Optional
 
 import numpy as np
 import pandas as pd
@@ -39,9 +39,9 @@ class OptimizedWeightingPolicy(ABC):
     def __init__(
             self,
             rf: float,
-            r: NDArray[Shape["*"], Float]=None,
-            cov: NDArray[Shape["*, *"], Float]=None,
-            symbols: list[str]=None
+            r: Optional[NDArray[Shape["*"], Float]]=None,
+            cov: Optional[NDArray[Shape["*, *"], Float]]=None,
+            symbols: Optional[list[str]]=None
     ):
         """Initialize the OptimizedWeightingPolicy.
         
@@ -69,7 +69,7 @@ class OptimizedWeightingPolicy(ABC):
             self,
             r: NDArray[Shape["*"], Float],
             cov: NDArray[Shape["*, *"], Float],
-            symbols: list[str]=None
+            symbols: Optional[list[str]]=None
     ) -> None:
         """Optimize the portfolio weights.
         
@@ -187,9 +187,9 @@ class OptimizedWeightingPolicyUsingMPTSharpeRatio(OptimizedWeightingPolicy):
     def __init__(
             self,
             rf: float,
-            r: NDArray[Shape["*"], Float]=None,
-            cov: NDArray[Shape["*, *"], Float]=None,
-            symbols: list[str]=None,
+            r: Optional[NDArray[Shape["*"], Float]]=None,
+            cov: Optional[NDArray[Shape["*, *"], Float]]=None,
+            symbols: Optional[list[str]]=None,
             minweight: float=0.
     ):
         """Initialize the OptimizedWeightingPolicyUsingMPTSharpeRatio.
@@ -210,7 +210,7 @@ class OptimizedWeightingPolicyUsingMPTSharpeRatio(OptimizedWeightingPolicy):
             self,
             r: NDArray[Shape["*"], Float],
             cov: NDArray[Shape["*, *"], Float],
-            symbols: list[str]=None
+            symbols: Optional[list[str]]=None
     ) -> None:
         """Optimize the portfolio weights using the Sharpe ratio.
         
@@ -300,8 +300,8 @@ class OptimizedWeightingPolicyUsingMPTCostFunction(OptimizedWeightingPolicy):
             rf: float,
             r: NDArray[Shape["*"], Float],
             cov: NDArray[Shape["*, *"], Float],
-            symbols: list[str]=None,
-            lamb: float=None,
+            symbols: Optional[list[str]]=None,
+            lamb: float=0.0,
             V0: float=10.0
     ):
         """Initialize the OptimizedWeightingPolicyUsingMPTCostFunction.
@@ -325,7 +325,7 @@ class OptimizedWeightingPolicyUsingMPTCostFunction(OptimizedWeightingPolicy):
             self,
             r: NDArray[Shape["*"], Float],
             cov: NDArray[Shape["*, *"], Float],
-            symbols: list[str]=None
+            symbols: Optional[list[str]]=None
     ) -> None:
         """Optimize the portfolio weights using the MPT cost function.
         
@@ -418,9 +418,9 @@ class OptimizedWeightingPolicyUsingMPTEntropyCostFunction(OptimizedWeightingPoli
             rf: float,
             r: NDArray[Shape["*"], Float]=None,
             cov: NDArray[Shape["*, *"], Float]=None,
-            symbols: list[str]=None,
-            lamb0: float=None,
-            lamb1: float=None,
+            symbols: Optional[list[str]]=None,
+            lamb0: float=0.0,
+            lamb1: float=0.0,
             V: float=10.0
     ):
         """Initialize the OptimizedWeightingPolicyUsingMPTEntropyCostFunction.
@@ -446,7 +446,7 @@ class OptimizedWeightingPolicyUsingMPTEntropyCostFunction(OptimizedWeightingPoli
             self,
             r: NDArray[Shape["*"], Float],
             cov: NDArray[Shape["*, *"], Float],
-            symbols: list[str]=None
+            symbols: Optional[list[str]]=None
     ) -> None:
         """Optimize the portfolio weights using the MPT entropy cost function.
         

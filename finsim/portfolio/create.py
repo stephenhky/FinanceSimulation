@@ -2,6 +2,7 @@
 from datetime import datetime, timedelta
 import warnings
 from os import PathLike
+from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -21,7 +22,7 @@ def get_optimized_portfolio_on_sharpe_ratio(
         estimating_enddate: str,
         minweight: float=0.,
         lazy: bool=False,
-        cacheddir: PathLike | str=None,
+        cacheddir: Optional[PathLike | str]=None,
         include_dividends: bool=False
 ) -> OptimizedPortfolio:
     """Create an optimized portfolio based on the Sharpe ratio optimization method.
@@ -68,7 +69,7 @@ def get_optimized_portfolio_on_mpt_costfunction(
         estimating_enddate: str,
         lamb: float,
         V0: float=10.,
-        cacheddir: PathLike | str=None,
+        cacheddir: Optional[PathLike | str]=None,
         include_dividends: bool=False
 ) -> OptimizedPortfolio:
     """Create an optimized portfolio based on the MPT cost function optimization method.
@@ -114,7 +115,7 @@ def get_optimized_portfolio_on_mpt_entropy_costfunction(
         lamb0: float,
         lamb1: float,
         V: float=10.,
-        cacheddir: PathLike | str=None,
+        cacheddir: Optional[PathLike | str]=None,
         include_dividends: bool=False
 ) -> OptimizedPortfolio:
     """Create an optimized portfolio based on the MPT entropy cost function optimization method.
@@ -195,7 +196,7 @@ def get_optimized_exponential_timeweighted_portfolio_on_mpt_entropy_costfunction
         lamb0: float,
         lamb1: float,
         V: float=10.,
-        cacheddir: PathLike | str=None,
+        cacheddir: Optional[PathLike | str]=None,
         include_dividends: bool=False
 ) -> OptimizedPortfolio:
     """Create an optimized time-weighted portfolio using exponential weights and entropy cost function.

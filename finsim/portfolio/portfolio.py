@@ -3,7 +3,7 @@ import json
 import logging
 import sys
 from collections import defaultdict
-from typing import Any
+from typing import Any, Optional
 from os import PathLike
 from io import TextIOWrapper
 if sys.version_info < (3, 11):
@@ -32,7 +32,7 @@ class Portfolio:
     def __init__(
             self,
             symbols_nbshares: dict[str, int | float],    # e.g., symbols_nbshares = {'NVDA': 200, 'AMZN': 101}
-            cacheddir: PathLike | str=None
+            cacheddir: Optional[PathLike | str]=None
     ):
         """Initialize a Portfolio with asset symbols and quantities.
         
@@ -64,7 +64,7 @@ class Portfolio:
             self,
             startdate: str,
             enddate: str,
-            cacheddir: PathLike | str=None,
+            cacheddir: Optional[PathLike | str]=None,
             progressbar: bool=False
     ) -> pd.DataFrame:
         logging.debug('Reading financial data...')
@@ -275,7 +275,7 @@ class Portfolio:
     def load_from_json(
             cls,
             fileobj: TextIOWrapper,
-            cacheddir: PathLike | str=None
+            cacheddir: Optional[PathLike | str]=None
     ) -> Self:
         """Load a portfolio from a JSON file.
         
@@ -293,7 +293,7 @@ class Portfolio:
     def load_from_dict(
             cls,
             portdict: dict[str, int | float],
-            cacheddir: PathLike | str=None
+            cacheddir: Optional[PathLike | str]=None
     ) -> Self:
         """Load a portfolio from a dictionary.
         
@@ -320,7 +320,7 @@ class OptimizedPortfolio(Portfolio):
             policy: OptimizedWeightingPolicy,
             totalworth: float,
             presetdate: str,
-            cacheddir: PathLike | str=None
+            cacheddir: Optional[PathLike | str]=None
     ):
         """Initialize an OptimizedPortfolio with an optimization policy.
         
@@ -445,7 +445,7 @@ class OptimizedPortfolio(Portfolio):
     def load_from_json(
             cls,
             fileobj: TextIOWrapper,
-            cacheddir: PathLike | str=None
+            cacheddir: Optional[PathLike | str]=None
     ) -> Self:
         """Load an optimized portfolio from a JSON file.
         
@@ -464,7 +464,7 @@ class OptimizedPortfolio(Portfolio):
     def load_from_dict(
             cls,
             portdict: TextIOWrapper,
-            cacheddir: PathLike | str=None
+            cacheddir: Optional[PathLike | str]=None
     ) -> Self:
         """Load an optimized portfolio from a dictionary.
         

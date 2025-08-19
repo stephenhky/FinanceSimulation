@@ -8,6 +8,7 @@ from functools import lru_cache
 import threading
 import traceback
 import sys
+from typing import Optional
 
 import pandas as pd
 import tables
@@ -120,7 +121,7 @@ def get_yahoofinance_data(
         symbol: str,
         startdate: str,
         enddate: str,
-        cacheddir: str | PathLike=None
+        cacheddir: Optional[str | PathLike]=None
 ) -> pd.DataFrame:
     """Get Yahoo Finance data for a symbol, with optional caching.
     
@@ -206,7 +207,7 @@ def get_symbol_closing_price(
         symbol: str,
         datestr: str,
         epsilon: float=1e-10,
-        cacheddir: PathLike | str=None,
+        cacheddir: Optional[PathLike | str]=None,
         backtrack: bool=False
 ) -> float:
     """Get the closing price for a symbol on a specific date.

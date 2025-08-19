@@ -206,7 +206,7 @@ def get_BlackScholesMerton_stocks_estimation(
         startdate: str,
         enddate: str,
         progressbar: bool=True,
-        cacheddir: PathLike | str=None,
+        cacheddir: Optional[PathLike | str]=None,
         include_dividends: bool=False
 ) -> Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
     """Get Black-Scholes-Merton model estimations for a list of stocks.
@@ -287,7 +287,7 @@ def get_stocks_timeweighted_estimation(
         symbols: list[str],
         timeweightdf: pd.DataFrame,
         progressbar: bool=True,
-        cacheddir: PathLike | str=None,
+        cacheddir: Optional[PathLike | str]=None,
         include_dividends: bool=False
 ) -> Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
     """Get time-weighted estimations for a list of stocks.
