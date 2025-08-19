@@ -3,7 +3,7 @@ import logging
 from functools import partial
 from itertools import product
 from datetime import datetime
-from typing import Tuple
+from typing import Optional
 from os import PathLike
 
 import numpy as np
@@ -208,7 +208,7 @@ def get_BlackScholesMerton_stocks_estimation(
         progressbar: bool=True,
         cacheddir: Optional[PathLike | str]=None,
         include_dividends: bool=False
-) -> Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
+) -> tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
     """Get Black-Scholes-Merton model estimations for a list of stocks.
     
     Args:
@@ -220,7 +220,7 @@ def get_BlackScholesMerton_stocks_estimation(
         include_dividends: Whether to include dividends in the calculation (default: False)
         
     Returns:
-        Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]: Tuple of (rarray, covmat)
+        tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]: Tuple of (rarray, covmat)
     """
     logging.info('Reading financial data...')
     symreadingprogress = tqdm(symbols) if progressbar else symbols
@@ -289,7 +289,7 @@ def get_stocks_timeweighted_estimation(
         progressbar: bool=True,
         cacheddir: Optional[PathLike | str]=None,
         include_dividends: bool=False
-) -> Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
+) -> tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
     """Get time-weighted estimations for a list of stocks.
     
     Args:
@@ -300,7 +300,7 @@ def get_stocks_timeweighted_estimation(
         include_dividends: Whether to include dividends in the calculation (default: False)
         
     Returns:
-        Tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]: Tuple of (rarray, covmat)
+        tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]: Tuple of (rarray, covmat)
     """
     logging.info('Parsing weights according to date')
     startdate = timeweightdf['TimeStamp'][0]
