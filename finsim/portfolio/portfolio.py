@@ -146,7 +146,15 @@ class Portfolio:
         symshares2 = defaultdict(lambda: 0, other.symbols_nbshares)
         all_symbols = set(symshares1.keys()).union(symshares2.keys())
 
-        symbols_diff_shares = {symbol: symshares1[symbol] - symshares2[symbol] for symbol in all_symbols}
+        symbols_diff_shares = {
+            symbol: symshares1[symbol] - symshares2[symbol]
+            for symbol in all_symbols
+        }
+        symbols_diff_shares = {
+            symbol: nbshares
+            for symbol, nbshares in symbols_diff_shares.items()
+            if nbshares != 0
+        }
         return Portfolio(symbols_diff_shares, cacheddir=self.cacheddir)
 
     def __eq__(self, other: Self) -> bool:
@@ -232,6 +240,20 @@ class Portfolio:
         assert isinstance(other, int) or isinstance(other, float)
         newshares = {symbol: nbshares*other for symbol, nbshares in self.symbols_nbshares.items()}
         return Portfolio(newshares, cacheddir=self.cacheddir)
+
+    def __rmul__(self, other: int | float) -> Self:
+        """Multiply the portfolio by a scalar factor.
+
+        This method creates a new portfolio with the number of shares for each
+        asset multiplied by the specified factor.
+
+        Args:
+            other: The factor by which to multiply the number of shares
+
+        Returns:
+            Self: A new Portfolio object with multiplied share quantities
+        """
+        return self * other
 
     def save_to_json(self, fileobj: TextIOWrapper) -> None:
         """Save the portfolio to a JSON file.
