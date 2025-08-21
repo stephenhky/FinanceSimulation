@@ -28,21 +28,4 @@ To install finsim, use pip:
 pip install finsim
 ```
 
-### With documentation dependencies
 
-To install finsim with documentation dependencies:
-
-```bash
-pip install finsim[docs]
-```
-
-## Usage
-
-```python
-from finsim.data import FinnHubStockReader
-from finsim.estimate import fit_BlackScholesMerton_model
-from finsim.portfolio import get_optimized_portfolio_on_sharpe_ratio
-
-# Example usage
-# ...
-```
