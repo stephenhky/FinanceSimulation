@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "finsim"
-version = "1.1.0"
+version = "1.2.0"
 authors = [
     {name = "Kwan Yuet Stephen Ho", email = "stephenhky@yahoo.com.hk"}
 ]
@@ -37,12 +37,14 @@ dependencies = [
     "openpyxl>=3.1.0",
     "numba",
     "typing-extensions",
-    "nptyping"
+    "nptyping",
+    "pydantic"
 ]
 
 [project.urls]
 Repository = "https://github.com/stephenhky/FinanceSimulation"
 Issues = "https://github.com/stephenhky/FinanceSimulation/issues"
+Documentation = "https://financesimulation.readthedocs.io"
 
 [tool.setuptools]
 packages = [
@@ -55,13 +57,16 @@ packages = [
     "finsim.portfolio.optimize",
     "finsim.portfolio.optimize.native",
     "finsim.tech",
-    "finsim.retrieve_stock_symbols_cli"
+    "finsim.retrieve_stock_symbols_cli",
+    "finsim.schemas"
 ]
 zip-safe = false
 include-package-data = true
+package-dir = {"" = "src"}
 
 [project.scripts]
 retrieve_stock_symbols = "finsim.retrieve_stock_symbols_cli:main_cli"
 
 [project.optional-dependencies]
 test = ["unittest2", "pytest"]
+docs = ["sphinx>=4.0.0", "sphinx-rtd-theme>=1.0.0"]

@@ -77,6 +77,36 @@ class TestPortfolio(unittest.TestCase):
         self.assertFalse(isinstance(reloaded_portfolio, OptimizedPortfolio))
         os.remove('portfolio.json')
 
+    def test_portfolio_arithmetic(self):
+        portfolio1 = Portfolio({"NVDA": 1, "GOOG": 3, "JPM": 2})
+        portfolio2 = Portfolio({"TSLA": 2, "NVDA": 3, "GOOG": 3, "CO": 2})
+
+        portfolio3 = portfolio1 + portfolio2
+        assert portfolio3.portfolio_symbols_nbshares["NVDA"] == 4
+        assert portfolio3.portfolio_symbols_nbshares["GOOG"] == 6
+        assert portfolio3.portfolio_symbols_nbshares["JPM"] == 2
+        assert portfolio3.portfolio_symbols_nbshares["TSLA"] == 2
+        assert portfolio3.portfolio_symbols_nbshares["CO"] == 2
+
+        portfolio4 = portfolio1 - portfolio2
+        assert portfolio4.portfolio_symbols_nbshares["NVDA"] == -2
+        with self.assertRaises(KeyError):
+            assert portfolio4.portfolio_symbols_nbshares["GOOG"] == 0
+        assert portfolio4.portfolio_symbols_nbshares["JPM"] == 2
+        assert portfolio4.portfolio_symbols_nbshares["TSLA"] == -2
+        assert portfolio4.portfolio_symbols_nbshares["CO"] == -2
+
+        assert portfolio1 != portfolio2
+
+        portfolio5 = portfolio2 * 4.5
+        assert portfolio5.portfolio_symbols_nbshares["TSLA"] == 9
+        assert portfolio5.portfolio_symbols_nbshares["NVDA"] == 13.5
+        assert portfolio5.portfolio_symbols_nbshares["GOOG"] == 13.5
+        assert portfolio5.portfolio_symbols_nbshares["CO"] == 9
+
+        portfolio6 = 4.5 * portfolio2
+        assert portfolio6 == portfolio5
+
 
 if __name__ == '__main__':
     unittest.main()
