@@ -57,7 +57,8 @@ packages = [
     "finsim.portfolio.optimize",
     "finsim.portfolio.optimize.native",
     "finsim.tech",
-    "finsim.retrieve_stock_symbols_cli"
+    "finsim.retrieve_stock_symbols_cli",
+    "finsim.schemas"
 ]
 zip-safe = false
 include-package-data = true
