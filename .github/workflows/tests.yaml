@@ -24,9 +24,9 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --user --upgrade pip
-          pip install --user --upgrade setuptools wheel Cython
+          pip install --user --upgrade setuptools wheel
           pip cache purge
           pip install --user .
           pip install --user .[test]
       - name: Run tests
-        run: pytest --doctest-cython
+        run: pytest
