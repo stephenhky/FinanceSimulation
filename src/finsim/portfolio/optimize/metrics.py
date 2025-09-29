@@ -1,15 +1,16 @@
 
-from typing import Literal
+from typing import Literal, Annotated
 
-from nptyping import NDArray, Shape, Float
+import numpy as np
+from numpy.typing import NDArray
 
 from .native.pymetrics import python_sharpe_ratio, python_mpt_costfunction, python_mpt_entropy_costfunction
 
 
 def sharpe_ratio(
-        weights: NDArray[Shape["*"], Float],
-        r: NDArray[Shape["*"], Float],
-        cov: NDArray[Shape["*, *"], Float],
+        weights: Annotated[NDArray[np.float64], Literal["1D array"]],
+        r: Annotated[NDArray[np.float64], Literal["1D array"]],
+        cov: Annotated[NDArray[np.float64], Literal["2D array"]],
         rf: float
 ) -> float:
     """Calculate the Sharpe ratio for a portfolio.
@@ -27,9 +28,9 @@ def sharpe_ratio(
 
 
 def mpt_costfunction(
-        weights: NDArray[Shape["*"], Float],
-        r: NDArray[Shape["*"], Float],
-        cov: NDArray[Shape["*, *"], Float],
+        weights: Annotated[NDArray[np.float64], Literal["1D array"]],
+        r: Annotated[NDArray[np.float64], Literal["1D array"]],
+        cov: Annotated[NDArray[np.float64], Literal["2D array"]],
         rf: float,
         lamb: float,
         V0: float=10.
@@ -52,9 +53,9 @@ def mpt_costfunction(
 
 
 def mpt_entropy_costfunction(
-        weights: NDArray[Shape["*"], Float],
-        r: NDArray[Shape["*"], Float],
-        cov: NDArray[Shape["*, *"], Float],
+        weights: Annotated[NDArray[np.float64], Literal["1D array"]],
+        r: Annotated[NDArray[np.float64], Literal["1D array"]],
+        cov: Annotated[NDArray[np.float64], Literal["2D array"]],
         rf: float,
         lamb0: float,
         lamb1: float,

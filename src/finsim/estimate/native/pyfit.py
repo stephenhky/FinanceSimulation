@@ -1,13 +1,15 @@
 
+from typing import Literal, Annotated
+
 import numpy as np
+from numpy.typing import NDArray
 import numba as nb
-from nptyping import NDArray, Shape, Float
 
 
 @nb.njit
 def python_fit_BlackScholesMerton_model(
-        ts: NDArray[Shape["*"], Float],
-        prices: NDArray[Shape["*"], Float]
+        ts: Annotated[NDArray[np.float64], Literal["1D array"]],
+        prices: Annotated[NDArray[np.float64], Literal["1D array"]]
 ) -> tuple[float, float]:
     """Fit a Black-Scholes-Merton model to price data using Python implementation.
     
@@ -35,9 +37,9 @@ def python_fit_BlackScholesMerton_model(
 
 @nb.njit
 def python_fit_multivariate_BlackScholesMerton_model(
-        ts: NDArray[Shape["*"], Float],
-        multiprices: NDArray[Shape["*, *"], Float]
-) -> tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
+        ts: Annotated[NDArray[np.float64], Literal["1D array"]],
+        multiprices: Annotated[NDArray[np.float64], Literal["2D array"]]
+) -> tuple[Annotated[NDArray[np.float64], Literal["1D array"]], Annotated[NDArray[np.float64], Literal["2D array"]]]:
     """Fit a multivariate Black-Scholes-Merton model to price data for multiple assets.
     
     This function estimates the parameters of the multivariate Black-Scholes-Merton model,
