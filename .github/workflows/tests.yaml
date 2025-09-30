@@ -2,9 +2,10 @@ name: Python package CI
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - '**'
   pull_request:
-    branches: [ master ]
+    branches: [ master, develop ]
 
 jobs:
   build_and_test:
@@ -23,9 +24,9 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --user --upgrade pip
-          pip install --user --upgrade setuptools wheel Cython
+          pip install --user --upgrade setuptools wheel
           pip cache purge
           pip install --user .
           pip install --user .[test]
       - name: Run tests
-        run: pytest --doctest-cython
+        run: pytest

@@ -3,6 +3,7 @@ version: 2
 shared: &shared
   working_directory: ~/finsim
 
+  resource_class: medium+
   steps:
     - checkout
 

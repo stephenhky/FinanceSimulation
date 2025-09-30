@@ -1,17 +1,17 @@
 
-from typing import Literal
+from typing import Literal, Annotated
 
 import numpy as np
+from numpy.typing import NDArray
 from scipy import stats
-from nptyping import NDArray, Shape, Float, Datetime64
 
 from .native.pyrisk import python_estimate_downside_risk, python_estimate_upside_risk
 from .constants import dividing_factors_dict
 
 
 def estimate_downside_risk(
-        timestamps: NDArray[Shape["*"], Datetime64],
-        prices: NDArray[Shape["*"], Float],
+        timestamps: Annotated[NDArray[np.datetime64], Literal["1D array"]],
+        prices: Annotated[NDArray[np.float64], Literal["1D array"]],
         target_return: float,
         unit: Literal['second', 'minute', 'hour', 'day', 'year']='year'
 ) -> float:
@@ -43,8 +43,8 @@ def estimate_downside_risk(
 
 
 def estimate_upside_risk(
-        timestamps: NDArray[Shape["*"], Datetime64],
-        prices: NDArray[Shape["*"], Float],
+        timestamps: Annotated[NDArray[np.datetime64], Literal["1D array"]],
+        prices: Annotated[NDArray[np.float64], Literal["1D array"]],
         target_return: float,
         unit: Literal['second', 'minute', 'hour', 'day', 'year'] = 'year'
 ) -> float:
@@ -76,9 +76,9 @@ def estimate_upside_risk(
 
 
 def estimate_beta(
-        timestamps: NDArray[Shape["*"], Datetime64],
-        prices: NDArray[Shape["*"], Float],
-        market_prices: NDArray[Shape["*"], Float],
+        timestamps: Annotated[NDArray[np.datetime64], Literal["1D array"]],
+        prices: Annotated[NDArray[np.float64], Literal["1D array"]],
+        market_prices: Annotated[NDArray[np.float64], Literal["1D array"]],
         unit: Literal['second', 'minute', 'hour', 'day', 'year']='year'
 ) -> float:
     """Estimate the beta coefficient of an asset relative to market performance.

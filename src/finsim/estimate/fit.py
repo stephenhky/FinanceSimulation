@@ -1,9 +1,9 @@
 
-from typing import Literal
+from typing import Literal, Annotated
 from itertools import product
 
 import numpy as np
-from nptyping import NDArray, Shape, Float, Datetime64
+from numpy.typing import NDArray
 
 from .constants import dividing_factors_dict
 from .native.pyfit import python_fit_BlackScholesMerton_model, python_fit_multivariate_BlackScholesMerton_model
@@ -12,8 +12,8 @@ from .native.pyfit import python_fit_BlackScholesMerton_model, python_fit_multiv
 # Note: always round-off to seconds first, but flexible about the unit to be used.
 
 def fit_BlackScholesMerton_model(
-        timestamps: NDArray[Shape["*"], Datetime64],
-        prices: NDArray[Shape["*"], Float],
+        timestamps: Annotated[NDArray[np.datetime64], Literal["1D array"]],
+        prices: Annotated[NDArray[np.float64], Literal["1D array"]],
         unit: Literal['second', 'minute', 'hour', 'day', 'year']='year'
 ) -> tuple[float, float]:
     """Fit a Black-Scholes-Merton model to price data to estimate rate of return and volatility.
@@ -46,10 +46,10 @@ def fit_BlackScholesMerton_model(
 
 
 def fit_multivariate_BlackScholesMerton_model(
-        timestamps: NDArray[Shape["*"], Datetime64],
-        multiprices: NDArray[Shape["*, *"], Float],
+        timestamps: Annotated[NDArray[np.datetime64], Literal["1D array"]],
+        multiprices: Annotated[NDArray[np.float64], Literal["1D array"]],
         unit: Literal['second', 'minute', 'hour', 'day', 'year']='year',
-) -> tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
+) -> tuple[Annotated[NDArray[np.float64], Literal["1D array"]], Annotated[NDArray[np.float64], Literal["2D array"]]]:
     """Fit a multivariate Black-Scholes-Merton model to price data for multiple assets.
     
     This function estimates the parameters of the multivariate Black-Scholes-Merton model,
@@ -82,9 +82,9 @@ def fit_multivariate_BlackScholesMerton_model(
 ######## routines below are for time-weighted portfolio building
 
 def fit_timeweighted_BlackScholesMerton_model(
-        timestamps: NDArray[Shape["*"], Datetime64],
-        prices: NDArray[Shape["*"], Float],
-        weights: NDArray[Shape["*"], Float],
+        timestamps: Annotated[NDArray[np.datetime64], Literal["1D array"]],
+        prices: Annotated[NDArray[np.float64], Literal["1D array"]],
+        weights: Annotated[NDArray[np.float64], Literal["1D array"]],
         unit: Literal['second', 'minute', 'hour', 'day', 'year']='year'
 ) -> tuple[float, float]:
     """Fit a time-weighted Black-Scholes-Merton model to price data.
@@ -120,11 +120,11 @@ def fit_timeweighted_BlackScholesMerton_model(
 
 
 def fit_timeweighted_multivariate_BlackScholesMerton_model(
-        timestamps: NDArray[Shape["*"], Datetime64],
-        multiprices: NDArray[Shape["*, *"], Float],
-        weights: NDArray[Shape["*"], Float],
+        timestamps: Annotated[NDArray[np.datetime64], Literal["1D array"]],
+        multiprices: Annotated[NDArray[np.float64], Literal["2D array"]],
+        weights: Annotated[NDArray[np.float64], Literal["1D array"]],
         unit: Literal['second', 'minute', 'hour', 'day', 'year']='year'
-) -> tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
+) -> tuple[Annotated[NDArray[np.float64], Literal["1D array"]], Annotated[NDArray[np.float64], Literal["2D array"]]]:
     """Fit a time-weighted multivariate Black-Scholes-Merton model to price data for multiple assets.
     
     This function estimates the parameters of the multivariate Black-Scholes-Merton model

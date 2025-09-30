@@ -3,7 +3,7 @@ import json
 import logging
 import sys
 from collections import defaultdict
-from typing import Any, Optional
+from typing import Any, Optional, Literal, Annotated
 from os import PathLike
 from io import TextIOWrapper
 if sys.version_info < (3, 11):
@@ -11,9 +11,10 @@ if sys.version_info < (3, 11):
 else:
     from typing import Self
 
+import numpy as np
+from numpy.typing import NDArray
 from tqdm import tqdm
 import pandas as pd
-from nptyping import NDArray, Shape, Float
 
 from ..data.preader import get_yahoofinance_data, get_symbol_closing_price
 from .optimize.policy import OptimizedWeightingPolicy
@@ -364,11 +365,11 @@ class OptimizedPortfolio(Portfolio):
         return self.policy.portfolio_symbols
 
     @property
-    def weights(self) -> NDArray[Shape["*"], Float]:
+    def weights(self) -> Annotated[NDArray[np.float64], Literal["1D array"]]:
         """Get the optimized weights for each asset.
         
         Returns:
-            NDArray[Shape["*"], Float]: Array of optimized weights
+            Annotated[NDArray[np.float64], Literal["1D array"]]: Array of optimized weights
         """
         return self.policy.weights
 
@@ -391,11 +392,11 @@ class OptimizedPortfolio(Portfolio):
         return self.policy.volatility
 
     @property
-    def correlation_matrix(self) -> NDArray[Shape["*, *"], Float]:
+    def correlation_matrix(self) -> Annotated[NDArray[np.float64], Literal["2D array"]]:
         """Get the correlation matrix of the optimized portfolio.
         
         Returns:
-            NDArray[Shape["*, *"], Float]: Correlation matrix of the portfolio
+            Annotated[NDArray[np.float64], Literal["2D array"]]: Correlation matrix of the portfolio
         """
         return self.policy.correlation_matrix
 

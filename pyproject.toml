@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "finsim"
-version = "1.2.0"
+version = "1.2.1"
 authors = [
     {name = "Kwan Yuet Stephen Ho", email = "stephenhky@yahoo.com.hk"}
 ]
@@ -37,7 +37,6 @@ dependencies = [
     "openpyxl>=3.1.0",
     "numba",
     "typing-extensions",
-    "nptyping",
     "pydantic"
 ]
 
