@@ -1,9 +1,10 @@
 
 from abc import ABC, abstractmethod
 from math import log, exp
+from typing import Literal, Annotated
 
 import numpy as np
-from nptyping import NDArray, Shape, Float
+from numpy.typing import NDArray
 
 
 class AbstractStochasticValue(ABC):
@@ -46,7 +47,7 @@ class BlackScholesMertonStockPrices(AbstractStochasticValue):
             T: float,
             dt: float,
             nbsimulations: int=1
-    ) -> NDArray[Shape["*"], Float]:
+    ) -> Annotated[NDArray[np.float64], Literal["1D array"]]:
         """Generate a time series of stock prices using the Black-Scholes-Merton model.
         
         Args:
@@ -88,7 +89,12 @@ class SquareRootDiffusionProcesses(AbstractStochasticValue):
         self.kappa = kappa
         self.sigma = sigma
 
-    def generate_time_series(self, T: float, dt: float, nbsimulations: int=1) -> NDArray[Shape["*"], Float]:
+    def generate_time_series(
+            self,
+            T: float,
+            dt: float,
+            nbsimulations: int=1
+    ) -> Annotated[NDArray[np.float64], Literal["1D array"]]:
         """Generate a time series of values using the square root diffusion process.
         
         Args:
@@ -139,7 +145,7 @@ class HestonStockPrices(AbstractStochasticValue):
         self.logS0 = log(self.S0)
         self.rho = np.array([[1., self.rho], [self.rho, 1.]])
 
-    def generate_time_series(self, T: float, dt: float, nbsimulations: int=1) -> NDArray[Shape["*"], Float]:
+    def generate_time_series(self, T: float, dt: float, nbsimulations: int=1) -> Annotated[NDArray[np.float64], Literal["1D array"]]:
         """Generate a time series of stock prices using the Heston model.
         
         Args:
@@ -202,7 +208,7 @@ class MertonJumpDiffusionStockPrices(AbstractStochasticValue):
 
         self.logS0 = log(self.S0)
 
-    def generate_time_series(self, T: float, dt: float, nbsimulations: int=1) -> NDArray[Shape["*"], Float]:
+    def generate_time_series(self, T: float, dt: float, nbsimulations: int=1) -> Annotated[NDArray[np.float64], Literal["1D array"]]:
         """Generate a time series of stock prices using the Merton jump-diffusion model.
         
         Args:

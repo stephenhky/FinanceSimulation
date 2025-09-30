@@ -1,18 +1,18 @@
 
 from itertools import product
 from abc import ABC, abstractmethod
-from typing import Any, Optional
+from typing import Any, Optional, Literal, Annotated
 
 import numpy as np
+from numpy.typing import NDArray
 import pandas as pd
 import numba as nb
-from nptyping import NDArray, Shape, Float
 
 from .numerics import optimized_portfolio_on_sharperatio, optimized_portfolio_mpt_costfunction, optimized_portfolio_mpt_entropy_costfunction
 
 
 @nb.njit
-def mat_to_list(mat: NDArray[Shape["*, *"], Float]) -> list[list[float]]:
+def mat_to_list(mat: Annotated[NDArray[np.float64], Literal["2D array"]]) -> list[list[float]]:
     """Convert a 2D numpy array to a list of lists.
     
     Args:
@@ -39,8 +39,8 @@ class OptimizedWeightingPolicy(ABC):
     def __init__(
             self,
             rf: float,
-            r: Optional[NDArray[Shape["*"], Float]]=None,
-            cov: Optional[NDArray[Shape["*, *"], Float]]=None,
+            r: Optional[Annotated[NDArray[np.float64], Literal["1D array"]]]=None,
+            cov: Optional[Annotated[NDArray[np.float64], Literal["2D array"]]]=None,
             symbols: Optional[list[str]]=None
     ):
         """Initialize the OptimizedWeightingPolicy.
@@ -67,8 +67,8 @@ class OptimizedWeightingPolicy(ABC):
     @abstractmethod
     def optimize(
             self,
-            r: NDArray[Shape["*"], Float],
-            cov: NDArray[Shape["*, *"], Float],
+            r: Annotated[NDArray[np.float64], Literal["1D array"]],
+            cov: Annotated[NDArray[np.float64], Literal["2D array"]],
             symbols: Optional[list[str]]=None
     ) -> None:
         """Optimize the portfolio weights.
@@ -91,11 +91,11 @@ class OptimizedWeightingPolicy(ABC):
 
     @property
     @abstractmethod
-    def weights(self) -> NDArray[Shape["*"], Float]:
+    def weights(self) -> Annotated[NDArray[np.float64], Literal["1D array"]]:
         """Get the optimized weights for each asset.
         
         Returns:
-            NDArray[Shape["*"], Float]: Array of optimized weights
+            Annotated[NDArray[np.float64], Literal["1D array"]]: Array of optimized weights
         """
         raise NotImplemented()
 
@@ -120,11 +120,11 @@ class OptimizedWeightingPolicy(ABC):
         raise NotImplemented()
 
     @property
-    def correlation_matrix(self) -> NDArray[Shape["*, *"], Float]:
+    def correlation_matrix(self) -> Annotated[NDArray[np.float64], Literal["2D array"]]:
         """Get the correlation matrix of the optimized portfolio.
         
         Returns:
-            NDArray[Shape["*, *"], Float]: Correlation matrix of the portfolio
+            Annotated[NDArray[np.float64], Literal["2D array"]]: Correlation matrix of the portfolio
         """
         corr = np.zeros(self.cov.shape)
         for i, j in product(range(self.cov.shape[0]), range(self.cov.shape[1])):
@@ -187,8 +187,8 @@ class OptimizedWeightingPolicyUsingMPTSharpeRatio(OptimizedWeightingPolicy):
     def __init__(
             self,
             rf: float,
-            r: Optional[NDArray[Shape["*"], Float]]=None,
-            cov: Optional[NDArray[Shape["*, *"], Float]]=None,
+            r: Optional[Annotated[NDArray[np.float64], Literal["1D array"]]]=None,
+            cov: Optional[Annotated[NDArray[np.float64], Literal["2D array"]]]=None,
             symbols: Optional[list[str]]=None,
             minweight: float=0.
     ):
@@ -208,8 +208,8 @@ class OptimizedWeightingPolicyUsingMPTSharpeRatio(OptimizedWeightingPolicy):
 
     def optimize(
             self,
-            r: NDArray[Shape["*"], Float],
-            cov: NDArray[Shape["*, *"], Float],
+            r: Annotated[NDArray[np.float64], Literal["1D array"]],
+            cov: Annotated[NDArray[np.float64], Literal["2D array"]],
             symbols: Optional[list[str]]=None
     ) -> None:
         """Optimize the portfolio weights using the Sharpe ratio.
@@ -232,11 +232,11 @@ class OptimizedWeightingPolicyUsingMPTSharpeRatio(OptimizedWeightingPolicy):
         self.optimized_volatility = np.sqrt(np.sum(sqweights * self.cov))
 
     @property
-    def weights(self) -> NDArray[Shape["*"], Float]:
+    def weights(self) -> Annotated[NDArray[np.float64], Literal["1D array"]]:
         """Get the optimized weights for each asset.
         
         Returns:
-            NDArray[Shape["*"], Float]: Array of optimized weights
+            Annotated[NDArray[np.float64], Literal["1D array"]]: Array of optimized weights
         """
         return self.optimized_weights
 
@@ -298,8 +298,8 @@ class OptimizedWeightingPolicyUsingMPTCostFunction(OptimizedWeightingPolicy):
     def __init__(
             self,
             rf: float,
-            r: NDArray[Shape["*"], Float],
-            cov: NDArray[Shape["*, *"], Float],
+            r: Annotated[NDArray[np.float64], Literal["1D array"]],
+            cov: Annotated[NDArray[np.float64], Literal["2D array"]],
             symbols: Optional[list[str]]=None,
             lamb: float=0.0,
             V0: float=10.0
@@ -323,8 +323,8 @@ class OptimizedWeightingPolicyUsingMPTCostFunction(OptimizedWeightingPolicy):
 
     def optimize(
             self,
-            r: NDArray[Shape["*"], Float],
-            cov: NDArray[Shape["*, *"], Float],
+            r: Annotated[NDArray[np.float64], Literal["1D array"]],
+            cov: Annotated[NDArray[np.float64], Literal["2D array"]],
             symbols: Optional[list[str]]=None
     ) -> None:
         """Optimize the portfolio weights using the MPT cost function.
@@ -348,11 +348,11 @@ class OptimizedWeightingPolicyUsingMPTCostFunction(OptimizedWeightingPolicy):
         self.optimized_volatility = np.sqrt(np.sum(sqweights * self.cov))
 
     @property
-    def weights(self) -> NDArray[Shape["*"], Float]:
+    def weights(self) -> Annotated[NDArray[np.float64], Literal["1D array"]]:
         """Get the optimized weights for each asset.
         
         Returns:
-            NDArray[Shape["*"], Float]: Array of optimized weights
+            Annotated[NDArray[np.float64], Literal["1D array"]]: Array of optimized weights
         """
         return self.optimized_weights
 
@@ -416,8 +416,8 @@ class OptimizedWeightingPolicyUsingMPTEntropyCostFunction(OptimizedWeightingPoli
     def __init__(
             self,
             rf: float,
-            r: NDArray[Shape["*"], Float]=None,
-            cov: NDArray[Shape["*, *"], Float]=None,
+            r: Annotated[NDArray[np.float64], Literal["1D array"]]=None,
+            cov: Annotated[NDArray[np.float64], Literal["2D array"]]=None,
             symbols: Optional[list[str]]=None,
             lamb0: float=0.0,
             lamb1: float=0.0,
@@ -444,8 +444,8 @@ class OptimizedWeightingPolicyUsingMPTEntropyCostFunction(OptimizedWeightingPoli
 
     def optimize(
             self,
-            r: NDArray[Shape["*"], Float],
-            cov: NDArray[Shape["*, *"], Float],
+            r: Annotated[NDArray[np.float64], Literal["1D array"]],
+            cov: Annotated[NDArray[np.float64], Literal["2D array"]],
             symbols: Optional[list[str]]=None
     ) -> None:
         """Optimize the portfolio weights using the MPT entropy cost function.
@@ -469,11 +469,11 @@ class OptimizedWeightingPolicyUsingMPTEntropyCostFunction(OptimizedWeightingPoli
         self.optimized_volatility = np.sqrt(np.sum(sqweights * self.cov))
 
     @property
-    def weights(self) -> NDArray[Shape["*"], Float]:
+    def weights(self) -> Annotated[NDArray[np.float64], Literal["1D array"]]:
         """Get the optimized weights for each asset.
         
         Returns:
-            NDArray[Shape["*"], Float]: Array of optimized weights
+            Annotated[NDArray[np.float64], Literal["1D array"]]: Array of optimized weights
         """
         return self.optimized_weights
 

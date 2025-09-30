@@ -3,15 +3,15 @@ import logging
 from functools import partial
 from itertools import product
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Literal, Annotated
 from os import PathLike
 
 import numpy as np
+from numpy.typing import NDArray
 import pandas as pd
 from scipy.optimize import minimize, OptimizeResult
 from tqdm import tqdm
 import numba as nb
-from nptyping import NDArray, Shape, Float
 
 from .metrics import sharpe_ratio, mpt_costfunction, mpt_entropy_costfunction
 from ..helper import align_timestamps_stock_dataframes
@@ -23,7 +23,7 @@ from ...estimate.fit import fit_multivariate_BlackScholesMerton_model, fit_Black
 
 @nb.njit(nb.float64(nb.float64[:], nb.float64, nb.int32))
 def getarrayelementminusminvalue(
-        array: NDArray[Shape["*"], Float],
+        array: Annotated[NDArray[np.float64], Literal["1D array"]],
         minvalue: float,
         index: int
 ) -> float:
@@ -41,7 +41,10 @@ def getarrayelementminusminvalue(
 
 
 @nb.njit(nb.float64(nb.float64[:], nb.float64))
-def checksumarray(array: NDArray[Shape["*"], Float], total: float) -> float:
+def checksumarray(
+        array: Annotated[NDArray[np.float64], Literal["1D array"]],
+        total: float
+) -> float:
     """Calculate the difference between a total and the sum of an array.
     
     Args:
@@ -55,8 +58,8 @@ def checksumarray(array: NDArray[Shape["*"], Float], total: float) -> float:
 
 
 def optimized_portfolio_on_sharperatio(
-        r: NDArray[Shape["*"], Float],
-        cov: NDArray[Shape["*, *"], Float],
+        r: Annotated[NDArray[np.float64], Literal["1D array"]],
+        cov: Annotated[NDArray[np.float64], Literal["2D array"]],
         rf: float,
         minweight: float=0.
 ) -> OptimizeResult:
@@ -91,8 +94,8 @@ def optimized_portfolio_on_sharperatio(
 
 
 def optimized_portfolio_mpt_costfunction(
-        r: NDArray[Shape["*"], Float],
-        cov: NDArray[Shape["*, *"], Float],
+        r: Annotated[NDArray[np.float64], Literal["1D array"]],
+        cov: Annotated[NDArray[np.float64], Literal["2D array"]],
         rf: float,
         lamb: float,
         V0: float=10.
@@ -129,8 +132,8 @@ def optimized_portfolio_mpt_costfunction(
 
 
 def optimized_portfolio_mpt_entropy_costfunction(
-        r: NDArray[Shape["*"], Float],
-        cov: NDArray[Shape["*, *"], Float],
+        r: Annotated[NDArray[np.float64], Literal["1D array"]],
+        cov: Annotated[NDArray[np.float64], Literal["2D array"]],
         rf: float,
         lamb0: float,
         lamb1: float,
@@ -208,7 +211,7 @@ def get_BlackScholesMerton_stocks_estimation(
         progressbar: bool=True,
         cacheddir: Optional[PathLike | str]=None,
         include_dividends: bool=False
-) -> tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
+) -> tuple[Annotated[NDArray[np.float64], Literal["1D array"]], Annotated[NDArray[np.float64], Literal["2D array"]]]:
     """Get Black-Scholes-Merton model estimations for a list of stocks.
     
     Args:
@@ -289,7 +292,7 @@ def get_stocks_timeweighted_estimation(
         progressbar: bool=True,
         cacheddir: Optional[PathLike | str]=None,
         include_dividends: bool=False
-) -> tuple[NDArray[Shape["*"], Float], NDArray[Shape["*, *"], Float]]:
+) -> tuple[Annotated[NDArray[np.float64], Literal["1D array"]], Annotated[NDArray[np.float64], Literal["2D array"]]]:
     """Get time-weighted estimations for a list of stocks.
     
     Args:

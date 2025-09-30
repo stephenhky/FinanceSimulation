@@ -1,13 +1,15 @@
 
+from typing import Literal, Annotated
+
 import numpy as np
+from numpy.typing import NDArray
 import numba as nb
-from nptyping import NDArray, Shape, Float
 
 
 @nb.njit
 def python_estimate_downside_risk(
-        ts: NDArray[Shape["*"], Float],
-        prices: NDArray[Shape["*"], Float],
+        ts: Annotated[NDArray[np.float64], Literal["1D array"]],
+        prices: Annotated[NDArray[np.float64], Literal["1D array"]],
         target_return: float
 ) -> float:
     """Estimate the downside risk of an asset based on historical price data.
@@ -35,8 +37,8 @@ def python_estimate_downside_risk(
 
 @nb.njit
 def python_estimate_upside_risk(
-        ts: NDArray[Shape["*"], Float],
-        prices: NDArray[Shape["*"], Float],
+        ts: Annotated[NDArray[np.float64], Literal["1D array"]],
+        prices: Annotated[NDArray[np.float64], Literal["1D array"]],
         target_return: float
 ) -> float:
     """Estimate the upside risk of an asset based on historical price data.
