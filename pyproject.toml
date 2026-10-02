@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "finsim"
-version = "2.0.0a1"
+version = "2.0.0"
 authors = [
     {name = "Kwan Yuet Stephen Ho", email = "stephenhky@yahoo.com.hk"}
 ]
@@ -56,7 +56,6 @@ packages = [
     "finsim.portfolio.optimize",
     "finsim.portfolio.optimize.native",
     "finsim.tech",
-    "finsim.retrieve_stock_symbols_cli",
     "finsim.schemas"
 ]
 zip-safe = false
@@ -64,7 +63,7 @@ include-package-data = true
 package-dir = {"" = "src"}
 
 [project.scripts]
-retrieve_stock_symbols = "finsim.retrieve_stock_symbols_cli:main_cli"
+retrieve_stock_symbols = "finsim.cli:retrieve_stock_symbols"
 
 [project.optional-dependencies]
 test = ["unittest2", "pytest"]
