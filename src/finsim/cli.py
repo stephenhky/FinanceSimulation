@@ -1,8 +1,10 @@
+
 import os
+from typing import Optional
 
 import click
 import pandas as pd
-from ..data.finnhub import FinnHubStockReader
+from .data.finnhub import FinnHubStockReader
 
 
 @click.command(help='Retrieve stock symbols from Finnhub')
@@ -10,7 +12,12 @@ from ..data.finnhub import FinnHubStockReader
 @click.option('--finnhubtokenpath', default=None, help='path of Finnhub tokens')
 @click.option('--useenvtoken', is_flag=True, default=False, help='Use the environment variable FINNHUBTOKEN as the tokens')
 @click.option('--shorten', is_flag=True, default=False, help='shorten list of symbols')
-def main_cli(outputpath, finnhubtokenpath=None, useenvtoken=False, shorten=False):
+def retrieve_stock_symbols(
+        outputpath: str | os.PathLike,
+        finnhubtokenpath: Optional[str | os.PathLike] = None,
+        useenvtoken: bool = False,
+        shorten: bool = False
+) -> None:
     """Main CLI function to retrieve stock symbols from Finnhub and save them to a file.
     
     This function parses command line arguments, retrieves stock symbols from Finnhub,
