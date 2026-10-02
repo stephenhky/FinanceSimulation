@@ -1,15 +1,10 @@
 
 import json
 import logging
-import sys
 from collections import defaultdict
-from typing import Any, Optional, Literal, Annotated
+from typing import Any, Optional, Literal, Annotated, Self
 from os import PathLike
 from io import TextIOWrapper
-if sys.version_info < (3, 11):
-    from typing_extensions import Self
-else:
-    from typing import Self
 
 import numpy as np
 from numpy.typing import NDArray

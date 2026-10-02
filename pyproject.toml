@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "finsim"
-version = "1.2.2"
+version = "2.0.0a1"
 authors = [
     {name = "Kwan Yuet Stephen Ho", email = "stephenhky@yahoo.com.hk"}
 ]
@@ -12,15 +12,15 @@ description = "Financial simulation and inference"
 readme = {file = "README.md", content-type = "text/markdown"}
 license = {text = "LGPL"}
 keywords = ["simulation", "finance", "quantitative finance", "inference", "portfolio analysis"]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 classifiers = [
     "Topic :: Scientific/Engineering :: Mathematics",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Software Development :: Version Control :: Git",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Intended Audience :: Science/Research",
     "Intended Audience :: Developers",
     "Intended Audience :: Financial and Insurance Industry"
@@ -36,8 +36,8 @@ dependencies = [
     "yfinance>=0.2.59",
     "openpyxl>=3.1.0",
     "numba",
-    "typing-extensions",
-    "pydantic"
+    "pydantic",
+    "click>=8.0.0"
 ]
 
 [project.urls]
@@ -69,3 +69,7 @@ retrieve_stock_symbols = "finsim.retrieve_stock_symbols_cli:main_cli"
 [project.optional-dependencies]
 test = ["unittest2", "pytest"]
 docs = ["sphinx>=4.0.0", "sphinx-rtd-theme>=1.0.0"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+
