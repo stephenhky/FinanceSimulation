@@ -4,15 +4,10 @@ from operator import itemgetter
 from collections import defaultdict
 import logging
 import json
-import sys
-from typing import Any, Optional
+from typing import Any, Optional, Self
 from os import PathLike
 from io import TextIOWrapper
 import warnings
-if sys.version_info < (3, 11):
-    from typing_extensions import Self
-else:
-    from typing import Self
 
 import numpy as np
 import pandas as pd
