@@ -36,7 +36,8 @@ dependencies = [
     "yfinance>=0.2.59",
     "openpyxl>=3.1.0",
     "numba",
-    "pydantic"
+    "pydantic",
+    "click>=8.0.0"
 ]
 
 [project.urls]
@@ -68,3 +69,7 @@ retrieve_stock_symbols = "finsim.retrieve_stock_symbols_cli:main_cli"
 [project.optional-dependencies]
 test = ["unittest2", "pytest"]
 docs = ["sphinx>=4.0.0", "sphinx-rtd-theme>=1.0.0"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+
