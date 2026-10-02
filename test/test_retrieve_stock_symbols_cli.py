@@ -51,7 +51,7 @@ class TestRetrieveStockSymbolsCLI(unittest.TestCase):
             self.assertIsInstance(result.exception, ValueError)
             self.assertIn('Finnhub tokens not found in the environment variable $FINNHUBTOKEN', str(result.exception))
 
-    @patch('finsim.retrieve_stock_symbols_cli.cli.FinnHubStockReader')
+    @patch('finsim.cli.FinnHubStockReader')
     def test_success_with_useenvtoken_json(self, mock_reader_cls):
         mock_reader = MagicMock()
         mock_reader.get_all_US_symbols.return_value = self.sample_symbols
@@ -71,7 +71,7 @@ class TestRetrieveStockSymbolsCLI(unittest.TestCase):
             df = pd.read_json(out_file)
             self.assertEqual(len(df), len(self.sample_symbols))
 
-    @patch('finsim.retrieve_stock_symbols_cli.cli.FinnHubStockReader')
+    @patch('finsim.cli.FinnHubStockReader')
     def test_success_with_finnhubtokenpath_and_shorten(self, mock_reader_cls):
         mock_reader = MagicMock()
         mock_reader.get_all_US_symbols.return_value = self.sample_symbols
@@ -96,7 +96,7 @@ class TestRetrieveStockSymbolsCLI(unittest.TestCase):
             symbols = list(df['symbol'])
             self.assertEqual(symbols, ['AAPL', 'MSFT'])
 
-    @patch('finsim.retrieve_stock_symbols_cli.cli.FinnHubStockReader')
+    @patch('finsim.cli.FinnHubStockReader')
     def test_nonexistent_directory(self, mock_reader_cls):
         mock_reader = MagicMock()
         mock_reader.get_all_US_symbols.return_value = self.sample_symbols
@@ -111,7 +111,7 @@ class TestRetrieveStockSymbolsCLI(unittest.TestCase):
         self.assertNotEqual(result.exit_code, 0)
         self.assertIsInstance(result.exception, FileNotFoundError)
 
-    @patch('finsim.retrieve_stock_symbols_cli.cli.FinnHubStockReader')
+    @patch('finsim.cli.FinnHubStockReader')
     def test_unrecognized_extension(self, mock_reader_cls):
         mock_reader = MagicMock()
         mock_reader.get_all_US_symbols.return_value = self.sample_symbols
