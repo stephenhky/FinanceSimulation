@@ -83,7 +83,7 @@ def optimized_portfolio_on_sharperatio(
     ] + [
         {'type': 'eq', 'fun': partial(checksumarray, total=1.)}
     ] + [
-        {'type': 'ineq', 'fun': lambda weights: weights[i]}
+        {'type': 'ineq', 'fun': lambda weights, i=i: weights[i]}
         for i in range(len(r))
     ]
     return minimize(
@@ -120,7 +120,7 @@ def optimized_portfolio_mpt_costfunction(
     ] + [
         {'type': 'ineq', 'fun': partial(checksumarray, total=V0)}
     ] + [
-        {'type': 'ineq', 'fun': lambda weights: weights[i]}
+        {'type': 'ineq', 'fun': lambda weights, i=i: weights[i]}
         for i in range(len(r))
     ]
     initialguess = np.repeat(V0 / (nbstocks+1), nbstocks+1)
@@ -160,7 +160,7 @@ def optimized_portfolio_mpt_entropy_costfunction(
     ] + [
         {'type': 'ineq', 'fun': partial(checksumarray, total=V)}
     ] + [
-        {'type': 'ineq', 'fun': lambda weights: weights[i]}
+        {'type': 'ineq', 'fun': lambda weights, i=i: weights[i]}
         for i in range(len(r))
     ]
     initialguess = np.repeat(V / (nbstocks + 1), nbstocks + 1)
@@ -265,7 +265,7 @@ def get_BlackScholesMerton_stocks_estimation(
         covmat = np.zeros((len(symbols), len(symbols)))
 
         for i, stock_df in enumerate(stocks_data_dfs):
-            r, sigma = fit_BlackScholesMerton_model(stock_df['TimeStamp'].to_numpy(), stock_df['Close'].to_numpy())
+            r, sigma = fit_BlackScholesMerton_model(stock_df['TimeStamp'].to_numpy(), stock_df['EffVal'].to_numpy())
             rarray[i] = r
             covmat[i, i] = sigma*sigma
 
@@ -276,8 +276,8 @@ def get_BlackScholesMerton_stocks_estimation(
             _, cov = fit_multivariate_BlackScholesMerton_model(
                 stock_df_i.loc[(len(stock_df_i)-smallerlen):, 'TimeStamp'].to_numpy(),
                 np.array([
-                    stock_df_i.loc[(len(stock_df_i)-smallerlen):, 'Close'].to_numpy(),
-                    stock_df_j.loc[(len(stock_df_j)-smallerlen):, 'Close'].to_numpy()
+                    stock_df_i.loc[(len(stock_df_i)-smallerlen):, 'EffVal'].to_numpy(),
+                    stock_df_j.loc[(len(stock_df_j)-smallerlen):, 'EffVal'].to_numpy()
                 ])
             )
             covmat[i, j] = cov[0, 1]
@@ -358,7 +358,7 @@ def get_stocks_timeweighted_estimation(
             w_stock_df = stock_df.merge(timeweightdf, on='TimeStamp', how='left')
             r, sigma = fit_timeweighted_BlackScholesMerton_model(
                 w_stock_df['TimeStamp'].ravel(),
-                w_stock_df['Close'].ravel(),
+                w_stock_df['EffVal'].ravel(),
                 w_stock_df['weight'].ravel()
             )
             rarray[i] = r
@@ -371,8 +371,8 @@ def get_stocks_timeweighted_estimation(
             _, cov = fit_timeweighted_multivariate_BlackScholesMerton_model(
                 w_stock_df_i.loc[(len(w_stock_df_i) - smallerlen):, 'TimeStamp'].ravel(),
                 np.array([
-                    w_stock_df_i.loc[(len(w_stock_df_i) - smallerlen):, 'Close'].ravel(),
-                    w_stock_df_j.loc[(len(w_stock_df_j) - smallerlen):, 'Close'].ravel()
+                    w_stock_df_i.loc[(len(w_stock_df_i) - smallerlen):, 'EffVal'].ravel(),
+                    w_stock_df_j.loc[(len(w_stock_df_j) - smallerlen):, 'EffVal'].ravel()
                 ]),
                 w_stock_df_i.loc[(len(w_stock_df_i) - smallerlen):, 'weight'].ravel()
             )
