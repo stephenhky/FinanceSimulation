@@ -78,7 +78,7 @@ class OptimizedWeightingPolicy(ABC):
             cov: Covariance matrix
             symbols: List of symbols (optional)
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     @property
     def portfolio_symbols(self) -> list[str]:
@@ -97,7 +97,7 @@ class OptimizedWeightingPolicy(ABC):
         Returns:
             Annotated[NDArray[np.float64], Literal["1D array"]]: Array of optimized weights
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     @property
     @abstractmethod
@@ -107,7 +107,7 @@ class OptimizedWeightingPolicy(ABC):
         Returns:
             float: Expected yield of the portfolio
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     @property
     @abstractmethod
@@ -117,7 +117,7 @@ class OptimizedWeightingPolicy(ABC):
         Returns:
             float: Volatility of the portfolio
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     @property
     def correlation_matrix(self) -> Annotated[NDArray[np.float64], Literal["2D array"]]:

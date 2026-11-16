@@ -127,6 +127,23 @@ class TestRetrieveStockSymbolsCLI(unittest.TestCase):
             self.assertNotEqual(result.exit_code, 0)
             self.assertIsInstance(result.exception, IOError)
 
+    @patch('finsim.cli.FinnHubStockReader')
+    def test_other_output_extensions(self, mock_reader_cls):
+        mock_reader = MagicMock()
+        mock_reader.get_all_US_symbols.return_value = self.sample_symbols
+        mock_reader_cls.return_value = mock_reader
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            for ext in ['.h5', '.xlsx', '.pkl', '.pickle']:
+                out_file = os.path.join(tmpdir, f'symbols{ext}')
+                result = self.runner.invoke(
+                    retrieve_stock_symbols,
+                    [out_file, '--useenvtoken'],
+                    env={'FINNHUBTOKEN': 'dummy_env_token'}
+                )
+                self.assertEqual(result.exit_code, 0, msg=f"Failed for extension {ext}: {result.exception}")
+                self.assertTrue(os.path.exists(out_file))
+
 
 if __name__ == '__main__':
     unittest.main()

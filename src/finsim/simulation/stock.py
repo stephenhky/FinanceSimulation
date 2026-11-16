@@ -19,7 +19,7 @@ class AbstractStochasticValue(ABC):
             dt: Time step
             nbsimulations: Number of simulations (default: 1)
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
 
 class BlackScholesMertonStockPrices(AbstractStochasticValue):

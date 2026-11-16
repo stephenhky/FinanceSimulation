@@ -69,4 +69,4 @@ def retrieve_stock_symbols(
 
 
 if __name__ == '__main__':
-    main_cli()
+    retrieve_stock_symbols()

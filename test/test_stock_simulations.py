@@ -6,7 +6,12 @@ from datetime import datetime, timedelta
 import numpy as np
 
 from finsim.estimate.fit import fit_BlackScholesMerton_model
-from finsim.simulation.stock import BlackScholesMertonStockPrices, HestonStockPrices, MertonJumpDiffusionStockPrices
+from finsim.simulation.stock import (
+    BlackScholesMertonStockPrices,
+    SquareRootDiffusionProcesses,
+    HestonStockPrices,
+    MertonJumpDiffusionStockPrices,
+)
 
 
 def expected_bsm_stock(S0, r, sigma, t):
@@ -16,6 +21,9 @@ def expected_bsm_stock(S0, r, sigma, t):
 
 
 class TestStockSimulations(unittest.TestCase):
+    def setUp(self):
+        np.random.seed(42)
+
     def backend_test_BlackScholesMertonStocks(self, S, r, sigma, T, dt, nbsimulations):
         numerical_ts = np.linspace(0, T, int(T // dt) + 1)
         ts = np.array([
@@ -100,6 +108,14 @@ class TestStockSimulations(unittest.TestCase):
             1523.06,
             delta=1.96*169.68
         )
+
+    def test_SquareRootDiffusionProcesses(self):
+        cir_simulator = SquareRootDiffusionProcesses(x0=0.05, theta=0.02, kappa=0.5, sigma=0.01)
+        paths = cir_simulator.generate_time_series(T=10.0, dt=0.05, nbsimulations=2000)
+        self.assertEqual(paths.shape, (2000, int(10.0 // 0.05) + 1))
+        np.testing.assert_allclose(paths[:, 0], 0.05)
+        expected_terminal = 0.02 + (0.05 - 0.02) * exp(-0.5 * 10.0)
+        self.assertAlmostEqual(float(np.mean(paths[:, -1])), expected_terminal, delta=1e-3)
 
 
 if __name__ == '__main__':

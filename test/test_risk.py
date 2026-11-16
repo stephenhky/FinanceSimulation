@@ -57,6 +57,29 @@ class TestRisk(unittest.TestCase):
         beta = risk.estimate_beta(timestamps, stock_prices, index_prices)
         self.assertAlmostEqual(beta, 2.0)
 
+    def test_public_downside_and_upside_risk_wrappers(self):
+        timestamps = np.array([
+            '2021-01-01T00:00:00',
+            '2021-01-02T00:00:00',
+            '2021-01-03T00:00:00',
+            '2021-01-04T00:00:00',
+            '2021-01-05T00:00:00',
+            '2021-01-06T00:00:00',
+        ], dtype='datetime64[s]')
+        r_down = np.array([0.0, 0.2, -0.1, -0.1, 0.3, 0.4])
+        prices_down = np.exp(np.cumsum(r_down))
+        self.assertAlmostEqual(
+            risk.estimate_downside_risk(timestamps, prices_down, 0.0, unit='day'),
+            np.sqrt(0.02 / 5)
+        )
+
+        r_up = np.array([0.0, -0.2, 0.1, 0.1, -0.3, -0.4])
+        prices_up = np.exp(np.cumsum(r_up))
+        self.assertAlmostEqual(
+            risk.estimate_upside_risk(timestamps, prices_up, 0.0, unit='day'),
+            np.sqrt(0.02 / 5)
+        )
+
 
 if __name__ == '__main__':
     unittest.main()
