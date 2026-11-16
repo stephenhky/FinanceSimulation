@@ -24,7 +24,7 @@ author = 'Kwan Yuet Stephen Ho'
 
 # The full version, including alpha/beta/rc tags
 version = '2.0'
-release = '2.0.0'
+release = '2.0.2'
 
 
 # -- General configuration ---------------------------------------------------
