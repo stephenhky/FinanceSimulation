@@ -196,7 +196,7 @@ def intermediate_wrangle_stock_df_with_dividends(stock_df: pd.DataFrame, symbol:
     """
     dividends_df = get_dividends_df(symbol)
     dividends_df = dividends_df.rename(columns={'date': 'TimeStamp'})
-    dividends_df.loc[:, 'Cash'] = np.cumsum(dividends_df['Dividends'].ravel())
+    dividends_df.loc[:, 'Cash'] = np.cumsum(dividends_df['Dividends'].to_numpy())
     stock_df.loc[:, 'TimeStamp'] = stock_df['TimeStamp'].map(lambda ts: datetime.strftime(ts, '%Y-%m-%d'))
     stock_df = stock_df.merge(dividends_df, how='left').ffill().fillna(0)
     stock_df.loc[:, 'EffVal'] = stock_df['Close'] + stock_df['Cash']
@@ -254,9 +254,9 @@ def get_BlackScholesMerton_stocks_estimation(
     # same length, directly compare
     if maxlen == minlen:
         return fit_multivariate_BlackScholesMerton_model(
-            stocks_data_dfs[max_timearray_ref]['TimeStamp'].ravel(),
+            stocks_data_dfs[max_timearray_ref]['TimeStamp'].to_numpy(),
             np.array([
-                stocks_data_dfs[i]['EffVal'].ravel()
+                stocks_data_dfs[i]['EffVal'].to_numpy()
                 for i in range(len(stocks_data_dfs))
             ])
         )
@@ -348,7 +348,7 @@ def get_stocks_timeweighted_estimation(
                 np.array(stocks_data_dfs[i]['EffVal'])
                 for i in range(len(stocks_data_dfs))
             ]),
-            timeweightdf['weight'].ravel()
+            timeweightdf['weight'].to_numpy()
         )
     else:
         rarray = np.zeros(len(symbols))
@@ -357,9 +357,9 @@ def get_stocks_timeweighted_estimation(
         for i, stock_df in enumerate(stocks_data_dfs):
             w_stock_df = stock_df.merge(timeweightdf, on='TimeStamp', how='left')
             r, sigma = fit_timeweighted_BlackScholesMerton_model(
-                w_stock_df['TimeStamp'].ravel(),
-                w_stock_df['EffVal'].ravel(),
-                w_stock_df['weight'].ravel()
+                w_stock_df['TimeStamp'].to_numpy(),
+                w_stock_df['EffVal'].to_numpy(),
+                w_stock_df['weight'].to_numpy()
             )
             rarray[i] = r
             covmat[i, i] = sigma * sigma
@@ -369,12 +369,12 @@ def get_stocks_timeweighted_estimation(
             w_stock_df_j = stocks_data_dfs[j].merge(timeweightdf, on='TimeStamp', how='left')
             smallerlen = min(len(w_stock_df_i), len(w_stock_df_j))
             _, cov = fit_timeweighted_multivariate_BlackScholesMerton_model(
-                w_stock_df_i.loc[(len(w_stock_df_i) - smallerlen):, 'TimeStamp'].ravel(),
+                w_stock_df_i.loc[(len(w_stock_df_i) - smallerlen):, 'TimeStamp'].to_numpy(),
                 np.array([
-                    w_stock_df_i.loc[(len(w_stock_df_i) - smallerlen):, 'EffVal'].ravel(),
-                    w_stock_df_j.loc[(len(w_stock_df_j) - smallerlen):, 'EffVal'].ravel()
+                    w_stock_df_i.loc[(len(w_stock_df_i) - smallerlen):, 'EffVal'].to_numpy(),
+                    w_stock_df_j.loc[(len(w_stock_df_j) - smallerlen):, 'EffVal'].to_numpy()
                 ]),
-                w_stock_df_i.loc[(len(w_stock_df_i) - smallerlen):, 'weight'].ravel()
+                w_stock_df_i.loc[(len(w_stock_df_i) - smallerlen):, 'weight'].to_numpy()
             )
             covmat[i, j] = cov[0, 1]
             covmat[j, i] = cov[1, 0]
