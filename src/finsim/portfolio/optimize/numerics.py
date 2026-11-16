@@ -196,11 +196,12 @@ def intermediate_wrangle_stock_df_with_dividends(stock_df: pd.DataFrame, symbol:
     """
     dividends_df = get_dividends_df(symbol)
     dividends_df = dividends_df.rename(columns={'date': 'TimeStamp'})
-    dividends_df.loc[:, 'Cash'] = np.cumsum(dividends_df['Dividends'].to_numpy())
-    stock_df.loc[:, 'TimeStamp'] = stock_df['TimeStamp'].map(lambda ts: datetime.strftime(ts, '%Y-%m-%d'))
+    dividends_df['Cash'] = np.cumsum(dividends_df['Dividends'].to_numpy())
+    stock_df = stock_df.copy()
+    stock_df['TimeStamp'] = stock_df['TimeStamp'].map(lambda ts: datetime.strftime(ts, '%Y-%m-%d'))
     stock_df = stock_df.merge(dividends_df, how='left').ffill().fillna(0)
-    stock_df.loc[:, 'EffVal'] = stock_df['Close'] + stock_df['Cash']
-    stock_df.loc[:, 'TimeStamp'] = stock_df['TimeStamp'].map(lambda ts: datetime.strptime(ts, '%Y-%m-%d'))
+    stock_df['EffVal'] = stock_df['Close'] + stock_df['Cash']
+    stock_df['TimeStamp'] = stock_df['TimeStamp'].map(lambda ts: datetime.strptime(ts, '%Y-%m-%d'))
     return stock_df
 
 

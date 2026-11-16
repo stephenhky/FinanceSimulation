@@ -92,7 +92,7 @@ class Portfolio:
                     else:
                         startdatestr = stocks_data_dfs[i].loc[0, 'TimeStamp'].date().strftime('%Y-%m-%d')
                         logging.warning(f'{symbol}: starting from {startdatestr}')
-                        predf = pd.DataFrame(stocks_data_dfs[max_timearray_ref].loc[:(maxlen - thisdflen), 'TimeStamp'])
+                        predf = pd.DataFrame(stocks_data_dfs[max_timearray_ref].iloc[:(maxlen - thisdflen)][['TimeStamp']])
                     predf[stocks_data_dfs[max_timearray_ref].columns[1:]] = 0
                     predf = pd.concat([predf, stocks_data_dfs[i]], ignore_index=True)
                     stocks_data_dfs[i] = predf
